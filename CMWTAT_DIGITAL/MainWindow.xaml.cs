@@ -21,6 +21,7 @@ using System.Threading;
 using Microsoft.Win32;
 using CMWTAT_DIGITAL.Domain;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace CMWTAT_DIGITAL
 {
@@ -31,18 +32,169 @@ namespace CMWTAT_DIGITAL
     {
         [DllImport("Kernel32.dll")]
         private static extern bool Wow64EnableWow64FsRedirection(bool Wow64FsEnableRedirection);//重定向
+
         public struct Frequency
         {
             public int ID { get; set; }
             public string DisplayOS { get; set; }
         }
+
+        string tempfile = System.IO.Path.GetTempPath() + @"CMWTAT_DIGITAL\";
+
+        public void DelectTempFile()
+        {
+            //string tempfile = System.IO.Path.GetTempPath() + @"CMWTAT_DIGITAL\";
+            if (Directory.Exists(tempfile))
+            {
+                try
+                {
+                    //DirectoryInfo dir = new DirectoryInfo(srcPath);
+                    //FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();  //返回目录中所有文件和子目录
+                    //foreach (FileSystemInfo i in fileinfo)
+                    //{
+                    //    if (i is DirectoryInfo)            //判断是否文件夹
+                    //    {
+                    //        DirectoryInfo subdir = new DirectoryInfo(i.FullName);
+                    //        subdir.Delete(true);          //删除子目录和文件
+                    //    }
+                    //    else
+                    //    {
+                    //        File.Delete(i.FullName);      //删除指定文件
+                    //    }
+                    //}
+                    FileAttributes attr = File.GetAttributes(tempfile);
+                    if (attr == FileAttributes.Directory)
+                    {
+                        Directory.Delete(tempfile, true);
+                    }
+                    else
+                    {
+                        File.Delete(tempfile);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("DelectTempFile:" + e.Message);
+                }
+            }
+        }
+
+        public void ExportTempFile()
+        {
+            //string tempfile = System.IO.Path.GetTempPath() + @"CMWTAT_DIGITAL\";
+
+            //if (tempfile.EndsWith(@"\"))
+            //{
+            //    tempfile = tempfile.Remove(tempfile.Length - 1, 1);
+            //}
+
+            if (!Directory.Exists(tempfile))
+            {
+                Directory.CreateDirectory(tempfile);
+            }
+
+            byte[] temp;
+            System.IO.FileStream fileStream;
+
+            temp = CMWTAT_DIGITAL.Properties.Resources.gatherosstate;
+            fileStream = new System.IO.FileStream(tempfile + "gatherosstate" + ".exe", System.IO.FileMode.CreateNew);
+            fileStream.Write(temp, 0, (int)(temp.Length));
+            fileStream.Close();
+
+            temp = CMWTAT_DIGITAL.Properties.Resources.slc;
+            fileStream = new System.IO.FileStream(tempfile + "slc" + ".dll", System.IO.FileMode.CreateNew);
+            fileStream.Write(temp, 0, (int)(temp.Length));
+            fileStream.Close();
+
+            temp = CMWTAT_DIGITAL.Properties.Resources.slmgr;
+            fileStream = new System.IO.FileStream(tempfile + "slmgr" + ".vbs", System.IO.FileMode.CreateNew);
+            fileStream.Write(temp, 0, (int)(temp.Length));
+            fileStream.Close();
+        }
+
+        bool autoact = false;
+        bool hiderun = false;
+        bool expact = false;
+        bool showhelp = false;
+
         //public string SystemEdition = OSVersionInfo.Name + " " + OSVersionInfo.Edition;
         public string SystemEdition = OSVersionInfo.Edition;
+
+        NotifyIcon notifyIcon;
+
         public MainWindow()
         {
 
+            autoact = Program.autoact;
+            hiderun = Program.hiderun;
+            expact = Program.expact;
+            showhelp = Program.showhelp;
+
+            //MessageBox.Show("A:" + autoact.ToString() + ";H:" + hiderun.ToString());
+
             InitializeComponent();
 
+            if (showhelp == true)
+            {
+                DialogHelp.IsOpen = true;
+            }
+
+            notifyIcon = new System.Windows.Forms.NotifyIcon();
+            notifyIcon.Text = "CloudMoe Windows 10 Activation Toolkit V2";
+            notifyIcon.Icon = ((System.Drawing.Icon)(CMWTAT_DIGITAL.Properties.Resources.CMWTAT_ICON));
+
+            if (hiderun == true && autoact == true)
+            {
+                this.Hide();
+                //notifyIcon.BalloonTipText = "The app has been minimised. Click the tray icon to show.";
+                //notifyIcon.BalloonTipTitle = "The App";
+
+                //notifyIcon.Icon = new System.Drawing.Icon("TheAppIcon.ico");
+
+                //notifyIcon.Click += new EventHandler(notifyIcon_Click);
+
+                notifyIcon.Visible = true;
+
+                //打开菜单项
+                //System.Windows.Forms.MenuItem open = new System.Windows.Forms.MenuItem("Open");
+                //open.Click += new EventHandler((o, e) =>
+                //{
+                //    this.Show();
+                //});
+
+                //退出菜单项
+                System.Windows.Forms.MenuItem exit = new System.Windows.Forms.MenuItem("Exit");
+                exit.Click += new EventHandler(Exit_Button_Click);
+
+                //关联托盘控件
+                //System.Windows.Forms.MenuItem[] childen = new System.Windows.Forms.MenuItem[] { open, exit };
+
+                System.Windows.Forms.MenuItem[] childen = new System.Windows.Forms.MenuItem[] { exit };
+
+                notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu(childen);
+
+                //this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler((o, e) =>
+                //{
+                //    if (e.Button == MouseButtons.Left) this.Show();
+                //});
+
+                int tipShowMilliseconds = 0;
+                string tipTitle = "CloudMoe Windows 10 Activation Toolkit V2";
+                string tipContent = "Running.";
+                ToolTipIcon tipType = ToolTipIcon.None;
+                notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+
+                //notifyIcon.BalloonTipClicked += new EventHandler((o, e) =>
+                //{
+                //    //System.Windows.MessageBox.Show(System.Windows.Forms.Control.MouseButtons.ToString());
+                //    if (System.Windows.Forms.Control.MouseButtons == MouseButtons.None) //左键返回不是Right是None
+                //    {
+                //        System.Windows.MessageBox.Show("Hello");
+                //    };
+                //});
+            }
+
+            //初始化动态表单数据绑定
             DataContext = new ViewModel();
 
             this.DialogHostGrid.Visibility = Visibility.Visible;
@@ -63,7 +215,9 @@ namespace CMWTAT_DIGITAL
             //SystemEditionText.Text = SystemEdition;
             Thread loadthread = new Thread(LoadOSList);
             loadthread.Start();
+
         }
+
         JArray ositems;
         int now_os_index = 0;
         string checked_os = "unknow";
@@ -79,6 +233,9 @@ namespace CMWTAT_DIGITAL
         }
         private void LoadOSList()
         {
+
+            int is_selected = 0; //是否已经自动选择,0未选择，1普通模式，2实验模式
+
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
                 DialogWait.IsOpen = true;
@@ -90,24 +247,32 @@ namespace CMWTAT_DIGITAL
                 List<Frequency> list = new List<Frequency>();
                 Frequency freq = new Frequency();
                 ositems = (JArray)jsonobj["OS"];
+
                 for (int i = 0; i < ositems.Count(); i++)
                 {
                     freq.ID = i;
                     freq.DisplayOS = jsonobj["OS"][i].ToString();
-                    if (jsonobj["OS"][i].ToString() == SystemEdition)
-                    {
-                        now_os_index = i;
-                        checked_os = SystemEdition;
-                    }
-                    if (jsonobj["OS"][i].ToString() == SystemEdition + OSVersionInfo.BuildVersion)
+
+                    //按照优先级判断，如果已经自动选择则忽略新的
+                    if (String.Equals(jsonobj["OS"][i].ToString(), SystemEdition + OSVersionInfo.BuildVersion, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//jsonobj["OS"][i].ToString() == SystemEdition + OSVersionInfo.BuildVersion
                     {
                         now_os_index = i;
                         checked_os = SystemEdition + OSVersionInfo.BuildVersion;
+                        is_selected = 1;
                     }
-                    if (jsonobj["OS"][i].ToString() == "(Experimental) " + SystemEdition)
+
+                    if (String.Equals(jsonobj["OS"][i].ToString(), SystemEdition, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//jsonobj["OS"][i].ToString() == SystemEdition
+                    {
+                        now_os_index = i;
+                        checked_os = SystemEdition;
+                        is_selected = 1;
+                    }
+
+                    if (String.Equals(jsonobj["OS"][i].ToString(), "(Experimental) " + SystemEdition, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//旧的方法：jsonobj["OS"][i].ToString() == "(Experimental) " + SystemEdition，新方法忽略大小写并提升效率
                     {
                         now_os_index = i;
                         checked_os = "(Experimental) " + SystemEdition;
+                        is_selected = 2;
                     }
                     list.Add(freq);
                 }
@@ -116,11 +281,18 @@ namespace CMWTAT_DIGITAL
                 {
                     this.SystemEditionText.ItemsSource = list;//控件的ID
 
-                    if (checked_os == "unknow")
+                    if (is_selected == 0)//没有匹配
                     {
                         this.SystemEditionText.SelectedIndex = 0;
                         this.DialogWithOKToCloseDialogTitle.Text = "Attention";
-                        this.DialogWithOKToCloseDialogText.Text = "Unable to correctly identify your operating system, may be not be supported.\r\n(System edition: " + SystemEdition + OSVersionInfo.BuildVersion + ")";
+                        this.DialogWithOKToCloseDialogText.Text = "Unable to correctly identify your operating system edition, may be not be supported.\r\n(System edition: " + SystemEdition + OSVersionInfo.BuildVersion + ")";
+                        this.DialogWithOKToCloseDialog.IsOpen = true;
+                    }
+                    else if (is_selected == 2)//只找到实验性
+                    {
+                        this.SystemEditionText.SelectedIndex = 0;
+                        this.DialogWithOKToCloseDialogTitle.Text = "Attention";
+                        this.DialogWithOKToCloseDialogText.Text = "Only find experimental options that can be used with this operating system edition, little hope of activation success.\r\n(System edition: " + SystemEdition + OSVersionInfo.BuildVersion + ")";
                         this.DialogWithOKToCloseDialog.IsOpen = true;
                     }
                     else
@@ -130,19 +302,78 @@ namespace CMWTAT_DIGITAL
                 }));
 
                 //this.SystemEditionText.SelectedIndex = now_os_index;
+
+                actbtn.Dispatcher.Invoke(new Action(() =>
+                {
+                    DialogWait.IsOpen = false;
+                }));
+
+                if (autoact == true)//自动激活
+                {
+                    Thread actthread = new Thread(RunAct);
+                    switch (is_selected)
+                    {
+                        case 1: //正常
+                            actthread.Start();
+                            break;
+                        case 2: //实验性
+                            if (expact == true)
+                            {
+                                actbtn.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    DialogWithOKToCloseDialog.IsOpen = false;
+                                }));
+                                actthread.Start();
+                            }
+                            else
+                            {
+                                if (hiderun == true)
+                                {
+                                    int tipShowMilliseconds = 0;
+                                    string tipTitle = "CloudMoe Windows 10 Activation Toolkit V2";
+                                    string tipContent = "Your system edition may not be supported, program will exit. you can try add --expact or -e to startup.";
+                                    ToolTipIcon tipType = ToolTipIcon.None;
+                                    notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                                    Exit_Button_Click(null, null);//退出
+                                }
+                            }
+                            break;
+                        default:
+                            if (hiderun == true)
+                            {
+                                int tipShowMilliseconds = 0;
+                                string tipTitle = "CloudMoe Windows 10 Activation Toolkit V2";
+                                string tipContent = "Your system edition may not be supported, program will exit.";
+                                ToolTipIcon tipType = ToolTipIcon.None;
+                                notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                                Exit_Button_Click(null, null);//退出
+                            }
+                            break;
+                    }
+                }
             }
             catch
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
+                    DialogWait.IsOpen = false;
+                }));
+
+                actbtn.Dispatcher.Invoke(new Action(() =>
+                {
                     DialogWithExit.IsOpen = true;
                 }));
-            }
-            actbtn.Dispatcher.Invoke(new Action(() =>
-            {
-                DialogWait.IsOpen = false;
-            }));
 
+                if (hiderun == true && autoact == true)
+                {
+                    int tipShowMilliseconds = 0;
+                    string tipTitle = "CloudMoe Windows 10 Activation Toolkit V2";
+                    string tipContent = "Unable to connect to server, program will exit.";
+                    ToolTipIcon tipType = ToolTipIcon.None;
+                    notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                    Exit_Button_Click(null, null);//退出
+                }
+            }
         }
         private void Activate_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -181,13 +412,17 @@ namespace CMWTAT_DIGITAL
             return strHTML;
         }
 
-        private void Exit_Button_Click(object sender, RoutedEventArgs e)
+        private void Exit_Button_Click(object sender, EventArgs e)
         {
-            Application.Current.Shutdown();
+            DelectTempFile();
+            notifyIcon.Visible = false;
+            System.Windows.Application.Current.Shutdown();
         }
 
         private void RunInstall()
         {
+            ExportTempFile();
+            //释放文件
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
                 this.DialogActProg.IsOpen = true;
@@ -203,7 +438,11 @@ namespace CMWTAT_DIGITAL
             string system = "";
 
             string slmgr = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\slmgr.vbs";
-            string slmgr_self = System.AppDomain.CurrentDomain.BaseDirectory + "slmgr.vbs";
+
+            string slmgr_self = tempfile + "slmgr.vbs";
+
+            //旧的位置
+            //string slmgr_self = System.AppDomain.CurrentDomain.BaseDirectory + "slmgr.vbs";
 
             string changepk = Environment.SystemDirectory + "\\changepk.exe";
 
@@ -283,8 +522,8 @@ namespace CMWTAT_DIGITAL
                 code = "-1";
                 msg = "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
             }
-            //string runend = RunCScript(slmgr_self, "-upk").Trim();
-            EndLine:;
+        //string runend = RunCScript(slmgr_self, "-upk").Trim();
+        EndLine:;
             if (code != "200")
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
@@ -309,14 +548,34 @@ namespace CMWTAT_DIGITAL
                 }));
                 //MessageBox.Show("Congratulation!");
             }
+            DelectTempFile();
+            //清理文件
+        }
+
+        private void ShowBallSameDig()
+        {
+            actbtn.Dispatcher.Invoke(new Action(() =>
+            {
+                if (hiderun == true && autoact == true)
+                {
+                    int tipShowMilliseconds = 0;
+                    string tipTitle = "CloudMoe Windows 10 Activation Toolkit V2";
+                    string tipContent = this.activatingtext.Text;
+                    ToolTipIcon tipType = ToolTipIcon.None;
+                    notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                }
+            }));
         }
 
         private void RunAct()
         {
+            ExportTempFile();
+            //释放文件
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
                 this.DialogActProg.IsOpen = true;
                 this.activatingtext.Text = "Activating";
+                ShowBallSameDig();
             }));
 
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
@@ -329,7 +588,11 @@ namespace CMWTAT_DIGITAL
             string mode = "1"; //1：普通（SYS、SKU、KEY完全）；2.需要获取SKU（SYS、KEY）；3.手动输入KEY
 
             string slmgr = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\slmgr.vbs";
-            string slmgr_self = System.AppDomain.CurrentDomain.BaseDirectory + "slmgr.vbs";
+
+            string slmgr_self = tempfile + "slmgr.vbs";
+
+            //旧的位置
+            //string slmgr_self = System.AppDomain.CurrentDomain.BaseDirectory + "slmgr.vbs";
 
             string changepk = Environment.SystemDirectory + "\\changepk.exe";
 
@@ -344,6 +607,7 @@ namespace CMWTAT_DIGITAL
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
                     this.activatingtext.Text = "Getting Key";
+                    ShowBallSameDig();
                 }));
 
                 //获取密钥和SKU
@@ -386,6 +650,7 @@ namespace CMWTAT_DIGITAL
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
                 this.activatingtext.Text = "Uninstalling old Key";
+                ShowBallSameDig();
             }));
 
             //卸载
@@ -402,6 +667,7 @@ namespace CMWTAT_DIGITAL
                     actbtn.Dispatcher.Invoke(new Action(() =>
                     {
                         this.activatingtext.Text = "Getting edition code (Experimental)";
+                        ShowBallSameDig();
                     }));
 
                     //安装转换密钥
@@ -417,6 +683,7 @@ namespace CMWTAT_DIGITAL
                             actbtn.Dispatcher.Invoke(new Action(() =>
                             {
                                 this.activatingtext.Text = "Uninstalling old Key (Experimental)";
+                                ShowBallSameDig();
                             }));
 
                             runend = RunCScript(slmgr_self, "-upk").Trim();
@@ -426,6 +693,7 @@ namespace CMWTAT_DIGITAL
                                 actbtn.Dispatcher.Invoke(new Action(() =>
                                 {
                                     this.activatingtext.Text = "Prepare for the next step (Experimental)";
+                                    ShowBallSameDig();
                                 }));
                             }
                         }
@@ -450,6 +718,7 @@ namespace CMWTAT_DIGITAL
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
                     this.activatingtext.Text = "Writing feature of old Windows version";
+                    ShowBallSameDig();
                 }));
 
                 RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Retail"" /f");
@@ -460,6 +729,7 @@ namespace CMWTAT_DIGITAL
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
                     this.activatingtext.Text = "Installing Key";
+                    ShowBallSameDig();
                 }));
 
                 //安装数字权利升级密钥
@@ -472,21 +742,26 @@ namespace CMWTAT_DIGITAL
                     actbtn.Dispatcher.Invoke(new Action(() =>
                     {
                         this.activatingtext.Text = "Getting free upgrade permissions";
+                        ShowBallSameDig();
                     }));
 
-                    RunCMD(System.AppDomain.CurrentDomain.BaseDirectory + "gatherosstate.exe");
+                    RunCMD(tempfile + "gatherosstate.exe");
 
-                    for (int i = 0; i < 3 || !File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "GenuineTicket.xml"); i++)
+                    //旧的位置
+                    //RunCMD(System.AppDomain.CurrentDomain.BaseDirectory + "gatherosstate.exe"); tempfile
+
+                    for (int i = 0; i < 3 || !File.Exists(tempfile + "GenuineTicket.xml"); i++) //旧的位置： for (int i = 0; i < 3 || !File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "GenuineTicket.xml"); i++)
                     {
                         Thread.Sleep(3000);
                     }
 
-                    if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "GenuineTicket.xml"))
+                    if (File.Exists(tempfile + "GenuineTicket.xml")) //旧的位置： if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "GenuineTicket.xml"))
                     {
 
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
                             this.activatingtext.Text = "Cleaning changes";
+                            ShowBallSameDig();
                         }));
 
                         RunCMD(@"reg delete ""HKLM\SYSTEM\Tokens"" /f");
@@ -495,6 +770,7 @@ namespace CMWTAT_DIGITAL
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
                             this.activatingtext.Text = "Getting digital license";
+                            ShowBallSameDig();
                         }));
 
                         Wow64EnableWow64FsRedirection(false);//关闭文件重定向
@@ -503,6 +779,7 @@ namespace CMWTAT_DIGITAL
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
                             this.activatingtext.Text = "Activating";
+                            ShowBallSameDig();
                         }));
 
                         runend = RunCScript(slmgr_self, "-ato").Trim();
@@ -533,8 +810,8 @@ namespace CMWTAT_DIGITAL
                 code = "-1";
                 msg = "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
             }
-            //string runend = RunCScript(slmgr_self, "-upk").Trim();
-            EndLine:;
+        //string runend = RunCScript(slmgr_self, "-upk").Trim();
+        EndLine:;
             if (code != "200")
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
@@ -544,6 +821,15 @@ namespace CMWTAT_DIGITAL
                     this.DialogWithOKToCloseDialog.IsOpen = true;
                     this.DialogWithOKToCloseDialogTitle.Text = "Error";
                     this.DialogWithOKToCloseDialogText.Text = msg + "\r\nCode:" + code;
+                    if (hiderun == true && autoact == true)
+                    {
+                        int tipShowMilliseconds = 0;
+                        string tipTitle = "CloudMoe Windows 10 Activation Toolkit V2";
+                        string tipContent = msg;
+                        ToolTipIcon tipType = ToolTipIcon.None;
+                        notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                        Exit_Button_Click(null, null);
+                    }
                 }));
                 //MessageBox.Show(msg + "\r\nCode:" + code);
             }
@@ -556,9 +842,20 @@ namespace CMWTAT_DIGITAL
                     this.DialogWithOKToCloseDialogDonate.IsOpen = true;
                     this.DialogWithOKToCloseDialogDonateTitle.Text = "Complete";
                     this.DialogWithOKToCloseDialogDonateText.Text = "\nCongratulation! \n\nWindows 10 has been successful activated.\n";
+                    if (hiderun == true && autoact == true)
+                    {
+                        int tipShowMilliseconds = 0;
+                        string tipTitle = "CloudMoe Windows 10 Activation Toolkit V2";
+                        string tipContent = "Congratulation!\nWindows 10 has been successful activated.";
+                        ToolTipIcon tipType = ToolTipIcon.None;
+                        notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                        Exit_Button_Click(null, null);
+                    }
                 }));
                 //MessageBox.Show("Congratulation!");
             }
+            DelectTempFile();
+            //清理文件
         }
 
         private void RunCMD(string var)
@@ -582,7 +879,7 @@ namespace CMWTAT_DIGITAL
         public static string RunCScript(string path, string var = "")
         {
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-            //执行命令行函数
+                                                 //执行命令行函数
             try
             {
                 System.Diagnostics.Process myProcess = new System.Diagnostics.Process();
@@ -610,7 +907,7 @@ namespace CMWTAT_DIGITAL
         public static string GetSKU()
         {
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-            //执行命令行函数
+                                                 //执行命令行函数
             try
             {
                 System.Diagnostics.Process p = new System.Diagnostics.Process();
@@ -672,6 +969,12 @@ namespace CMWTAT_DIGITAL
             SystemEditionText.Visibility = Visibility.Hidden;
             SystemEditionTextInput.Visibility = Visibility.Visible;
             is_auto = false;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DelectTempFile();
+            notifyIcon.Visible = false;
         }
     }
 }

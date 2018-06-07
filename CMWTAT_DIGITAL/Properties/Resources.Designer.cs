@@ -59,5 +59,45 @@ namespace CMWTAT_DIGITAL.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Icon CMWTAT_ICON {
+            get {
+                object obj = ResourceManager.GetObject("CMWTAT_ICON", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] gatherosstate {
+            get {
+                object obj = ResourceManager.GetObject("gatherosstate", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] slc {
+            get {
+                object obj = ResourceManager.GetObject("slc", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] slmgr {
+            get {
+                object obj = ResourceManager.GetObject("slmgr", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
