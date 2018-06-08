@@ -774,7 +774,7 @@ namespace CMWTAT_DIGITAL
                         }));
 
                         Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-                        RunCMD(Environment.SystemDirectory + @"\ClipUp.exe -v -o -altto " + System.AppDomain.CurrentDomain.BaseDirectory);
+                        RunCMD(Environment.SystemDirectory + @"\ClipUp.exe -v -o -altto " + tempfile);
 
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
