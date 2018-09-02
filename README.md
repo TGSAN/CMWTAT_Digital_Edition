@@ -1,3 +1,7 @@
+# 公告
+
+中非合作论坛北京峰会期间，服务器机房接有关部门通知，为保证会议圆满成功需要临时关闭。（2018/09/01）
+
 # CloudMoe Windows 10 Activation Toolkit Digital Edition
 
 This toolkit can activate your windows 10 use digital license.
