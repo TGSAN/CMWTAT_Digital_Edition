@@ -1,8 +1,6 @@
-# 公告
+# Official Site 官方网站
 
-服务器已迁移至海外，同时1.x版本 [官方网站] 更新并重新开启（2018/09/02）
-
-中非合作论坛北京峰会期间，服务器机房接有关部门通知，为保证会议圆满成功需要临时关闭。（2018/08/31）
+[https://cmwtat.cloudmoe.com]
 
 # CloudMoe Windows 10 Activation Toolkit Digital Edition
 
@@ -100,4 +98,4 @@ This toolkit can activate your windows 10 use digital license.
 * Thanks for s1ave77 (Basic logic) and vyvojar (SLC.DLL)
 
 [UI_image]:./images/UI.jpg
-[官方网站]:https://cmwtat.cloudmoe.com
+[https://cmwtat.cloudmoe.com]:https://cmwtat.cloudmoe.com
