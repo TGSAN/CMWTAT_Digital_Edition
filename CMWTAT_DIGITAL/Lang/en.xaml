@@ -1,0 +1,203 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <!--FontFamily Dictionary-->
+    
+    <FontFamily x:Key="Font">
+        Roboto
+    </FontFamily>
+    
+    <!--String Dictionary-->
+    
+    <sys:String x:Key="OK">
+        OK
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        Cancel
+    </sys:String>
+    <sys:String x:Key="Refuse">
+        Refuse
+    </sys:String>
+    <sys:String x:Key="DonateBtn">
+        Thanks developer and donate a dinner
+    </sys:String>
+    <sys:String x:Key="Exit">
+        Exit
+    </sys:String>
+    <sys:String x:Key="UpdateNow">
+        Update Now
+    </sys:String>
+    <sys:String x:Key="Ignore">
+        Ignore
+    </sys:String>
+    <sys:String x:Key="TitleName">
+        CMWTAT Digital Edition
+    </sys:String>
+    <sys:String x:Key="AppName">
+        CMWTAT Digital Edition V2
+    </sys:String>
+    <sys:String x:Key="UpdateTitle">
+        A new version available!
+    </sys:String>
+    <sys:String x:Key="CurrentVersion">
+        Current Version
+    </sys:String>
+    <sys:String x:Key="LatestVersion">
+        Latest Version
+    </sys:String>
+    <sys:String x:Key="Auto_Mode">
+        Auto Mode
+    </sys:String>
+    <sys:String x:Key="Manual_Mode">
+        Manual Mode
+    </sys:String>
+    <sys:String x:Key="Activate_Button">
+        Activate
+    </sys:String>
+    <sys:String x:Key="Convert_versions">
+        Convert versions (Install Key without Activate)
+    </sys:String>
+    <sys:String x:Key="test">
+        Test Text
+    </sys:String>
+    <sys:String x:Key="Loading">
+        Loading
+    </sys:String>
+    <sys:String x:Key="Activating">
+        Activating
+    </sys:String>
+    <sys:String x:Key="Complete">
+        Complete
+    </sys:String>
+    <sys:String x:Key="notifyIconTitle">
+        CloudMoe Windows 10 Activation Toolkit V2
+    </sys:String>
+    <sys:String x:Key="Running">
+        Running.
+    </sys:String>
+    <sys:String x:Key="Experimental">
+        Experimental
+    </sys:String>
+    <sys:String x:Key="Attention">
+        Attention
+    </sys:String>
+    <sys:String x:Key="System_Edition">
+        System edition
+    </sys:String>
+    <sys:String x:Key="May_be_not_be_supported">
+        Unable to correctly identify your operating system edition in support list, may be not be supported.
+    </sys:String>
+    <sys:String x:Key="Only_find_experimental">
+        Only find experimental options that can be used with this operating system edition, little hope of activation success.
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_try">
+        Your system edition may not be supported, program will exit. you can try add --expact or -e to startup.
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_exit">
+        Your system edition may not be supported, program will exit.
+    </sys:String>
+    <sys:String x:Key="notify_Disconnect_to_server_exit">
+        Unable to connect to server, Please check the network and try to try again later, program will exit.
+    </sys:String>
+    <sys:String x:Key="Disconnect_to_server_exit">
+        Unable to connect to server, Please check the network and try to try again later, program will exit.
+    </sys:String>
+    <sys:String x:Key="RunInstall_Converting">
+        Converting
+    </sys:String>
+    <sys:String x:Key="RunAct_Activating">
+        Activating
+    </sys:String>
+    <sys:String x:Key="RunInstall_Getting_Key">
+        Getting Key via Internet
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_Key">
+        Getting Key via Internet
+    </sys:String>
+    <sys:String x:Key="RunInstall_Uninstalling_old_Key">
+        Uninstalling old Key
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key">
+        Uninstalling old Key
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key_Exp">
+        Uninstalling old Key (Experimental)
+    </sys:String>
+    <sys:String x:Key="RunInstall_Installing_Key">
+        Installing Key
+    </sys:String>
+    <sys:String x:Key="RunAct_Installing_Key">
+        Installing Key
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_edition_code_Exp">
+        Getting edition code (Experimental)
+    </sys:String>
+    <sys:String x:Key="RunAct_Prepare_for_the_next_step_Exp">
+        Prepare for the next step (Experimental)
+    </sys:String>
+    <sys:String x:Key="RunAct_Writing_old_OS">
+        Writing feature of old Windows version
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_free_upgrade_permissions">
+        Getting free upgrade permissions
+    </sys:String>
+    <sys:String x:Key="RunAct_Cleaning_changes">
+        Cleaning changes
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_digital_license">
+        Getting digital license
+    </sys:String>
+    <sys:String x:Key="CompleteTitle">
+        Complete
+    </sys:String>
+    <sys:String x:Key="ErrorTitle">
+        Error
+    </sys:String>
+    <sys:String x:Key="ErrorCode">
+        Code:
+    </sys:String>
+    <sys:String x:Key="SysMsg">
+        System return:
+    </sys:String>
+
+    <!--
+        Attention:
+        DO NOT USE ANY Indentation in Preserve Mode, Please!
+    -->
+
+    <sys:String x:Key="HelpText" xml:space="preserve">
+This application now supports the use of console args to startup!&#10;&#10;-a&#9;--auto&#9;&#9;Auto activate.&#10;-h&#9;--hide&#9;&#9;Run with hide mode (Only be worked with -auto).&#10;-e&#9;--expact&#9;&#9;Experimental activation.&#10;-?&#9;--help&#9;&#9;Show this help Dialog.
+    </sys:String>
+    <sys:String x:Key="DonateTextConverted" xml:space="preserve">
+Congratulation! &#10;&#10;Windows 10 has been successful converted.
+    </sys:String>
+    <sys:String x:Key="DonateTextActivated" xml:space="preserve">
+Congratulation! &#10;&#10;Windows 10 has been successful activated.
+    </sys:String>
+    <sys:String x:Key="UpdateText" xml:space="preserve">
+We found a new version for CloudMoe Windows 10 Activation Toolkit Digital Edition.&#10;Please update to the latest version to make sure it works.
+    </sys:String>
+    <sys:String x:Key="UpdateMustText" xml:space="preserve">
+We found a new version for CloudMoe Windows 10 Activation Toolkit Digital Edition.&#10;And because your version is too old, so you MUST update to the latest version to make sure it works.
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-0" xml:space="preserve">
+Activate Windows 10 requires a network to gets the product key :)
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1" xml:space="preserve">
+Cannot to uninstall old key. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.1" xml:space="preserve">
+Cannot to install key, may be you choose or enter a incorrect version. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.2" xml:space="preserve">
+Cannot to get edition code. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-2" xml:space="preserve">
+Cannot to install key, may be you choose or enter a incorrect version. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-3" xml:space="preserve">
+Time out, may be you choose or enter a incorrect version. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-4" xml:space="preserve">
+Activation Failed. :( &#10;Maybe: &#10;1.This edition/version of Windows does not support digital license activation. &#10;2. Unable to connect to Microsoft Windows Activation Server. &#10;3. Other unexpected problems. &#10;&#10;You can try to wait a minute or try again later. &#10;
+    </sys:String>
+</ResourceDictionary>
