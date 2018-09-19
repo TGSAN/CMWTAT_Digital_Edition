@@ -97,5 +97,10 @@ This toolkit can activate your windows 10 use digital license.
 
 * Thanks for s1ave77 (Basic logic) and vyvojar (SLC.DLL)
 
+# Contributors 贡献者
+
+[https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors]
+
 [UI_image]:./images/UI.jpg
 [https://cmwtat.cloudmoe.com]:https://cmwtat.cloudmoe.com
+[https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors]:https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors
