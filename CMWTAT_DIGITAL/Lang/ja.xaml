@@ -1,0 +1,203 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    
+    <!--FontFamily Dictionary-->
+    
+    <FontFamily x:Key="Font">
+        Microsoft YaHei UI
+    </FontFamily>
+    
+    <!--String Dictionary-->
+    
+    <sys:String x:Key="OK">
+        はい
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        キャンセル
+    </sys:String>
+    <sys:String x:Key="Refuse">
+        リフューズ
+    </sys:String>
+    <sys:String x:Key="DonateBtn">
+        寄付します
+    </sys:String>
+    <sys:String x:Key="Exit">
+        終了
+    </sys:String>
+    <sys:String x:Key="UpdateNow">
+        今すぐアップデート
+    </sys:String>
+    <sys:String x:Key="Ignore">
+        無視する
+    </sys:String>
+    <sys:String x:Key="TitleName">
+        クラウドモエ Windows 10 デジタルライセンス認証アプリ
+    </sys:String>
+    <sys:String x:Key="AppName">
+        CMWTAT Digital Edition V2
+    </sys:String>
+    <sys:String x:Key="UpdateTitle">
+        新しいバージョンがあります！
+    </sys:String>
+    <sys:String x:Key="CurrentVersion">
+        バージョン
+    </sys:String>
+    <sys:String x:Key="LatestVersion">
+        ラストバージョン
+    </sys:String>
+    <sys:String x:Key="Auto_Mode">
+        オートモード
+    </sys:String>
+    <sys:String x:Key="Manual_Mode">
+        マニュアルモード
+    </sys:String>
+    <sys:String x:Key="Activate_Button">
+        認証
+    </sys:String>
+    <sys:String x:Key="Convert_versions">
+        エディション変換 (キーをインストールするが、認証しません)
+    </sys:String>
+    <sys:String x:Key="test">
+        テストテキスト
+    </sys:String>
+    <sys:String x:Key="Loading">
+        ローディング
+    </sys:String>
+    <sys:String x:Key="Activating">
+        認証中
+    </sys:String>
+    <sys:String x:Key="Complete">
+        コンプリート
+    </sys:String>
+    <sys:String x:Key="notifyIconTitle">
+        クラウドモエ Windows 10 認証アプリ V2
+    </sys:String>
+    <sys:String x:Key="Running">
+        実行中。
+    </sys:String>
+    <sys:String x:Key="Experimental">
+        実験性
+    </sys:String>
+    <sys:String x:Key="Attention">
+        注意
+    </sys:String>
+    <sys:String x:Key="System_Edition">
+        システムエディション
+    </sys:String>
+    <sys:String x:Key="May_be_not_be_supported">
+        あなたのシステムエディションが判別できません，対応していないかもしれません。
+    </sys:String>
+    <sys:String x:Key="Only_find_experimental">
+        このシステムエディションに実験性オプションしか取れません、認証成功の可能性は極めて低い。
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_try">
+        あなたのシステムエディションは対応していないかもしれません。アプリは終了する。試して、--expactまたは-eを追加することでアプリ起動してください。
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_exit">
+        あなたのシステムエディションは対応していないかもしれません。アプリは終了する。
+    </sys:String>
+    <sys:String x:Key="notify_Disconnect_to_server_exit">
+        サーバーに接続できません，インターネット接続を確認するまたは後で試してください，アプリは終了します。
+    </sys:String>
+    <sys:String x:Key="Disconnect_to_server_exit">
+        サーバーに接続できません，インターネット接続を確認するまたは後で試してください，アプリは終了します。
+    </sys:String>
+    <sys:String x:Key="RunInstall_Converting">
+        変換中
+    </sys:String>
+    <sys:String x:Key="RunAct_Activating">
+        ライセンス認証中
+    </sys:String>
+    <sys:String x:Key="RunInstall_Getting_Key">
+        インターネットを通じてキーを取得しています
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_Key">
+        インターネットを通じてキーを取得しています
+    </sys:String>
+    <sys:String x:Key="RunInstall_Uninstalling_old_Key">
+        以前のキーをアンインストールしています
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key">
+        以前のキーをアンインストールしています
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key_Exp">
+        以前のキーをアンインストールしています（実験性）
+    </sys:String>
+    <sys:String x:Key="RunInstall_Installing_Key">
+        キーをインストールしています
+    </sys:String>
+    <sys:String x:Key="RunAct_Installing_Key">
+        キーをインストールしています
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_edition_code_Exp">
+        エディションコードを取得中（実験性）
+    </sys:String>
+    <sys:String x:Key="RunAct_Prepare_for_the_next_step_Exp">
+        次のステップに準備しています（実験性）
+    </sys:String>
+    <sys:String x:Key="RunAct_Writing_old_OS">
+        旧システムの特徴を書き込み中
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_free_upgrade_permissions">
+        無償アップグレード権限を取得中
+    </sys:String>
+    <sys:String x:Key="RunAct_Cleaning_changes">
+        変更がクリーンアップされます
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_digital_license">
+        デジタルライセンスを取得中
+    </sys:String>
+    <sys:String x:Key="CompleteTitle">
+        コンプリート
+    </sys:String>
+    <sys:String x:Key="ErrorTitle">
+        エラー
+    </sys:String>
+    <sys:String x:Key="ErrorCode">
+        コード：
+    </sys:String>
+    <sys:String x:Key="SysMsg">
+        システムメッセージ：
+    </sys:String>
+
+    <!--
+        Attention:
+        DO NOT USE ANY Indentation in Preserve Mode, Please!
+    -->
+
+    <sys:String x:Key="HelpText" xml:space="preserve">
+このアプリは起動時にコンソール引数を使用できるようになりました！&#10;&#10;-a&#9;--auto&#9;&#9;自動認証。&#10;-h&#9;--hide&#9;&#9;非表示モードで実行 (-autoと一緒に使用するだけ可能)。&#10;-e&#9;--expact&#9;&#9;実験性認証。&#10;-?&#9;--help&#9;&#9;この説明ダイアログボックスを表示する。
+    </sys:String>
+    <sys:String x:Key="DonateTextConverted" xml:space="preserve">
+おめでとう！ &#10;&#10;Windows 10 エディション変換成功。
+    </sys:String>
+    <sys:String x:Key="DonateTextActivated" xml:space="preserve">
+おめでとう！ &#10;&#10;Windows 10 認証成功。
+    </sys:String>
+    <sys:String x:Key="UpdateText" xml:space="preserve">
+クラウドモエ Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;最新バージョンにアップデートしてください。
+    </sys:String>
+    <sys:String x:Key="UpdateMustText" xml:space="preserve">
+クラウドモエ Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;アプリが古すぎるため、最新バージョンにアップデートしてから利用ください。
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-0" xml:space="preserve">
+Windows10ライセンス認証にはインターネットを通じてキーを取得する必要があります :)
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1" xml:space="preserve">
+以前のキーをアンインストールできません :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.1" xml:space="preserve">
+キーをインストールできません、選択または入力されたエディションが間違っているかもしれません :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.2" xml:space="preserve">
+エディションコードを取得できません :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-2" xml:space="preserve">
+キーをインストールできません、選択または入力されたエディションが間違っているかもしれません :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-3" xml:space="preserve">
+タイムアウト，選択または入力されたエディションが間違っているかもしれません :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-4" xml:space="preserve">
+認証失敗。 :( &#10;多分: &#10;1. このエディション/バージョンの Windows はデジタルライセンス認証が適用しない。 &#10;2. マイクロソフトの認証サーバーに接続できません。 &#10;3. その他。 &#10;&#10;暫くお待ちくださいまたはあとでもう一度やり直してください。 &#10;
+    </sys:String>
+</ResourceDictionary>
