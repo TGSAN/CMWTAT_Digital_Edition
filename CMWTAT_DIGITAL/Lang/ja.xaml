@@ -3,7 +3,7 @@
     <!--FontFamily Dictionary-->
     
     <FontFamily x:Key="Font">
-        Microsoft YaHei UI
+        Yu Gothic UI
     </FontFamily>
     
     <!--String Dictionary-->
@@ -30,7 +30,7 @@
         無視する
     </sys:String>
     <sys:String x:Key="TitleName">
-        クラウドモエ Windows 10 デジタルライセンス認証アプリ
+        雲萌 Windows 10 デジタルライセンス認証アプリ
     </sys:String>
     <sys:String x:Key="AppName">
         CMWTAT Digital Edition V2
@@ -69,7 +69,7 @@
         コンプリート
     </sys:String>
     <sys:String x:Key="notifyIconTitle">
-        クラウドモエ Windows 10 認証アプリ V2
+        雲萌 Windows 10 認証アプリ V2
     </sys:String>
     <sys:String x:Key="Running">
         実行中。
@@ -174,10 +174,10 @@
 おめでとう！ &#10;&#10;Windows 10 認証成功。
     </sys:String>
     <sys:String x:Key="UpdateText" xml:space="preserve">
-クラウドモエ Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;最新バージョンにアップデートしてください。
+雲萌 Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;最新バージョンにアップデートしてください。
     </sys:String>
     <sys:String x:Key="UpdateMustText" xml:space="preserve">
-クラウドモエ Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;アプリが古すぎるため、最新バージョンにアップデートしてから利用ください。
+雲萌 Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;アプリが古すぎるため、最新バージョンにアップデートしてから利用ください。
     </sys:String>
     <sys:String x:Key="ErrorMsg-0" xml:space="preserve">
 Windows10ライセンス認証にはインターネットを通じてキーを取得する必要があります :)
