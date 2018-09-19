@@ -84,7 +84,7 @@
         システムエディション
     </sys:String>
     <sys:String x:Key="May_be_not_be_supported">
-        あなたのシステムエディションが判別できません，対応していないかもしれません。
+        あなたのシステムエディションが判別できません、対応していないかもしれません。
     </sys:String>
     <sys:String x:Key="Only_find_experimental">
         このシステムエディションに実験性オプションしか取れません、認証成功の可能性は極めて低い。
@@ -96,10 +96,10 @@
         あなたのシステムエディションは対応していないかもしれません。アプリは終了する。
     </sys:String>
     <sys:String x:Key="notify_Disconnect_to_server_exit">
-        サーバーに接続できません，インターネット接続を確認するまたは後で試してください，アプリは終了します。
+        サーバーに接続できません、インターネット接続を確認するまたは後で試してください、アプリは終了します。
     </sys:String>
     <sys:String x:Key="Disconnect_to_server_exit">
-        サーバーに接続できません，インターネット接続を確認するまたは後で試してください，アプリは終了します。
+        サーバーに接続できません、インターネット接続を確認するまたは後で試してください、アプリは終了します。
     </sys:String>
     <sys:String x:Key="RunInstall_Converting">
         変換中
