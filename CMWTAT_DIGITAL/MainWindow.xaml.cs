@@ -89,6 +89,7 @@ namespace CMWTAT_DIGITAL
 
         public void ExportTempFile()
         {
+
             //string tempfile = System.IO.Path.GetTempPath() + @"CMWTAT_DIGITAL\";
 
             //if (tempfile.EndsWith(@"\"))
@@ -96,7 +97,10 @@ namespace CMWTAT_DIGITAL
             //    tempfile = tempfile.Remove(tempfile.Length - 1, 1);
             //}
 
-            if (!Directory.Exists(tempfile))
+            if (Directory.Exists(tempfile))
+            {
+                DelectTempFile();
+            } else
             {
                 Directory.CreateDirectory(tempfile);
             }
@@ -106,6 +110,11 @@ namespace CMWTAT_DIGITAL
 
             temp = CMWTAT_DIGITAL.Properties.Resources.gatherosstate;
             fileStream = new System.IO.FileStream(tempfile + "gatherosstate" + ".exe", System.IO.FileMode.CreateNew);
+            fileStream.Write(temp, 0, (int)(temp.Length));
+            fileStream.Close();
+
+            temp = CMWTAT_DIGITAL.Properties.Resources.gatherosstateltsc;
+            fileStream = new System.IO.FileStream(tempfile + "gatherosstateltsc" + ".exe", System.IO.FileMode.CreateNew);
             fileStream.Write(temp, 0, (int)(temp.Length));
             fileStream.Close();
 
@@ -388,7 +397,7 @@ namespace CMWTAT_DIGITAL
         private void LoadOSList()
         {
 
-            int is_selected = 0; //是否已经自动选择,0未选择，1普通模式，2实验模式
+            int is_selected = 0; //是否已经自动选择,0未选择，1普通模式，2实验模式，3离线KMS模式
 
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
@@ -400,14 +409,14 @@ namespace CMWTAT_DIGITAL
                 string json;
                 try
                 {
-                    json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=1&ver=2"); // 主要服务器
+                    json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=1&ver=3"); // 主要服务器
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("MainServer:" + MainServerDomain + " is not working.");
                     Console.WriteLine("Error Message:" + e.Message);
                     Console.WriteLine("Ready to use BackupServer:" + BackupServerDomain);
-                    json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=1&ver=2"); // 备用服务器
+                    json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=1&ver=3"); // 备用服务器
                 }
                 JObject jsonobj = JObject.Parse(json);
                 List<Frequency> list = new List<Frequency>();
@@ -420,6 +429,7 @@ namespace CMWTAT_DIGITAL
                     freq.DisplayOS = jsonobj["OS"][i].ToString();
 
                     //按照优先级判断，如果已经自动选择则忽略新的
+                    //选择带版本号
                     if (String.Equals(jsonobj["OS"][i].ToString(), SystemEdition + OSVersionInfo.BuildVersion, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//jsonobj["OS"][i].ToString() == SystemEdition + OSVersionInfo.BuildVersion
                     {
                         now_os_index = i;
@@ -427,6 +437,15 @@ namespace CMWTAT_DIGITAL
                         is_selected = 1;
                     }
 
+                    //选择带版本号Offline-KMS
+                    if (String.Equals(jsonobj["OS"][i].ToString(), "(Offline-KMS) " + SystemEdition + OSVersionInfo.BuildVersion, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//旧的方法：jsonobj["OS"][i].ToString() == "(Experimental) " + SystemEdition，新方法忽略大小写并提升效率
+                    {
+                        now_os_index = i;
+                        checked_os = "(Offline-KMS) " + SystemEdition + OSVersionInfo.BuildVersion;
+                        is_selected = 3;
+                    }
+
+                    //选择不带版本号
                     if (String.Equals(jsonobj["OS"][i].ToString(), SystemEdition, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//jsonobj["OS"][i].ToString() == SystemEdition
                     {
                         now_os_index = i;
@@ -434,6 +453,15 @@ namespace CMWTAT_DIGITAL
                         is_selected = 1;
                     }
 
+                    //选择不带版本号Offline-KMS
+                    if (String.Equals(jsonobj["OS"][i].ToString(), "(Offline-KMS) " + SystemEdition, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//旧的方法：jsonobj["OS"][i].ToString() == "(Experimental) " + SystemEdition，新方法忽略大小写并提升效率
+                    {
+                        now_os_index = i;
+                        checked_os = "(Offline-KMS) " + SystemEdition;
+                        is_selected = 3;
+                    }
+
+                    //选择不带版本号实验
                     if (String.Equals(jsonobj["OS"][i].ToString(), "(Experimental) " + SystemEdition, StringComparison.CurrentCultureIgnoreCase) && is_selected == 0)//旧的方法：jsonobj["OS"][i].ToString() == "(Experimental) " + SystemEdition，新方法忽略大小写并提升效率
                     {
                         now_os_index = i;
@@ -456,9 +484,16 @@ namespace CMWTAT_DIGITAL
                     }
                     else if (is_selected == 2)//只找到实验性
                     {
-                        this.SystemEditionText.SelectedIndex = 0;
+                        this.SystemEditionText.SelectedIndex = now_os_index;
                         this.DialogWithOKToCloseDialogTitle.Text = (string)this.Resources["Attention"];
                         this.DialogWithOKToCloseDialogText.Text = (string)this.Resources["Only_find_experimental"] + "\r\n(" + (string)this.Resources["System_Edition"] + ": " + SystemEdition + OSVersionInfo.BuildVersion + ")";
+                        this.DialogWithOKToCloseDialog.IsOpen = true;
+                    }
+                    else if (is_selected == 3)//只找到长期KMS
+                    {
+                        this.SystemEditionText.SelectedIndex = now_os_index;
+                        this.DialogWithOKToCloseDialogTitle.Text = (string)this.Resources["Attention"];
+                        this.DialogWithOKToCloseDialogText.Text = (string)this.Resources["Only_find_ltok"] + "\r\n(" + (string)this.Resources["System_Edition"] + ": " + SystemEdition + OSVersionInfo.BuildVersion + ")";
                         this.DialogWithOKToCloseDialog.IsOpen = true;
                     }
                     else
@@ -654,14 +689,14 @@ namespace CMWTAT_DIGITAL
                     string json;
                     try
                     {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=2"); // 主要服务器
+                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=3"); // 主要服务器
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine("MainServer:" + MainServerDomain + " is not working.");
                         Console.WriteLine("Error Message:" + e.Message);
                         Console.WriteLine("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=2"); // 备用服务器
+                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=3"); // 备用服务器
                     }
                     JObject jsonobj = JObject.Parse(json);
                     List<Frequency> list = new List<Frequency>();
@@ -722,8 +757,8 @@ namespace CMWTAT_DIGITAL
                 code = "-1";
                 msg = (string)this.Resources["ErrorMsg-1"]; // "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
             }
-            //string runend = RunCScript(slmgr_self, "-upk").Trim();
-            EndLine:;
+        //string runend = RunCScript(slmgr_self, "-upk").Trim();
+        EndLine:;
             if (code != "200")
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
@@ -769,6 +804,7 @@ namespace CMWTAT_DIGITAL
 
         private void RunAct()
         {
+            bool is_not_network_to_act = false; //是否无法联网稍后激活
             ExportTempFile();
             //释放文件
             actbtn.Dispatcher.Invoke(new Action(() =>
@@ -785,7 +821,7 @@ namespace CMWTAT_DIGITAL
             string sku = "0";
             string msg = "Unknow Error!";
             string system = "";
-            string mode = "1"; //1：普通（SYS、SKU、KEY完全）；2.需要获取SKU（SYS、KEY）；3.手动输入KEY
+            string mode = "1"; //1：普通（SYS、SKU、KEY完全）；2.需要获取SKU（SYS、KEY）；3.手动输入KEY；4.普通OfflineKMS（SYS、SKU、KEY完全）
 
             string slmgr = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\slmgr.vbs";
 
@@ -817,14 +853,14 @@ namespace CMWTAT_DIGITAL
                     string json;
                     try
                     {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=2"); // 主要服务器
+                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=3"); // 主要服务器
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine("MainServer:" + MainServerDomain + " is not working.");
                         Console.WriteLine("Error Message:" + e.Message);
                         Console.WriteLine("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=2"); // 备用服务器
+                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=3"); // 备用服务器
                     }
                     JObject jsonobj = JObject.Parse(json);
                     List<Frequency> list = new List<Frequency>();
@@ -832,6 +868,21 @@ namespace CMWTAT_DIGITAL
                     key = jsonobj[system]["key"].ToString();
                     sku = jsonobj[system]["sku"].ToString();
                     Console.WriteLine("Edition:" + system + "\r\nKEY:" + key + "\r\nSKU:" + sku);
+
+                    string selecos = "";
+                    // 获取当前选择的选择的文本
+                    actbtn.Dispatcher.Invoke(new Action(() =>
+                    {
+                        selecos = SystemEditionText.Text;
+                    }));
+
+                    Console.WriteLine("Selected OS: " + selecos);
+
+                    if (selecos.ToUpper().StartsWith("(Offline-KMS)".ToUpper()))
+                    {
+                        Console.WriteLine("Switch Mode Offline-KMS");
+                        mode = "4";
+                    }
 
                     if (sku == "unknow")
                     {
@@ -855,6 +906,7 @@ namespace CMWTAT_DIGITAL
                     key = this.SystemEditionTextInput.Text;
                 }));
                 mode = "3";
+                sku = "unknow";
 
             }
 
@@ -872,7 +924,7 @@ namespace CMWTAT_DIGITAL
 
                 RunCScript(slmgr_self, "-ckms").Trim();
 
-                if (mode == "2" || mode == "3")
+                if (sku == "unknow")//if (mode == "2" || mode == "3") //获取SKU
                 {
 
                     actbtn.Dispatcher.Invoke(new Action(() =>
@@ -932,7 +984,19 @@ namespace CMWTAT_DIGITAL
                     ShowBallSameDig();
                 }));
 
-                RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Retail"" /f");
+                if (mode == "4")
+                {
+                    //长期KMS
+                    Console.WriteLine(RunCScript(slmgr_self, "-skms 0.0.0.0").Trim());
+                    //if (runend.EndsWith("successfully."))
+                    //{
+                    //}
+                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Volume:GVLK"" /f");
+                }
+                else
+                {
+                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Retail"" /f");
+                }
                 RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Kernel-ProductInfo"" /t REG_DWORD /d " + sku + " /f");
                 RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Security-SPP-GenuineLocalStatus"" /t REG_DWORD /d 1 /f");
                 RunCMD(@"reg add ""HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"" /v ""C:\gatherosstate.exe"" /d ""~ WIN7RTM"" /f");
@@ -956,7 +1020,15 @@ namespace CMWTAT_DIGITAL
                         ShowBallSameDig();
                     }));
 
-                    RunCMD(tempfile + "gatherosstate.exe");
+                    if (mode == "4")
+                    {
+                        //长期KMS
+                        RunCMD(tempfile + "gatherosstateltsc.exe");
+                    }
+                    else
+                    {
+                        RunCMD(tempfile + "gatherosstate.exe");
+                    }
 
                     //旧的位置
                     //RunCMD(System.AppDomain.CurrentDomain.BaseDirectory + "gatherosstate.exe"); tempfile
@@ -995,8 +1067,12 @@ namespace CMWTAT_DIGITAL
 
                         runend = RunCScript(slmgr_self, "-ato").Trim();
                         Console.WriteLine(runend);
-                        if (runend.EndsWith("060' to display the error text.") || runend.EndsWith("successfully.") || runend.EndsWith("to display the error text."))
+                        if (runend.EndsWith("successfully.") || runend.Contains("0xC004F074") || runend.Contains("0xC004C003")) //0xC004F074是KMS（19年）长期激活会出的提示，Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
                         {
+                            if (runend.Contains("0xC004C003"))
+                            {
+                                is_not_network_to_act = true;
+                            }
                             code = "200";
                         }
                         else
@@ -1022,8 +1098,8 @@ namespace CMWTAT_DIGITAL
                 code = "-1";
                 msg = (string)this.Resources["ErrorMsg-1"]; // "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
             }
-            //string runend = RunCScript(slmgr_self, "-upk").Trim();
-            EndLine:;
+        //string runend = RunCScript(slmgr_self, "-upk").Trim();
+        EndLine:;
             if (code != "200")
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
@@ -1053,7 +1129,15 @@ namespace CMWTAT_DIGITAL
                     this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; //提示激活中
                     this.DialogWithOKToCloseDialogDonate.IsOpen = true;
                     this.DialogWithOKToCloseDialogDonateTitle.Text = (string)this.Resources["CompleteTitle"]; //完成标题
-                    this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextActivated"]; //完成转换内容
+                    if (is_not_network_to_act == true)
+                    {
+                        this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextWillActivated"]; //即将激活内容
+                    }
+                    else
+                    {
+                        this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextActivated"]; //完成激活内容
+                    }
+
                     if (hiderun == true && autoact == true)
                     {
                         int tipShowMilliseconds = 0;

@@ -1,13 +1,17 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-    
+
+    <!--
+    Version: 2.4.0.0
+    -->
+
     <!--FontFamily Dictionary-->
-    
+
     <FontFamily x:Key="Font">
         Microsoft YaHei UI
     </FontFamily>
-    
+
     <!--String Dictionary-->
-    
+
     <sys:String x:Key="OK">
         好
     </sys:String>
@@ -199,5 +203,11 @@
     </sys:String>
     <sys:String x:Key="ErrorMsg-4" xml:space="preserve">
 激活失败。 :( &#10;可能因为: &#10;1. 此版本/类型的 Windows 不支持数字权利（数字许可证）方式激活。 &#10;2. 无法连接到微软Windows激活服务器。 &#10;3. 其它未知问题。 &#10;&#10;你可以尝试稍等片刻或者稍后重试。 &#10;
+    </sys:String>
+    <sys:String x:Key="Only_find_ltok" xml:space="preserve">
+只找到用于此版本系统的长期离线KMS（批量激活）选项。&#10;这表示您将不能在下次重装系统后自动激活。&#10;不过无需担心，这不同于传统的KMS激活方式（离线状态下可以保持激活180天）&#10;长期离线KMS（Offline-KMS）即使不联网也可以保持激活长达19年！
+    </sys:String>
+    <sys:String x:Key="DonateTextWillActivated" xml:space="preserve">
+祝贺！ &#10;&#10;Windows 10 已经快要激活成功了。&#10;不过似乎Windows无法连接到微软激活服务器，&#10;当下次连接上服务器时系统将会自动激活。
     </sys:String>
 </ResourceDictionary>

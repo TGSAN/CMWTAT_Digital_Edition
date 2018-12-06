@@ -33,6 +33,8 @@ namespace CMWTAT_DIGITAL
 
                 new AssemblyName(args.Name).Name + ".dll";
 
+                Console.WriteLine("Load Assembly: " + resourceName);
+
                 using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
                     Byte[] assemblyData = new Byte[stream.Length];
@@ -43,12 +45,6 @@ namespace CMWTAT_DIGITAL
                 }
             };
 
-            //if (startup_args.Length == 0)
-            //{
-            //    //MessageBox.Show("ARGS NULL");
-            //    //Console.WriteLine("CMWTAT Digital Edition V2");
-            //    //Console.WriteLine("This application can use console args.");
-            //}
             foreach (string arg in startup_args)
             {
                 Console.WriteLine("arg: " + arg);
