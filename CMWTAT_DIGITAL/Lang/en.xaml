@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--
-    Version: 2.4.0.0
+    Version: 2.5.0.0
     -->
 
     <!--FontFamily Dictionary-->
@@ -169,7 +169,7 @@
     -->
 
     <sys:String x:Key="HelpText" xml:space="preserve">
-This application now supports the use of console args to startup!&#10;&#10;-a&#9;--auto&#9;&#9;Auto activate.&#10;-h&#9;--hide&#9;&#9;Run with hide mode (Only be worked with -auto).&#10;-e&#9;--expact&#9;&#9;Experimental activation.&#10;-?&#9;--help&#9;&#9;Show this help Dialog.
+This application now supports the use of console args to startup!&#10;&#10;-a&#9;--auto&#9;&#9;Auto activate.&#10;-h&#9;--hide&#9;&#9;Run with hide mode (Only be worked with -auto).&#10;-e&#9;--expact&#9;&#9;Experimental activation.&#10;-l&#9;--log&#9;&#9;Output log to file.&#10;-?&#9;--help&#9;&#9;Show this help Dialog.
     </sys:String>
     <sys:String x:Key="DonateTextConverted" xml:space="preserve">
 Congratulation! &#10;&#10;Windows 10 has been successful converted.

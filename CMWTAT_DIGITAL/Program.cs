@@ -15,6 +15,7 @@ namespace CMWTAT_DIGITAL
         public static bool autoact = false;
         public static bool hiderun = false;
         public static bool expact = false;
+        public static bool log2file = false;
         public static bool showhelp = false;
 
         /// <summary>
@@ -27,21 +28,49 @@ namespace CMWTAT_DIGITAL
         public static void Main(string[] startup_args)
         {
             //添加程序集解析事件  
+            //AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            //{
+            //    String resourceName = "CMWTAT_DIGITAL.Res." +
+
+            //    new AssemblyName(args.Name).Name + ".dll";
+
+            //    Console.WriteLine("Load Assembly: " + resourceName);
+
+            //    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            //    {
+            //        if (stream == null)
+            //            return null;
+
+            //        Byte[] assemblyData = new Byte[stream.Length];
+
+            //        stream.Read(assemblyData, 0, assemblyData.Length);
+
+            //        return Assembly.Load(assemblyData);
+            //    }
+            //};
+            var loadedAssemblies = new Dictionary<string, Assembly>();
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 String resourceName = "CMWTAT_DIGITAL.Res." +
-
                 new AssemblyName(args.Name).Name + ".dll";
 
-                Console.WriteLine("Load Assembly: " + resourceName);
+                //Must return the EXACT same assembly, do not reload from a new stream
+                if (loadedAssemblies.TryGetValue(resourceName, out Assembly loadedAssembly))
+                {
+                    return loadedAssembly;
+                }
 
                 using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
+                    if (stream == null)
+                        return null;
                     Byte[] assemblyData = new Byte[stream.Length];
 
                     stream.Read(assemblyData, 0, assemblyData.Length);
 
-                    return Assembly.Load(assemblyData);
+                    var assembly = Assembly.Load(assemblyData);
+                    loadedAssemblies[resourceName] = assembly;
+                    return assembly;
                 }
             };
 
@@ -63,9 +92,14 @@ namespace CMWTAT_DIGITAL
                     Console.WriteLine("EXPACT: True");
                     expact = true;
                 }
+                if (arg == "-l" || arg == "--log")
+                {
+                    Console.WriteLine("LOG: True");
+                    log2file = true;
+                }
                 if (arg == "-?" || arg == "--help")
                 {
-                    Console.WriteLine("EXPACT: True");
+                    Console.WriteLine("SHOWHELP: True");
                     showhelp = true;
                 }
             }

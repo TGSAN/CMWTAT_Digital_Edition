@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--
-    Version: 2.4.0.0
+    Version: 2.5.0.0
     -->
 
     <!--FontFamily Dictionary-->
@@ -169,7 +169,7 @@
     -->
 
     <sys:String x:Key="HelpText" xml:space="preserve">
-这个应用现已支持通过控制台参数启动！&#10;&#10;-a&#9;--auto&#9;&#9;自动激活。&#10;-h&#9;--hide&#9;&#9;隐藏模式运行 (只能与 -auto 一起使用)。&#10;-e&#9;--expact&#9;&#9;实验性激活。&#10;-?&#9;--help&#9;&#9;显示此说明对话框。
+这个应用现已支持通过控制台参数启动！&#10;&#10;-a&#9;--auto&#9;&#9;自动激活。&#10;-h&#9;--hide&#9;&#9;隐藏模式运行 (只能与 -auto 一起使用)。&#10;-e&#9;--expact&#9;实验性激活。&#10;-l&#9;--log&#9;&#9;输出日志到文件。&#10;-?&#9;--help&#9;&#9;显示此说明对话框。
     </sys:String>
     <sys:String x:Key="DonateTextConverted" xml:space="preserve">
 祝贺！ &#10;&#10;Windows 10 已经成功转换。

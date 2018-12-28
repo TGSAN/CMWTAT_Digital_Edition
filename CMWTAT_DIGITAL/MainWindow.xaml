@@ -19,15 +19,17 @@
         Icon="CMWTAT.ico"
         Closing="Window_Closing"
         FontFamily="{DynamicResource Font}"
+        Activated="Window_Activated"
+        WindowStartupLocation="CenterScreen"
         >
     <!--FontFamily="{DynamicResource MaterialDesignFont}"-->
     <Grid>
         <Grid Margin="30,30,30,30" VerticalAlignment="Center">
             <StackPanel>
-                <materialDesign:Card Padding="30" Margin="0,0,0,0">
+                <materialDesign:Card Padding="30" Margin="0,0,0,0" materialDesign:ShadowAssist.ShadowDepth="Depth3" UniformCornerRadius="8">
                     <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignTitleTextBlock}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
                 </materialDesign:Card>
-                <materialDesign:Card Padding="30,30" Margin="0,30,0,0">
+                <materialDesign:Card Padding="30,30" Margin="0,30,0,0" materialDesign:ShadowAssist.ShadowDepth="Depth3" UniformCornerRadius="8">
                     <StackPanel>
                         <Grid>
                             <ComboBox x:Name="SystemEditionText" DisplayMemberPath="DisplayOS" VerticalAlignment="Center" Visibility="Visible"/>
@@ -48,15 +50,19 @@
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:Card>
-                <Button FontFamily="{DynamicResource Font}" x:Name="actbtn" Content="{DynamicResource Activate_Button}" Margin="0,30,0,0" VerticalAlignment="Top" Click="Activate_Button_Click" Height="65"/>
-                <Button FontFamily="{DynamicResource Font}" x:Name="installbtn" Content="{DynamicResource Convert_versions}" Margin="0,30,0,0" VerticalAlignment="Top" Click="installbtn_Click" Height="65"/>
+                <materialDesign:Card Margin="0,30,0,0" VerticalAlignment="Top" materialDesign:ShadowAssist.ShadowDepth="Depth3" Height="65" UniformCornerRadius="8">
+                    <Button FontFamily="{DynamicResource Font}" x:Name="actbtn" Content="{DynamicResource Activate_Button}" materialDesign:ShadowAssist.ShadowDepth="Depth0" Click="Activate_Button_Click" Margin="0" Height="65" />
+                </materialDesign:Card>
+                <materialDesign:Card Margin="0,30,0,0" VerticalAlignment="Top" materialDesign:ShadowAssist.ShadowDepth="Depth3" Height="65" UniformCornerRadius="8">
+                    <Button FontFamily="{DynamicResource Font}" x:Name="installbtn" Content="{DynamicResource Convert_versions}" materialDesign:ShadowAssist.ShadowDepth="Depth0" Click="installbtn_Click" Margin="0" Height="65"/>
+                </materialDesign:Card>
             </StackPanel>
         </Grid>
         <Grid x:Name="DialogHostGrid" Visibility="Hidden">
             <materialDesign:DialogHost x:Name="DialogWait" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="32,24,32,24">
                                     <ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />
@@ -70,7 +76,7 @@
             <materialDesign:DialogHost x:Name="DialogActProg" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="32,24,32,24">
                                     <ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />
@@ -84,7 +90,7 @@
             <materialDesign:DialogHost x:Name="DialogWithCancel" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="24,24,24,8">
                                     <ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />
@@ -104,7 +110,7 @@
             <materialDesign:DialogHost x:Name="DialogWithOK" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="16,16,16,8">
                                     <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
@@ -125,7 +131,7 @@
             <materialDesign:DialogHost x:Name="DialogHelp" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="16,16,16,8">
                                     <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
@@ -146,7 +152,7 @@
             <materialDesign:DialogHost x:Name="DialogWithExit" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="16,16,16,8">
                                     <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
@@ -166,7 +172,7 @@
             <materialDesign:DialogHost x:Name="DialogWithOKToCloseDialog" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="16,16,16,8">
                                     <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
@@ -186,7 +192,7 @@
             <materialDesign:DialogHost x:Name="DialogWithOKToCloseDialogDonate" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="16,16,16,8">
                                     <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
@@ -207,7 +213,7 @@
             <materialDesign:DialogHost x:Name="DialogUpdate" IsOpen="False">
                 <materialDesign:DialogHost.DialogContent>
                     <Grid>
-                        <materialDesign:Card>
+                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
                             <StackPanel>
                                 <StackPanel Margin="16,16,16,8">
                                     <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->

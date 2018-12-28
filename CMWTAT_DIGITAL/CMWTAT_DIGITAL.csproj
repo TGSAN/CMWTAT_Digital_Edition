@@ -67,7 +67,7 @@
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.0.1205, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.0.1205\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -78,6 +78,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.InteropServices.WindowsRuntime" />
+    <Reference Include="System.Runtime.WindowsRuntime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -161,9 +162,15 @@
     <Resource Include="CMWTAT.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Res\MaterialDesignColors.dll" />
-    <EmbeddedResource Include="Res\MaterialDesignThemes.Wpf.dll" />
-    <EmbeddedResource Include="Res\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll">
+      <Link>Res\MaterialDesignColors.dll</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\packages\MaterialDesignThemes.2.5.0.1205\lib\net45\MaterialDesignThemes.Wpf.dll">
+      <Link>Res\MaterialDesignThemes.Wpf.dll</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll">
+      <Link>Res\Newtonsoft.Json.dll</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
