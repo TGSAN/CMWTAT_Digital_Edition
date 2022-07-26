@@ -4,9 +4,9 @@
 
 # CloudMoe Windows 10 Activation Toolkit Digital Edition
 
-This toolkit can activate your windows 10 use digital license.
+This toolkit can activate your Windows 10 and Windows 11 use digital license.
 
-一款使用`CSharp`编写的 `Windows 10` 数字权利激活工具。
+一款使用`CSharp`编写的 `Windows 10` 和 `Windows 11` 数字权利激活工具。
 
 ![UI界面截图][UI_image]
 
@@ -14,7 +14,7 @@ This toolkit can activate your windows 10 use digital license.
 
 ## Getting started 入门
 
-### 使用自动模式激活 `Windows 10`
+### 使用自动模式激活 `Windows 10` 或 `Windows 11`
 
 ##### English Version
 
