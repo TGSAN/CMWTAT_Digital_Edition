@@ -88,25 +88,10 @@ namespace CMWTAT_DIGITAL
 
         public void DelectTempFile()
         {
-            //string tempfile = System.IO.Path.GetTempPath() + @"CMWTAT_DIGITAL\";
             if (Directory.Exists(tempfile))
             {
                 try
                 {
-                    //DirectoryInfo dir = new DirectoryInfo(srcPath);
-                    //FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();  //返回目录中所有文件和子目录
-                    //foreach (FileSystemInfo i in fileinfo)
-                    //{
-                    //    if (i is DirectoryInfo)            //判断是否文件夹
-                    //    {
-                    //        DirectoryInfo subdir = new DirectoryInfo(i.FullName);
-                    //        subdir.Delete(true);          //删除子目录和文件
-                    //    }
-                    //    else
-                    //    {
-                    //        File.Delete(i.FullName);      //删除指定文件
-                    //    }
-                    //}
                     FileAttributes attr = File.GetAttributes(tempfile);
                     if (attr == FileAttributes.Directory)
                     {
@@ -128,14 +113,6 @@ namespace CMWTAT_DIGITAL
 
         public void ExportTempFile()
         {
-
-            //string tempfile = System.IO.Path.GetTempPath() + @"CMWTAT_DIGITAL\";
-
-            //if (tempfile.EndsWith(@"\"))
-            //{
-            //    tempfile = tempfile.Remove(tempfile.Length - 1, 1);
-            //}
-
             if (Directory.Exists(tempfile))
             {
                 ConsoleLog("找到已存在的缓存，开始删除");
@@ -143,41 +120,21 @@ namespace CMWTAT_DIGITAL
                 ConsoleLog("删除操作完毕");
                 if (Directory.Exists(tempfile))
                 {
-                    ConsoleLog("检测到文件依旧存在，等待三秒");
-                    Thread.Sleep(3000);
-                }
-                else
-                {
-                    ConsoleLog("确认完毕");
+                    ConsoleLog("[警告] 检测到文件依旧存在");
                 }
             }
 
-            ConsoleLog("开始创建缓存");
-            Directory.CreateDirectory(tempfile);
-            ConsoleLog("创建缓存完毕");
+            ConsoleLog("开始创建缓存目录");
+            if (Directory.Exists(tempfile) == false)
+            {
+                Directory.CreateDirectory(tempfile);
+            }
+            ConsoleLog("创建缓存目录完毕");
 
-            byte[] temp;
-            System.IO.FileStream fileStream;
-
-            temp = CMWTAT_DIGITAL.Properties.Resources.gatherosstate;
-            fileStream = new System.IO.FileStream(tempfile + "gatherosstate" + ".exe", System.IO.FileMode.CreateNew);
-            fileStream.Write(temp, 0, (int)(temp.Length));
-            fileStream.Close();
-
-            temp = CMWTAT_DIGITAL.Properties.Resources.gatherosstateltsc;
-            fileStream = new System.IO.FileStream(tempfile + "gatherosstateltsc" + ".exe", System.IO.FileMode.CreateNew);
-            fileStream.Write(temp, 0, (int)(temp.Length));
-            fileStream.Close();
-
-            temp = CMWTAT_DIGITAL.Properties.Resources.slc;
-            fileStream = new System.IO.FileStream(tempfile + "slc" + ".dll", System.IO.FileMode.CreateNew);
-            fileStream.Write(temp, 0, (int)(temp.Length));
-            fileStream.Close();
-
-            temp = CMWTAT_DIGITAL.Properties.Resources.slmgr;
-            fileStream = new System.IO.FileStream(tempfile + "slmgr" + ".vbs", System.IO.FileMode.CreateNew);
-            fileStream.Write(temp, 0, (int)(temp.Length));
-            fileStream.Close();
+            ConsoleLog("开始写入缓存文件");
+            File.WriteAllBytes(tempfile + "CloudMoeGatherOsState" + ".exe", Properties.Resources.CloudMoeGatherOsState);
+            File.WriteAllBytes(tempfile + "slmgr" + ".vbs", Properties.Resources.slmgr);
+            ConsoleLog("写入缓存文件完毕");
         }
 
         public static string LocalLang = Constants.DefaultLang;
@@ -227,7 +184,9 @@ namespace CMWTAT_DIGITAL
 
         private static void ApplyBase(bool isDark)
         {
-            new PaletteHelper().SetLightDark(isDark);
+            var theme = new PaletteHelper().GetTheme();
+            theme.SetBaseTheme(isDark ? Theme.Dark : Theme.Light);
+            new PaletteHelper().SetTheme(theme);
         }
 
         string ProductVersion = "0.0.0.0"; // 存储程序版本
@@ -298,7 +257,6 @@ namespace CMWTAT_DIGITAL
 
         public MainWindow()
         {
-
             CheckWindowsTheme();
 
             ConsoleLog("Windows Theme Mode is: " + WindowsTheme);
@@ -423,6 +381,7 @@ namespace CMWTAT_DIGITAL
             Thread loadthread = new Thread(LoadOSList);
             loadthread.Start();
 
+            CheckWindowsCore();
         }
 
         JArray ositems;
@@ -670,6 +629,17 @@ namespace CMWTAT_DIGITAL
             }
             CheckUpdate(); // 检查更新
         }
+
+        private void CheckWindowsCore()
+        {
+            if (SystemEdition.ToLower().IndexOf("core") == -1)
+            {
+                upgradefullbtn.IsEnabled = false;
+                upgradefullbtn.Visibility = Visibility.Collapsed;
+                this.Height -= 95;
+            }
+        }
+
         private void Activate_Button_Click(object sender, RoutedEventArgs e)
         {
             Thread actthread = new Thread(RunAct);
@@ -687,6 +657,18 @@ namespace CMWTAT_DIGITAL
         {
             Thread installthread = new Thread(RunInstall);
             installthread.Start();
+        }
+        
+        private void upgradefullbtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogUpgradeFullVersion.IsOpen = true;
+        }
+        
+        private void UpgradeFullVersionWindows_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogUpgradeFullVersion.IsOpen = false;
+            Thread upgradethread = new Thread(RunUpgradeFullVersion);
+            upgradethread.Start();
         }
 
         private string GetHttpWebRequest(string url, int timeout = 10000, int retry = 2)
@@ -896,6 +878,25 @@ namespace CMWTAT_DIGITAL
             //清理文件
         }
 
+        private void RunUpgradeFullVersion()
+        {
+            actbtn.Dispatcher.Invoke(new Action(() =>
+            {
+                this.DialogActProg.IsOpen = true;
+                this.activatingtext.Text = (string)this.Resources["RunUpgradeFullVersion_Upgrading"]; //提示升级中
+            }));
+            RunCMD(@"sc start sppsvc");
+            RunCMD(@"sc start wuauserv");
+            RunCLI("ChangePK.exe", ".", "/ProductKey VK7JG-NPHTM-C97JM-9MPGT-3V66T"); // Pro
+            RunCLI("ChangePK.exe", ".", "/ProductKey 2B87N-8KFHP-DKV6R-Y2C8J-PKCKT"); // Pro N
+            RunCLI("ChangePK.exe", ".", "/ProductKey W269N-WFGWX-YVC9B-4J6C9-T83GX"); // KMS Pro
+            RunCLI("ChangePK.exe", ".", "/ProductKey MH37W-N47XK-V7XM9-C7227-GCQG9"); // KMS Pro N
+            actbtn.Dispatcher.Invoke(new Action(() =>
+            {
+                this.DialogActProg.IsOpen = false;
+            }));
+        }
+
         private void ShowBallSameDig()
         {
             actbtn.Dispatcher.Invoke(new Action(() =>
@@ -1056,6 +1057,8 @@ namespace CMWTAT_DIGITAL
                     RunCMD(@"del /F /Q %systemroot%\system32\spp\store\2.0\tokens.dat");
                     RunCMD(@"del /F /Q %systemroot%\system32\spp\store\2.0\data.dat");
                     RunCMD(@"del /F /Q %systemroot%\system32\spp\store\2.0\cache\cache.dat");
+
+                    RunCMD(@"sc start sppsvc");
                 }
 
                 if (sku == "unknow")//if (mode == "2" || mode == "3") //获取SKU
@@ -1137,7 +1140,6 @@ namespace CMWTAT_DIGITAL
 
                 RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Kernel-ProductInfo"" /t REG_DWORD /d " + sku + " /f");
                 RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Security-SPP-GenuineLocalStatus"" /t REG_DWORD /d 1 /f");
-                RunCMD(@"reg add ""HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"" /v ""C:\gatherosstate.exe"" /d ""~ WIN7RTM"" /f");
 
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
@@ -1162,45 +1164,33 @@ namespace CMWTAT_DIGITAL
                     if (mode == "4")
                     {
                         //长期KMS
-                        RunCLI(tempfile + "gatherosstateltsc.exe");
+                        RunCLI(tempfile + "CloudMoeGatherOsState.exe", tempfile, "GVLK");
                         ConsoleLog("进入下一步");
                     }
                     else
                     {
-                        RunCLI(tempfile + "gatherosstate.exe");
+                        RunCLI(tempfile + "CloudMoeGatherOsState.exe", tempfile, "Retail");
                         ConsoleLog("进入下一步");
                     }
 
-                    //旧的位置
-                    //RunCMD(System.AppDomain.CurrentDomain.BaseDirectory + "gatherosstate.exe"); tempfile
-                    int try_max_count = 6;
-                    for (int i = 0; i < try_max_count + 1 && !File.Exists(tempfile + "GenuineTicket.xml"); i++) //旧的位置： for (int i = 0; i < 3 || !File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "GenuineTicket.xml"); i++)
+                    int try_max_count = 30;
+                    for (int i = 0; i < try_max_count + 1 && !File.Exists(tempfile + "GenuineTicket.xml"); i++)
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(1000);
                         ConsoleLog($"检查许可证 重试 {i}/{try_max_count}");
                     }
 
-                    if (File.Exists(tempfile + "GenuineTicket.xml")) //旧的位置： if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "GenuineTicket.xml"))
+                    if (File.Exists(tempfile + "GenuineTicket.xml"))
                     {
-
-                        //actbtn.Dispatcher.Invoke(new Action(() =>
-                        //{
-                        //    this.activatingtext.Text = (string)this.Resources["RunAct_Cleaning_changes"]; // "Cleaning changes";
-                        //    ShowBallSameDig();
-                        //}));
-
-                        //RunCMD(@"reg delete ""HKLM\SYSTEM\Tokens"" /f");
-                        //RunCMD(@"reg delete ""HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"" /v ""C:\gatherosstate.exe"" /f");
-                        //此处代码移至EndLine
-
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
                             this.activatingtext.Text = (string)this.Resources["RunAct_Getting_digital_license"]; // "Getting digital license";
                             ShowBallSameDig();
                         }));
 
-                        //Wow64EnableWow64FsRedirection(false); // 关闭文件重定向
-                        //RunCMD(Environment.SystemDirectory + @"\ClipUp.exe -v -o -altto " + tempfile);
+                        RunCMD(@"sc start wuauserv");
+                        RunCMD(@"sc start clipsvc");
+
                         RunCMD(@"clipup -v -o -altto " + tempfile);
 
                         actbtn.Dispatcher.Invoke(new Action(() =>
@@ -1210,9 +1200,9 @@ namespace CMWTAT_DIGITAL
                         }));
 
                         runend = RunCScript(slmgr_self, "-ato").Trim();
-                        //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ato").Trim();
+                        
                         ConsoleLog(runend);
-                        if (runend.EndsWith("successfully.") || runend.Contains("0xC004F074") || runend.Contains("0xC004C003")) //0xC004F074是KMS（19年）长期激活会出的提示，Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
+                        if (runend.EndsWith("successfully.") || runend.Contains("0xC004F074") || runend.Contains("0xC004C003")) //0xC004F074是KMS38长期激活会出的提示，Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
                         {
                             if (runend.Contains("0xC004C003"))
                             {
@@ -1255,7 +1245,6 @@ namespace CMWTAT_DIGITAL
                 }));
 
                 RunCMD(@"reg delete ""HKLM\SYSTEM\Tokens"" /f");
-                RunCMD(@"reg delete ""HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"" /v ""C:\gatherosstate.exe"" /f");
             }
             catch
             {
@@ -1337,7 +1326,7 @@ namespace CMWTAT_DIGITAL
             //System.Diagnostics.Process.Start(var);
         }
 
-        public static string RunCLI(string path, string var = "")
+        public static string RunCLI(string path, string wdPath, string var = "")
         {
             ConsoleLog(path + " " + var);
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
@@ -1351,12 +1340,13 @@ namespace CMWTAT_DIGITAL
                 myProcess.StartInfo.RedirectStandardOutput = true;//由调用程序获取输出信息 
                 myProcess.StartInfo.CreateNoWindow = true;//不显示程序窗口 
                 myProcess.StartInfo.Arguments = var;
+                myProcess.StartInfo.WorkingDirectory = wdPath;
                 //myProcess.Arguments = "/c chcp 65001 > nul && cmd /c \"" + PHPRuntimePath + "\" \"" + path + "\" " + var;
                 //myProcess.Arguments = "/c " & Commands
                 //myProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
                 myProcess.Start();
                 myProcess.WaitForExit(60 * 1000);
-                System.IO.StreamReader myStreamReader = myProcess.StandardOutput;
+                StreamReader myStreamReader = myProcess.StandardOutput;
                 string myString = myStreamReader.ReadToEnd();
                 myProcess.Close();
                 ConsoleLog(myString.Trim());
@@ -1372,8 +1362,8 @@ namespace CMWTAT_DIGITAL
         public static string RunCMD(string var)
         {
             ConsoleLog(var);
-            Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-                                                 //执行命令行函数
+            Wow64EnableWow64FsRedirection(false); //关闭文件重定向
+            //执行命令行函数
             try
             {
                 System.Diagnostics.Process myProcess = new System.Diagnostics.Process();
@@ -1404,7 +1394,7 @@ namespace CMWTAT_DIGITAL
         {
             ConsoleLog("CScript" + " " + "//Nologo \"" + path + "\" " + var);
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-                                                 //执行命令行函数
+            //执行命令行函数
             try
             {
                 System.Diagnostics.Process myProcess = new System.Diagnostics.Process();
@@ -1434,7 +1424,7 @@ namespace CMWTAT_DIGITAL
         {
             ConsoleLog("Geting SKU");
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-                                                 //执行命令行函数
+            //执行命令行函数
             try
             {
                 System.Diagnostics.Process myProcess = new System.Diagnostics.Process();
@@ -1493,24 +1483,27 @@ namespace CMWTAT_DIGITAL
             //防止初始化前访问null出错
             try
             {
-                string pattern = @"^[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}$";
-                if (is_auto == false)
-                {
-                    if (CMWTAT_DIGITAL.Domain.IsSN.IsMatch((SystemEditionTextInput.Text ?? "").ToString(), pattern))
+                if (actbtn != null)
+                { 
+                    string pattern = @"^[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}$";
+                    if (is_auto == false)
+                    {
+                        if (CMWTAT_DIGITAL.Domain.IsSN.IsMatch((SystemEditionTextInput.Text ?? "").ToString(), pattern))
+                        {
+                            actbtn.IsEnabled = true;
+                            installbtn.IsEnabled = true;
+                        }
+                        else
+                        {
+                            actbtn.IsEnabled = false;
+                            installbtn.IsEnabled = false;
+                        }
+                    }
+                    else
                     {
                         actbtn.IsEnabled = true;
                         installbtn.IsEnabled = true;
                     }
-                    else
-                    {
-                        actbtn.IsEnabled = false;
-                        installbtn.IsEnabled = false;
-                    }
-                }
-                else
-                {
-                    actbtn.IsEnabled = true;
-                    installbtn.IsEnabled = true;
                 }
             }
             catch { }

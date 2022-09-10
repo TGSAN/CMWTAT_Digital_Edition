@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--
-    Version: 2.5.0.0
+    Version: 2.6.0.0
     -->
 
     <!--FontFamily Dictionary-->
@@ -34,13 +34,17 @@
         無視する
     </sys:String>
     <sys:String x:Key="TitleName">
-        雲萌 Windows 10 デジタルライセンス認証アプリ
+        雲萌 10+ デジタルライセンス認証アプリ
     </sys:String>
     <sys:String x:Key="AppName">
         CMWTAT Digital Edition V2
     </sys:String>
     <sys:String x:Key="UpdateTitle">
         新しいバージョンがあります！
+    </sys:String>
+    <!-- TODO -->
+    <sys:String x:Key="UpgradeFullVersionWindowsTitle">
+        Upgrade to full version of Windows
     </sys:String>
     <sys:String x:Key="CurrentVersion">
         バージョン
@@ -60,6 +64,10 @@
     <sys:String x:Key="Convert_versions">
         エディション変換 (キーをインストールするが、認証しません)
     </sys:String>
+    <!-- TODO -->
+    <sys:String x:Key="Upgrade_full_version">
+        Upgrade to full version of Windows
+    </sys:String>
     <sys:String x:Key="test">
         テストテキスト
     </sys:String>
@@ -73,7 +81,7 @@
         コンプリート
     </sys:String>
     <sys:String x:Key="notifyIconTitle">
-        雲萌 Windows 10 認証アプリ V2
+        雲萌 Windows 10+ 認証アプリ V2
     </sys:String>
     <sys:String x:Key="Running">
         実行中。
@@ -150,6 +158,10 @@
     <sys:String x:Key="RunAct_Getting_digital_license">
         デジタルライセンスを取得中
     </sys:String>
+    <!-- TODO -->
+    <sys:String x:Key="RunUpgradeFullVersion_Upgrading">
+        Upgrading
+    </sys:String>
     <sys:String x:Key="CompleteTitle">
         コンプリート
     </sys:String>
@@ -168,23 +180,27 @@
         DO NOT USE ANY Indentation in Preserve Mode, Please!
     -->
 
+    <!-- TODO -->
+    <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
+You are currently using the core version of Windows, you can use this feature to upgrade to the full version of Windows.&#10;(If the operation does not respond it may be that the current version does not support the upgrade or is in the process of upgrading) &#10;&#10;Note:&#10;This operation is not reversible and once the upgrade is complete you will not be able to roll back to the core version of Windows!&#10;&#10;Are you sure you want to perform an upgrade?
+    </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 このアプリは起動時にコンソール引数を使用できるようになりました！&#10;&#10;-a&#9;--auto&#9;&#9;自動認証。&#10;-h&#9;--hide&#9;&#9;非表示モードで実行 (-autoと一緒に使用するだけ可能)。&#10;-e&#9;--expact&#9;&#9;実験性認証。&#10;-l&#9;--log&#9;&#9;ログをファイルに出力。&#10;-?&#9;--help&#9;&#9;この説明ダイアログボックスを表示する。
     </sys:String>
     <sys:String x:Key="DonateTextConverted" xml:space="preserve">
-おめでとう！ &#10;&#10;Windows 10 エディション変換成功。
+おめでとう！ &#10;&#10;Windows エディション変換成功。
     </sys:String>
     <sys:String x:Key="DonateTextActivated" xml:space="preserve">
-おめでとう！ &#10;&#10;Windows 10 認証成功。
+おめでとう！ &#10;&#10;Windows 認証成功。
     </sys:String>
     <sys:String x:Key="UpdateText" xml:space="preserve">
-雲萌 Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;最新バージョンにアップデートしてください。
+雲萌 Windows 10+ デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;最新バージョンにアップデートしてください。
     </sys:String>
     <sys:String x:Key="UpdateMustText" xml:space="preserve">
-雲萌 Windows10 デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;アプリが古すぎるため、最新バージョンにアップデートしてから利用ください。
+雲萌 Windows 10+ デジタルライセンス認証アプリの新しいバージョン発見しました。&#10;アプリが古すぎるため、最新バージョンにアップデートしてから利用ください。
     </sys:String>
     <sys:String x:Key="ErrorMsg-0" xml:space="preserve">
-Windows10ライセンス認証にはインターネットを通じてキーを取得する必要があります :)
+Windows ライセンス認証にはインターネットを通じてキーを取得する必要があります :)
     </sys:String>
     <sys:String x:Key="ErrorMsg-1" xml:space="preserve">
 以前のキーをアンインストールできません :(
@@ -205,9 +221,9 @@ Windows10ライセンス認証にはインターネットを通じてキーを�
 認証失敗。 :( &#10;多分: &#10;1. このエディション/バージョンの Windows はデジタルライセンス認証が適用しない。 &#10;2. マイクロソフトの認証サーバーに接続できません。 &#10;3. その他。 &#10;&#10;暫くお待ちくださいまたはあとでもう一度やり直してください。 &#10;
     </sys:String>
     <sys:String x:Key="Only_find_ltok" xml:space="preserve">
-このシステムエディションに適用されたのは長期オフラインＫＭＳ（ＬＴＯＫ）オプションしか見つかりません。これによってシステムを再インストールした時自動的にライセンス認証しませんが、心配する必要はありません。この方法（ＬＴＯＫ）でライセンス認証後、インターネット接続なしでも最大１９年間稼働を継続できます！
+このシステムエディションに適用されたのは長期オフラインＫＭＳ（ＬＴＯＫ）オプションしか見つかりません。これによってシステムを再インストールした時自動的にライセンス認証しませんが、心配する必要はありません。この方法（ＬＴＯＫ）でライセンス認証後、インターネット接続なしでも２０３８年まで稼働を継続できます！
 	</sys:String>
     <sys:String x:Key="DonateTextWillActivated" xml:space="preserve">
-おめでとうございます！ &#10;&#10;Windows 10はライセンス認証の準備が出来ています。&#10;でも、マイクロソフトのライセンス認証サーバーに接続できませんみたいです。&#10;システムは認証サーバーに接続出来る次第に自動的にライセンス認証します。
+おめでとうございます！ &#10;&#10;Windowsはライセンス認証の準備が出来ています。&#10;でも、マイクロソフトのライセンス認証サーバーに接続できませんみたいです。&#10;システムは認証サーバーに接続出来る次第に自動的にライセンス認証します。
     </sys:String>
 </ResourceDictionary>

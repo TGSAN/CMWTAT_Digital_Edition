@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--
-    Version: 2.5.0.0
+    Version: 2.6.0.0
     -->
 
     <!--FontFamily Dictionary-->
@@ -34,13 +34,16 @@
         忽略
     </sys:String>
     <sys:String x:Key="TitleName">
-        云萌 Windows 10 数字权利激活工具
+        云萌 Windows 10+ 数字权利激活工具
     </sys:String>
     <sys:String x:Key="AppName">
         CMWTAT Digital Edition V2
     </sys:String>
     <sys:String x:Key="UpdateTitle">
         新版本可用！
+    </sys:String>
+    <sys:String x:Key="UpgradeFullVersionWindowsTitle">
+        升级到完整版 Windows
     </sys:String>
     <sys:String x:Key="CurrentVersion">
         当前版本
@@ -60,6 +63,9 @@
     <sys:String x:Key="Convert_versions">
         版本无缝转换 (安装产品密钥而不激活)
     </sys:String>
+    <sys:String x:Key="Upgrade_full_version">
+        升级到完整版 Windows
+    </sys:String>
     <sys:String x:Key="test">
         测试文本
     </sys:String>
@@ -73,7 +79,7 @@
         完成
     </sys:String>
     <sys:String x:Key="notifyIconTitle">
-        云萌 Windows 10 激活工具 V2
+        云萌 Windows 10+ 激活工具 V2
     </sys:String>
     <sys:String x:Key="Running">
         运行中。
@@ -150,6 +156,9 @@
     <sys:String x:Key="RunAct_Getting_digital_license">
         正在获取数字许可证
     </sys:String>
+    <sys:String x:Key="RunUpgradeFullVersion_Upgrading">
+        正在升级
+    </sys:String>
     <sys:String x:Key="CompleteTitle">
         完成
     </sys:String>
@@ -168,23 +177,26 @@
         DO NOT USE ANY Indentation in Preserve Mode, Please!
     -->
 
+    <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
+当前正在使用核心版 Windows，你可以通过此功能升级到完整版 Windows。&#10;（如果操作没有反应可能是当前版本不支持升级，或者正在升级）&#10;&#10;注意：&#10;此操作不可逆，一旦升级完成将无法回退到核心版 Windows！&#10;&#10;确定要执行升级操作吗？
+    </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 这个应用现已支持通过控制台参数启动！&#10;&#10;-a&#9;--auto&#9;&#9;自动激活。&#10;-h&#9;--hide&#9;&#9;隐藏模式运行 (只能与 -auto 一起使用)。&#10;-e&#9;--expact&#9;实验性激活。&#10;-l&#9;--log&#9;&#9;输出日志到文件。&#10;-?&#9;--help&#9;&#9;显示此说明对话框。
     </sys:String>
     <sys:String x:Key="DonateTextConverted" xml:space="preserve">
-祝贺！ &#10;&#10;Windows 10 已经成功转换。
+祝贺！ &#10;&#10;Windows 已经成功转换。
     </sys:String>
     <sys:String x:Key="DonateTextActivated" xml:space="preserve">
-祝贺！ &#10;&#10;Windows 10 已经成功激活。
+祝贺！ &#10;&#10;Windows 已经成功激活。
     </sys:String>
     <sys:String x:Key="UpdateText" xml:space="preserve">
-我们发现了新版本的 云萌 Windows10 数字权利激活工具。&#10;请更新到最新版本来确保它可以正常工作。
+我们发现了新版本的 云萌 Windows 10+ 数字权利激活工具。&#10;请更新到最新版本来确保它可以正常工作。
     </sys:String>
     <sys:String x:Key="UpdateMustText" xml:space="preserve">
-我们发现了新版本的 云萌 Windows10 数字权利激活工具。&#10;由于您的版本太旧，所以您必须更新到最新版本来确保它可以正常工作。
+我们发现了新版本的 云萌 Windows 10+ 数字权利激活工具。&#10;由于您的版本太旧，所以您必须更新到最新版本来确保它可以正常工作。
     </sys:String>
     <sys:String x:Key="ErrorMsg-0" xml:space="preserve">
-激活Windows10需要网络获取产品密钥 :)
+激活 Windows 需要网络获取产品密钥 :)
     </sys:String>
     <sys:String x:Key="ErrorMsg-1" xml:space="preserve">
 无法卸载旧密钥 :(
@@ -205,9 +217,9 @@
 激活失败。 :( &#10;可能因为: &#10;1. 此版本/类型的 Windows 不支持数字权利（数字许可证）方式激活。 &#10;2. 无法连接到微软Windows激活服务器。 &#10;3. 其它未知问题。 &#10;&#10;你可以尝试稍等片刻或者稍后重试。 &#10;
     </sys:String>
     <sys:String x:Key="Only_find_ltok" xml:space="preserve">
-只找到用于此版本系统的长期离线KMS（批量激活）选项。&#10;这表示您将不能在下次重装系统后自动激活。&#10;不过无需担心，这不同于传统的KMS激活方式（离线状态下可以保持激活180天）&#10;长期离线KMS（Offline-KMS）即使不联网也可以保持激活长达19年！
+只找到用于此版本系统的长期离线KMS（批量激活）选项。&#10;这表示您将不能在下次重装系统后自动激活。&#10;不过无需担心，这不同于传统的KMS激活方式（离线状态下可以保持激活180天）&#10;长期离线KMS（Offline-KMS）即使不联网也可以保持激活值2038年！
     </sys:String>
     <sys:String x:Key="DonateTextWillActivated" xml:space="preserve">
-祝贺！ &#10;&#10;Windows 10 已经快要激活成功了。&#10;不过似乎Windows无法连接到微软激活服务器，&#10;当下次连接上服务器时系统将会自动激活。
+祝贺！ &#10;&#10;Windows 已经快要激活成功了。&#10;不过似乎Windows无法连接到微软激活服务器，&#10;当下次连接上服务器时系统将会自动激活。
     </sys:String>
 </ResourceDictionary>
