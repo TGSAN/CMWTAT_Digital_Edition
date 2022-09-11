@@ -132,7 +132,9 @@ namespace CMWTAT_DIGITAL
             ConsoleLog("创建缓存目录完毕");
 
             ConsoleLog("开始写入缓存文件");
-            File.WriteAllBytes(tempfile + "CloudMoeGatherOsState" + ".exe", Properties.Resources.CloudMoeGatherOsState);
+            File.WriteAllBytes(tempfile + "ClipUp" + ".exe", Properties.Resources.ClipUp);
+            //File.WriteAllBytes(tempfile + "LibHWIDx86" + ".dll", Properties.Resources.LibHWIDx86);
+            //File.WriteAllBytes(tempfile + "LibHWIDx64" + ".dll", Properties.Resources.LibHWIDx64);
             File.WriteAllBytes(tempfile + "slmgr" + ".vbs", Properties.Resources.slmgr);
             ConsoleLog("写入缓存文件完毕");
         }
@@ -1161,25 +1163,31 @@ namespace CMWTAT_DIGITAL
                         ShowBallSameDig();
                     }));
 
+                    //LibGatherOsState.GatherOsState.SetLibHWIDPath(tempfile + "LibHWIDx86.dll", tempfile + "LibHWIDx64.dll");
+
+                    var licenseType = LibGatherOsState.GatherOsState.LicenseType.Retail;
+
                     if (mode == "4")
                     {
                         //长期KMS
-                        RunCLI(tempfile + "CloudMoeGatherOsState.exe", tempfile, "GVLK");
-                        ConsoleLog("进入下一步");
+                        licenseType = LibGatherOsState.GatherOsState.LicenseType.GVLK;
                     }
-                    else
-                    {
-                        RunCLI(tempfile + "CloudMoeGatherOsState.exe", tempfile, "Retail");
-                        ConsoleLog("进入下一步");
-                    }
+                    
+                    var result = LibGatherOsState.GatherOsState.GenActivateLicenseXML(licenseType);
 
-                    int try_max_count = 30;
-                    for (int i = 0; i < try_max_count + 1 && !File.Exists(tempfile + "GenuineTicket.xml"); i++)
-                    {
-                        Thread.Sleep(1000);
-                        ConsoleLog($"检查许可证 重试 {i}/{try_max_count}");
-                    }
+                    if (result.state == LibGatherOsState.GatherOsState.ActivateLicenseXMLResultState.OK)
+                    { 
+                        File.WriteAllText(tempfile + "GenuineTicket.xml", result.xml, Encoding.UTF8);
+                        ConsoleLog("进入下一步");
 
+                        int try_max_count = 30;
+                        for (int i = 0; i < try_max_count + 1 && !File.Exists(tempfile + "GenuineTicket.xml"); i++)
+                        {
+                            Thread.Sleep(1000);
+                            ConsoleLog($"检查许可证 重试 {i}/{try_max_count}");
+                        }
+                    }
+                    
                     if (File.Exists(tempfile + "GenuineTicket.xml"))
                     {
                         actbtn.Dispatcher.Invoke(new Action(() =>
@@ -1190,8 +1198,9 @@ namespace CMWTAT_DIGITAL
 
                         RunCMD(@"sc start wuauserv");
                         RunCMD(@"sc start clipsvc");
-
+                        
                         RunCMD(@"clipup -v -o -altto " + tempfile);
+                        RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile); // 固定版本解决 22H2 后 ARM64 许可证接收问题
 
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
@@ -1202,7 +1211,7 @@ namespace CMWTAT_DIGITAL
                         runend = RunCScript(slmgr_self, "-ato").Trim();
                         
                         ConsoleLog(runend);
-                        if (runend.EndsWith("successfully.") || runend.Contains("0xC004F074") || runend.Contains("0xC004C003")) //0xC004F074是KMS38长期激活会出的提示，Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
+                        if (runend.EndsWith("successfully.") || runend.Contains("0xC004F074") || runend.Contains("0xC004C003")) //0xC004F074 是 KMS38 长期激活会出的提示，Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
                         {
                             if (runend.Contains("0xC004C003"))
                             {

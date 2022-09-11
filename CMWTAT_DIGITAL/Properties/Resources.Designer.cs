@@ -63,9 +63,9 @@ namespace CMWTAT_DIGITAL.Properties {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] CloudMoeGatherOsState {
+        internal static byte[] ClipUp {
             get {
-                object obj = ResourceManager.GetObject("CloudMoeGatherOsState", resourceCulture);
+                object obj = ResourceManager.GetObject("ClipUp", resourceCulture);
                 return ((byte[])(obj));
             }
         }

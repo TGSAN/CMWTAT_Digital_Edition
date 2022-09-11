@@ -50,8 +50,8 @@
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:Card>
-                <Button FontFamily="{DynamicResource Font}" x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65" />
-                <Button FontFamily="{DynamicResource Font}" x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65"/>
+                <Button FontFamily="{DynamicResource Font}" x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65" Cursor="Hand" />
+                <Button FontFamily="{DynamicResource Font}" x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65" Cursor="Hand"/>
                 <Button FontFamily="{DynamicResource Font}" x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65" Cursor="Hand"/>
             </StackPanel>
         </Grid>

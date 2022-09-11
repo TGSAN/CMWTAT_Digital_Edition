@@ -63,6 +63,10 @@
     <StartupObject>CMWTAT_DIGITAL.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibGatherOsState, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Res\LibGatherOsState.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=2.0.6.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.6\lib\net452\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -187,7 +191,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Lang\fr.xml" />
-    <Content Include="Res\CloudMoeGatherOsState.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Res\ClipUp.exe" />
+    <EmbeddedResource Include="Res\LibGatherOsState.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.5.0\build\MaterialDesignThemes.targets')" />
