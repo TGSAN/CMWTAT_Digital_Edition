@@ -93,10 +93,6 @@ This toolkit can activate your Windows 10 and Windows 11 use digital license.
 
 [GPL-2.0](./LICENSE)
 
-# Thanks 感谢
-
-* Thanks for s1ave77 (Basic logic) and vyvojar (SLC.DLL)
-
 # Contributors 贡献者
 
 [https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors]

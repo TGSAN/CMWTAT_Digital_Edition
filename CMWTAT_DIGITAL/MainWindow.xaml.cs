@@ -365,8 +365,7 @@ namespace CMWTAT_DIGITAL
             DataContext = new ViewModel();
 
             this.DialogHostGrid.Visibility = Visibility.Visible;
-
-            //MessageBox.Show(@"reg add ""HKLM\SYSTEM\Tokens\"" /v ""Channel"" /t REG_SZ /d ""Retail"" /f");
+            
             DialogWait.IsOpen = true;
             try
             {
@@ -1119,12 +1118,6 @@ namespace CMWTAT_DIGITAL
                 //写入Win7特征
                 //ChangePKAction(changepk + " /ProductKey " + key);
 
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Writing_old_OS"]; // "Writing feature of old Windows version";
-                    ShowBallSameDig();
-                }));
-
                 if (mode == "4")
                 {
                     //长期KMS
@@ -1133,15 +1126,7 @@ namespace CMWTAT_DIGITAL
                     //if (runend.EndsWith("successfully."))
                     //{
                     //}
-                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Volume:GVLK"" /f");
                 }
-                else
-                {
-                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Retail"" /f");
-                }
-
-                RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Kernel-ProductInfo"" /t REG_DWORD /d " + sku + " /f");
-                RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Security-SPP-GenuineLocalStatus"" /t REG_DWORD /d 1 /f");
 
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
@@ -1244,21 +1229,6 @@ namespace CMWTAT_DIGITAL
             }
         //string runend = RunCScript(slmgr_self, "-upk").Trim();
         EndLine:;
-            // 此处确保注册表清理一定进行
-            try
-            {
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Cleaning_changes"]; // "Cleaning changes";
-                    ShowBallSameDig();
-                }));
-
-                RunCMD(@"reg delete ""HKLM\SYSTEM\Tokens"" /f");
-            }
-            catch
-            {
-                ConsoleLog("Delete Reg Error");
-            }
             if (code != "200")
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
