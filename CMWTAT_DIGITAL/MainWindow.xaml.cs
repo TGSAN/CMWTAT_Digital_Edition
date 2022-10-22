@@ -1185,13 +1185,25 @@ namespace CMWTAT_DIGITAL
                         RunCMD(@"sc start clipsvc");
                         
                         RunCMD(@"clipup -v -o -altto " + tempfile);
-                        RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile); // 固定版本解决 22H2 后 ARM64 许可证接收问题
+                        RunCMD(@"clipup -v -o -altto " + tempfile.TrimEnd('\\')); // 旧版本系统的 ClipUp 路径不能带最后的反斜杠
+                        if (OSVersionInfo.BuildVersion >= 20348) 
+                        { 
+                            RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile); // 固定版本解决 22H2 后 ARM64 许可证接收问题
+                            RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile.TrimEnd('\\'));
+                        }
 
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
                             this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; // 提示激活中
                             ShowBallSameDig();
                         }));
+
+                        int try_max_count = 30;
+                        for (int i = 0; i < try_max_count + 1 && File.Exists(tempfile + "GenuineTicket.xml"); i++)
+                        {
+                            Thread.Sleep(1000);
+                            ConsoleLog($"应用许可证 重试 {i}/{try_max_count}");
+                        }
 
                         runend = RunCScript(slmgr_self, "-ato").Trim();
                         
