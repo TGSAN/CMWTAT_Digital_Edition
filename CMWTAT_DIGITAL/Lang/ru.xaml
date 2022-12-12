@@ -1,0 +1,225 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+    Version: 2.6.0.0
+    -->
+
+    <!--FontFamily Dictionary-->
+    
+    <FontFamily x:Key="Font">
+        Roboto
+    </FontFamily>
+    
+    <!--String Dictionary-->
+    
+    <sys:String x:Key="OK">
+        ОК
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        Отменить
+    </sys:String>
+    <sys:String x:Key="Refuse">
+        Отказаться
+    </sys:String>
+    <sys:String x:Key="DonateBtn">
+        Поблагодарить и поддержать разработчика
+    </sys:String>
+    <sys:String x:Key="Exit">
+        Выйти
+    </sys:String>
+    <sys:String x:Key="UpdateNow">
+        Обновить сейчас
+    </sys:String>
+    <sys:String x:Key="Ignore">
+        Игнорировать
+    </sys:String>
+    <sys:String x:Key="TitleName">
+        CMWTAT Digital Edition
+    </sys:String>
+    <sys:String x:Key="AppName">
+        CMWTAT Digital Edition V2
+    </sys:String>
+    <sys:String x:Key="UpdateTitle">
+        Доступна новая версия!
+    </sys:String>
+    <sys:String x:Key="UpgradeFullVersionWindowsTitle">
+        Перейти на полную версию Windows
+    </sys:String>
+    <sys:String x:Key="CurrentVersion">
+        Текущая версия
+    </sys:String>
+    <sys:String x:Key="LatestVersion">
+        Последняя версия
+    </sys:String>
+    <sys:String x:Key="Auto_Mode">
+        Авто
+    </sys:String>
+    <sys:String x:Key="Manual_Mode">
+        Вручную
+    </sys:String>
+    <sys:String x:Key="Activate_Button">
+        Активировать
+    </sys:String>
+    <sys:String x:Key="Convert_versions">
+        Конвертировать версии (установить ключ без активации)
+    </sys:String>
+    <sys:String x:Key="Upgrade_full_version">
+        Перейти на полную версию Windows
+    </sys:String>
+    <sys:String x:Key="test">
+        тест текст
+    </sys:String>
+    <sys:String x:Key="Loading">
+        Загрузка
+    </sys:String>
+    <sys:String x:Key="Activating">
+        Активация
+    </sys:String>
+    <sys:String x:Key="Complete">
+        Готово
+    </sys:String>
+    <sys:String x:Key="notifyIconTitle">
+        CloudMoe Windows 10+ Activation Toolkit V2
+    </sys:String>
+    <sys:String x:Key="Running">
+        Работает
+    </sys:String>
+    <sys:String x:Key="Experimental">
+        Экспериментальный
+    </sys:String>
+    <sys:String x:Key="Attention">
+        Внимание
+    </sys:String>
+    <sys:String x:Key="System_Edition">
+        Версия системы
+    </sys:String>
+    <sys:String x:Key="May_be_not_be_supported">
+        Версия вашей системы не найдена. Возможно, она не поддерживается.
+    </sys:String>
+    <sys:String x:Key="Only_find_experimental">
+        Найдены только экспериментальные варианты для вашей системы. Скорее всего, активация завершится неудачей.
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_try">
+        Версия вашей системы может не поддерживаться, программа завершает свою работу. Попробуйте добавить --expact или -e в качестве аргумента для запуска.
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_exit">
+        Версия вашей системы может не поддерживаться, программа завершает свою работу.
+    </sys:String>
+    <sys:String x:Key="notify_Disconnect_to_server_exit">
+        Невозможно подключиться к серверу, проверьте подключение к интернету или попробуйте позже, программа завершает свою работу.
+    </sys:String>
+    <sys:String x:Key="Disconnect_to_server_exit">
+        Невозможно подключиться к серверу, проверьте подключение к интернету или попробуйте позже, программа завершает свою работу.
+    </sys:String>
+    <sys:String x:Key="RunInstall_Converting">
+        Конвертирую
+    </sys:String>
+    <sys:String x:Key="RunAct_Activating">
+        Активация
+    </sys:String>
+    <sys:String x:Key="RunInstall_Getting_Key">
+        Получаю ключ через интернет
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_Key">
+        Получаю ключ через интернет
+    </sys:String>
+    <sys:String x:Key="RunInstall_Uninstalling_old_Key">
+        Удаляю старый ключ
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key">
+        Удаляю старый ключ
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key_Exp">
+        Удаляю старый ключ (Экспериментальный)
+    </sys:String>
+    <sys:String x:Key="RunInstall_Installing_Key">
+        Устанавливаю ключ
+    </sys:String>
+    <sys:String x:Key="RunAct_Installing_Key">
+        Устанавливаю ключ
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_edition_code_Exp">
+        Получаю код версии (Экспериментальный)
+    </sys:String>
+    <sys:String x:Key="RunAct_Prepare_for_the_next_step_Exp">
+        Подготовка к следующему шагу (Экспериментальный)
+    </sys:String>
+    <sys:String x:Key="RunAct_Writing_old_OS">
+        Записываю возможности старой версии системы
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_free_upgrade_permissions">
+        Получаю разрешения на бесплатное обновление
+    </sys:String>
+    <sys:String x:Key="RunAct_Cleaning_changes">
+        Очищаю изменения
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_digital_license">
+        Получаю цифровую лицензию
+    </sys:String>
+    <sys:String x:Key="RunUpgradeFullVersion_Upgrading">
+        Обновляю
+    </sys:String>
+    <sys:String x:Key="CompleteTitle">
+        Готово
+    </sys:String>
+    <sys:String x:Key="ErrorTitle">
+        Ошибка
+    </sys:String>
+    <sys:String x:Key="ErrorCode">
+        Код:
+    </sys:String>
+    <sys:String x:Key="SysMsg">
+        Сообщение системы:
+    </sys:String>
+
+    <!--
+        Attention:
+        DO NOT USE ANY Indentation in Preserve Mode, Please!
+    -->
+
+    <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
+Вы используете базовую версию Windows, Вы можете использовать эту функцию, чтобы перейти на полную версию.&#10;(Если программа не отвечает, Ваша версия системы может не поддерживать переход на полную версию или уже в процессе перехода) &#10;&#10;Note:&#10;Данное действие необратимо. После перехода на полную версию Вы не сможете перейти обратно!&#10;&#10;Вы хотите продолжить?
+    </sys:String>
+    <sys:String x:Key="HelpText" xml:space="preserve">
+Эта программа теперь поддерживает аргументы командной строки при запуске!&#10;&#10;-a&#9;--auto&#9;&#9;Автоматическая активация.&#10;-h&#9;--hide&#9;&#9;Запустить в скрытом режиме (Работает только с --auto).&#10;-e&#9;--expact&#9;&#9;Экспериментальная активация.&#10;-l&#9;--log&#9;&#9;Вывод логов в файл.&#10;-?&#9;--help&#9;&#9;Показать эту справку.
+    </sys:String>
+    <sys:String x:Key="DonateTextConverted" xml:space="preserve">
+Поздравляю! &#10;&#10;Windows была успешно конвертирована.
+    </sys:String>
+    <sys:String x:Key="DonateTextActivated" xml:space="preserve">
+Поздравляю! &#10;&#10;Windows была успешно активирована.
+    </sys:String>
+    <sys:String x:Key="UpdateText" xml:space="preserve">
+Была найдена новая версия CloudMoe Windows 10+ Activation Toolkit Digital Edition.&#10;Пожалуйста, обновите программу для полной поддержки.
+    </sys:String>
+    <sys:String x:Key="UpdateMustText" xml:space="preserve">
+Было найдено обязательное обновление CloudMoe Windows 10+ Activation Toolkit Digital Edition.&#10;Программа не будет работать без этого обновления.
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-0" xml:space="preserve">
+При активации Windows требуется подключение к сети (для получения ключа) :)
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1" xml:space="preserve">
+Не удалось удалить старый ключ. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.1" xml:space="preserve">
+Не удалось установить ключ. Может, вы выбрали или ввели неправильную версию системы?
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.2" xml:space="preserve">
+Не удалось получить код версии. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-2" xml:space="preserve">
+Не удалось установить ключ. Может, вы выбрали или ввели неправильную версию системы?
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-3" xml:space="preserve">
+Превышено время. Может, вы выбрали или ввели неправильную версию системы?
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-4" xml:space="preserve">
+Активация не выполнена. :( &#10;Возможно: &#10;1.Эта версия Windows не поддерживает активацию цифровым ключом. &#10;2. Невозможно подключиться к серверу активации Microsoft Activation Server. &#10;3. Другие неизвестные ошибки. &#10;&#10;Вы можете попробовать еще раз позже. &#10;
+    </sys:String>
+    <sys:String x:Key="Only_find_ltok" xml:space="preserve">
+Найдены только Long-Term Offline KMS (LTOK) варианты, которые можно использовать с текущей версией системы. &#10;Это значит, что при переустановке системы, Вам надо будет активировать ее заново. &#10;Не волнуйтесь, это не вариант активации legacy KMS, который может продолжать активироваться в течение 180 дней в оффлайн режиме. &#10;LTOK (Префикс Offline-KMS) может продолжать активироваться до 2038 года даже без подключения к сети!
+    </sys:String>
+    <sys:String x:Key="DonateTextWillActivated" xml:space="preserve">
+Поздравляю! &#10;&#10;Windows готова к активации. &#10;Но похоже, что Windows не может подключиться к серверу активации Microsoft Activation Server.&#10;Ваша система будет активирована автоматически при следующем подключении к Microsoft Activation Server.
+    </sys:String>
+</ResourceDictionary>
