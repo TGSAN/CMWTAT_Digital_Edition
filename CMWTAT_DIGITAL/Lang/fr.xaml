@@ -1,0 +1,216 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+    Version: 2.5.0.0
+    -->
+
+    <!--FontFamily Dictionary-->
+    
+    <FontFamily x:Key="Font">
+        Roboto
+    </FontFamily>
+    
+    <!--String Dictionary-->
+    
+    <sys:String x:Key="OK">
+        Ok
+    </sys:String>
+    <sys:String x:Key="Cancel">
+        Annuler
+    </sys:String>
+    <sys:String x:Key="Refuse">
+        Refuser
+    </sys:String>
+    <sys:String x:Key="DonateBtn">
+        Remerciez les développeurs et offrez leurs un café
+    </sys:String>
+    <sys:String x:Key="Exit">
+        Sortir
+    </sys:String>
+    <sys:String x:Key="UpdateNow">
+        Mettre à jour maintenant
+    </sys:String>
+    <sys:String x:Key="Ignore">
+        Ignorer
+    </sys:String>
+    <sys:String x:Key="TitleName">
+        CMWTAT Edition numérique
+    </sys:String>
+    <sys:String x:Key="AppName">
+        CMWTAT Edition numérique V2
+    </sys:String>
+    <sys:String x:Key="UpdateTitle">
+        Une nouvelle version disponible !
+    </sys:String>
+    <sys:String x:Key="CurrentVersion">
+        Version actuelle
+    </sys:String>
+    <sys:String x:Key="LatestVersion">
+        Dernière version
+    </sys:String>
+    <sys:String x:Key="Auto_Mode">
+        Mode automatique
+    </sys:String>
+    <sys:String x:Key="Manual_Mode">
+        Mode manuel
+    </sys:String>
+    <sys:String x:Key="Activate_Button">
+        Activer
+    </sys:String>
+    <sys:String x:Key="Convert_versions">
+        Convertir la versions (Installer la clé sans l'activer)
+    </sys:String>
+    <sys:String x:Key="test">
+        Texte de test
+    </sys:String>
+    <sys:String x:Key="Loading">
+        Chargement
+    </sys:String>
+    <sys:String x:Key="Activating">
+        Activation
+    </sys:String>
+    <sys:String x:Key="Complete">
+        Terminé
+    </sys:String>
+    <sys:String x:Key="notifyIconTitle">
+        CloudMoe Windows 10+ Activation Toolkit V2
+    </sys:String>
+    <sys:String x:Key="Running">
+        En cours d'exécution.
+    </sys:String>
+    <sys:String x:Key="Experimental">
+        Expérimental
+    </sys:String>
+    <sys:String x:Key="Attention">
+        Attention
+    </sys:String>
+    <sys:String x:Key="System_Edition">
+        Version du système
+    </sys:String>
+    <sys:String x:Key="May_be_not_be_supported">
+        La version de votre système d'exploitation n'est pas identifiable, il se peut qu'il ne soit pas supporté.
+    </sys:String>
+    <sys:String x:Key="Only_find_experimental">
+        Seules des options expérimentales peuvent être utilisées avec cette édition du système d'exploitation. Il y a peu d'espoir de succès d'activation.
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_try">
+        La version de votre système peut ne pas être supportée, le programme se terminera automatiquement. Vous pouvez essayer d'ajouter --expact ou -e au démarrage.
+    </sys:String>
+    <sys:String x:Key="notify_May_be_not_be_supported_exit">
+        La version de votre système peut ne pas être prise en charge, le programme va se fermer.
+    </sys:String>
+    <sys:String x:Key="notify_Disconnect_to_server_exit">
+        Impossible de se connecter au serveur, Veuillez vérifier le réseau et réessayer plus tard, le programme va se fermer.
+    </sys:String>
+    <sys:String x:Key="Disconnect_to_server_exit">
+        Impossible de se connecter au serveur, Veuillez vérifier le réseau et réessayer plus tard, le programme va se fermer.
+    </sys:String>
+    <sys:String x:Key="RunInstall_Converting">
+        Conversion
+    </sys:String>
+    <sys:String x:Key="RunAct_Activating">
+        Activation
+    </sys:String>
+    <sys:String x:Key="RunInstall_Getting_Key">
+        Obtention de la clé par Internet
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_Key">
+        Obtention de la clé par Internet
+    </sys:String>
+    <sys:String x:Key="RunInstall_Uninstalling_old_Key">
+        Suppression de l'ancienne clé
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key">
+        Suppression de l'ancienne clé
+    </sys:String>
+    <sys:String x:Key="RunAct_Uninstalling_old_Key_Exp">
+        Suppression de l'ancienne clé (Experimental)
+    </sys:String>
+    <sys:String x:Key="RunInstall_Installing_Key">
+       Installation de la clé
+    </sys:String>
+    <sys:String x:Key="RunAct_Installing_Key">
+        Installation de la clé
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_edition_code_Exp">
+        Obtenir le code version (Experimental)
+    </sys:String>
+    <sys:String x:Key="RunAct_Prepare_for_the_next_step_Exp">
+        Préparation à l'étape suivante (Experimental)
+    </sys:String>
+    <sys:String x:Key="RunAct_Writing_old_OS">
+        Écriture d'une ancienne version de Windows
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_free_upgrade_permissions">
+        Obtention des autorisations gratuite de mise à niveau
+    </sys:String>
+    <sys:String x:Key="RunAct_Cleaning_changes">
+        Nettoyage des changements
+    </sys:String>
+    <sys:String x:Key="RunAct_Getting_digital_license">
+        Obtention d'une licence numérique
+    </sys:String>
+    <sys:String x:Key="CompleteTitle">
+        Terminé
+    </sys:String>
+    <sys:String x:Key="ErrorTitle">
+        Erreur
+    </sys:String>
+    <sys:String x:Key="ErrorCode">
+        Code:
+    </sys:String>
+    <sys:String x:Key="SysMsg">
+        Le système à retourné:
+    </sys:String>
+
+    <!--
+        Attention:
+        DO NOT USE ANY Indentation in Preserve Mode, Please!
+    -->
+   <!--
+        TODO: Finish the above translation
+    -->
+
+    <sys:String x:Key="HelpText" xml:space="preserve">
+This application now supports the use of console args to startup!&#10;&#10;-a&#9;--auto&#9;&#9;Auto activate.&#10;-h&#9;--hide&#9;&#9;Run with hide mode (Only be worked with -auto).&#10;-e&#9;--expact&#9;&#9;Experimental activation.&#10;-l&#9;--log&#9;&#9;Output log to file.&#10;-?&#9;--help&#9;&#9;Show this help Dialog.
+    </sys:String>
+    <sys:String x:Key="DonateTextConverted" xml:space="preserve">
+Congratulation! &#10;&#10;Windows has been successful converted.
+    </sys:String>
+    <sys:String x:Key="DonateTextActivated" xml:space="preserve">
+Congratulation! &#10;&#10;Windows has been successful activated.
+    </sys:String>
+    <sys:String x:Key="UpdateText" xml:space="preserve">
+We found a new version for CloudMoe Windows 10+ Activation Toolkit Digital Edition.&#10;Please update to the latest version to make sure it works.
+    </sys:String>
+    <sys:String x:Key="UpdateMustText" xml:space="preserve">
+We found a new version for CloudMoe Windows 10+ Activation Toolkit Digital Edition.&#10;And because your version is too old, so you MUST update to the latest version to make sure it works.
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-0" xml:space="preserve">
+Activate Windows requires a network to gets the product key :)
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1" xml:space="preserve">
+Cannot to uninstall old key. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.1" xml:space="preserve">
+Cannot to install key, may be you choose or enter a incorrect version. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-1.2" xml:space="preserve">
+Cannot to get edition code. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-2" xml:space="preserve">
+Cannot to install key, may be you choose or enter a incorrect version. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-3" xml:space="preserve">
+Time out, may be you choose or enter a incorrect version. :(
+    </sys:String>
+    <sys:String x:Key="ErrorMsg-4" xml:space="preserve">
+Activation Failed. :( &#10;Maybe: &#10;1.This edition/version of Windows does not support digital license activation. &#10;2. Unable to connect to Microsoft Windows Activation Server. &#10;3. Other unexpected problems. &#10;&#10;You can try to wait a minute or try again later. &#10;
+    </sys:String>
+    <sys:String x:Key="Only_find_ltok" xml:space="preserve">
+Only found Long-Term Offline KMS (LTOK) options that can be used with this operating system edition. &#10;This means that it will not be activate automatically after you reinstalled the system. &#10;But don't worry, this is different from the legacy KMS activation method (it can keep activating for 180 days in offline environment). &#10;LTOK (The prefix is Offline-KMS) can keep activating for up to 2038 even it is without networking!
+    </sys:String>
+    <sys:String x:Key="DonateTextWillActivated" xml:space="preserve">
+Congratulation! &#10;&#10;Windows is ready to activate. &#10;However, it seems that Windows cannot connect to the Microsoft Activation Server.&#10;Your system will be activated automatically the next time the server is connected.
+    </sys:String>
+</ResourceDictionary>

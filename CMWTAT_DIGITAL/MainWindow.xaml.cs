@@ -25,6 +25,7 @@ using System.Windows.Forms;
 using System.Globalization;
 using System.Reflection;
 using MaterialDesignThemes.Wpf;
+using System.IO.Pipes;
 
 namespace CMWTAT_DIGITAL
 {
@@ -133,9 +134,10 @@ namespace CMWTAT_DIGITAL
 
             ConsoleLog("开始写入缓存文件");
             File.WriteAllBytes(tempfile + "ClipUp" + ".exe", Properties.Resources.ClipUp);
-            //File.WriteAllBytes(tempfile + "LibHWIDx86" + ".dll", Properties.Resources.LibHWIDx86);
-            //File.WriteAllBytes(tempfile + "LibHWIDx64" + ".dll", Properties.Resources.LibHWIDx64);
             File.WriteAllBytes(tempfile + "slmgr" + ".vbs", Properties.Resources.slmgr);
+            File.WriteAllBytes(tempfile + "gatherosstate" + ".exe", Properties.Resources.gatherosstate);
+            File.WriteAllBytes(tempfile + "gatherosstateltsc" + ".exe", Properties.Resources.gatherosstateltsc);
+            File.WriteAllBytes(tempfile + "slc" + ".dll", Properties.Resources.slc);
             ConsoleLog("写入缓存文件完毕");
         }
 
@@ -1115,18 +1117,27 @@ namespace CMWTAT_DIGITAL
                     }
                 }
 
-                //写入Win7特征
-                //ChangePKAction(changepk + " /ProductKey " + key);
+                //写入旧系统特征（用于旧版保底方案）
+                actbtn.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.activatingtext.Text = (string)this.Resources["RunAct_Writing_old_OS"]; // "Writing feature of old Windows version";
+                    ShowBallSameDig();
+                }));
 
                 if (mode == "4")
                 {
                     //长期KMS
                     ConsoleLog(RunCScript(slmgr_self, "-skms 1.1.45.14:1919").Trim()); // いいよ、来いよ ｗｗｗ
-                    //ConsoleLog(RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -skms 1.1.45.14:1919").Trim()); // いいよ、来いよ ｗｗｗ
-                    //if (runend.EndsWith("successfully."))
-                    //{
-                    //}
+                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Volume:GVLK"" /f"); // 用于旧版保底方案
                 }
+                else
+                {
+                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Retail"" /f"); // 用于旧版保底方案
+                }
+
+                // 写入注册表模拟激活和产品信息（用于旧版保底方案）
+                RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Kernel-ProductInfo"" /t REG_DWORD /d " + sku + " /f");
+                RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Security-SPP-GenuineLocalStatus"" /t REG_DWORD /d 1 /f");
 
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
@@ -1156,25 +1167,29 @@ namespace CMWTAT_DIGITAL
                     {
                         //长期KMS
                         licenseType = LibGatherOsState.GatherOsState.LicenseType.GVLK;
+                        RunCLI(tempfile + "gatherosstateltsc.exe", tempfile);
+                        ConsoleLog("进入下一步（CUR：LTSC OLD）");
                     }
-                    
+                    else
+                    {
+                        RunCLI(tempfile + "gatherosstate.exe", tempfile);
+                        ConsoleLog("进入下一步（CUR：OLD）");
+                    }
+
                     var result = LibGatherOsState.GatherOsState.GenActivateLicenseXML(licenseType);
 
                     if (result.state == LibGatherOsState.GatherOsState.ActivateLicenseXMLResultState.OK)
                     { 
-                        File.WriteAllText(tempfile + "GenuineTicket.xml", result.xml, Encoding.UTF8);
-                        ConsoleLog("进入下一步");
-
-                        int try_max_count = 30;
-                        for (int i = 0; i < try_max_count + 1 && !File.Exists(tempfile + "GenuineTicket.xml"); i++)
-                        {
-                            Thread.Sleep(1000);
-                            ConsoleLog($"检查许可证 重试 {i}/{try_max_count}");
-                        }
+                        File.WriteAllText(tempfile + "GenuineTicketvNext.xml", result.xml, Encoding.UTF8);
+                        ConsoleLog("进入下一步（CUR：VNEXT）");
                     }
-                    
-                    if (File.Exists(tempfile + "GenuineTicket.xml"))
+
+                    var hasOldTicket = File.Exists(tempfile + "GenuineTicket.xml");
+                    var hasvNextTicket = File.Exists(tempfile + "GenuineTicketvNext.xml");
+
+                    if (hasOldTicket || hasvNextTicket)
                     {
+                        
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
                             this.activatingtext.Text = (string)this.Resources["RunAct_Getting_digital_license"]; // "Getting digital license";
@@ -1199,8 +1214,13 @@ namespace CMWTAT_DIGITAL
                         }));
 
                         int try_max_count = 30;
-                        for (int i = 0; i < try_max_count + 1 && File.Exists(tempfile + "GenuineTicket.xml"); i++)
+                        for (int i = 0; i < try_max_count + 1; i++)
                         {
+                            if (hasOldTicket && !File.Exists(tempfile + "GenuineTicket.xml"))
+                            {
+                                break;
+                            }
+                            if (hasvNextTicket && !File.Exists(tempfile + "GenuineTicketvNext.xml"))
                             Thread.Sleep(1000);
                             ConsoleLog($"应用许可证 重试 {i}/{try_max_count}");
                         }
@@ -1241,6 +1261,21 @@ namespace CMWTAT_DIGITAL
             }
         //string runend = RunCScript(slmgr_self, "-upk").Trim();
         EndLine:;
+            // 此处确保注册表清理一定进行
+            try
+            {
+                actbtn.Dispatcher.Invoke(new Action(() =>
+                {
+                    this.activatingtext.Text = (string)this.Resources["RunAct_Cleaning_changes"]; // "Cleaning changes";
+                    ShowBallSameDig();
+                }));
+
+                RunCMD(@"reg delete ""HKLM\SYSTEM\Tokens"" /f");
+            }
+            catch
+            {
+                ConsoleLog("Delete Reg Error");
+            }
             if (code != "200")
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
@@ -1306,7 +1341,7 @@ namespace CMWTAT_DIGITAL
             p.StartInfo.RedirectStandardOutput = true;//由调用程序获取输出信息 
             p.StartInfo.CreateNoWindow = true;//不显示程序窗口 
             p.Start();//启动程序 
-                      //向CMD窗口发送输入信息： 
+            //向CMD窗口发送输入信息： 
             p.StandardInput.WriteLine(var);
             ConsoleLog(var);
             //p.WaitForExit();
@@ -1321,7 +1356,7 @@ namespace CMWTAT_DIGITAL
         {
             ConsoleLog(path + " " + var);
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-                                                 //执行命令行函数
+            //执行命令行函数
             try
             {
                 System.Diagnostics.Process myProcess = new System.Diagnostics.Process();
@@ -1336,7 +1371,7 @@ namespace CMWTAT_DIGITAL
                 //myProcess.Arguments = "/c " & Commands
                 //myProcess.StartInfo.StandardOutputEncoding = Encoding.UTF8;
                 myProcess.Start();
-                myProcess.WaitForExit(60 * 1000);
+                myProcess.WaitForExit(120 * 1000);
                 StreamReader myStreamReader = myProcess.StandardOutput;
                 string myString = myStreamReader.ReadToEnd();
                 myProcess.Close();

@@ -111,6 +111,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Lang\fr.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Lang\ru.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Lang\zh.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -190,10 +198,10 @@
     <Folder Include="bin\Debug\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Lang\fr.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Res\ClipUp.exe" />
+    <Content Include="Res\gatherosstate.exe" />
+    <Content Include="Res\gatherosstateltsc.exe" />
+    <Content Include="Res\slc.dll" />
     <EmbeddedResource Include="Res\LibGatherOsState.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
