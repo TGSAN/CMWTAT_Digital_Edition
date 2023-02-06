@@ -40,7 +40,8 @@ This toolkit can activate your Windows 10 and Windows 11 use digital license.
 
 ### 在不同版本 `Windows` 之间转换
 
-* 注意: 目前已知 `Windows` 的 `专业版（Professional）`、`专业工作站版（ProfessionalWorkstation）`、`教育版（Education）`、`专业教育版（ProfessionalEducation）`、`企业版（Enterprise）` 之间可以进行互相转换（N版本与LTSB版本除外），而这些版本与`家庭版（Core）`均不能直接一键转换，如需转换请使用 2.6 版本新增的 `升级到完整版 Windows` 功能或使用 `Windows设置` 中的 `更改产品密钥` 功能进行升级。
+* 注意: 目前已知 `Windows` 的 `专业版（Professional）`、`专业工作站版（ProfessionalWorkstation）`、`教育版（Education）`、`专业教育版（ProfessionalEducation）`、`企业版（Enterprise）` 之间可以进行互相转换（N版本与LTSB版本除外），而这些版本与`家庭版（Core）`均不能直接一键转换，如需转换请使用 2.6 版本新增的 `升级到完整版 Windows` 功能或使用 `Windows设置` 中的 `更改产品密钥` 功能进行升级。  
+激活 `物联网企业版（IoTEnterprise）` 版本前需要先激活 `企业版（Enterprise）`。
 
 ##### `Auto Mode` 自动模式
 
