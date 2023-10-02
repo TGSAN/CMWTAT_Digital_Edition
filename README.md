@@ -1,3 +1,7 @@
+> Due to the closure of the Microsoft Digital License Issuance service, CMWTAT has temporarily (or permanently) disabled digital license activation. However, this does not affect the "Offline KMS" activation feature. There is no need to update CMWTAT; it should automatically switch to "Offline KMS" activation mode.
+  
+> 由于微软数字许可证下发服务关闭，CMWTAT 暂时（或永久）关闭了数字许可证激活功能，但是这并不影响“离线 KMS”激活功能，无需更新 CMWTAT，它应该会自动切换到“离线 KMS”激活模式。  
+
 # Official Site 官方网站
 
 [https://cmwtat.cloudmoe.com]
