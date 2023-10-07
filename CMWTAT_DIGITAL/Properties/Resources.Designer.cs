@@ -83,36 +83,6 @@ namespace CMWTAT_DIGITAL.Properties {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] gatherosstate {
-            get {
-                object obj = ResourceManager.GetObject("gatherosstate", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] gatherosstateltsc {
-            get {
-                object obj = ResourceManager.GetObject("gatherosstateltsc", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] slc {
-            get {
-                object obj = ResourceManager.GetObject("slc", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
         internal static byte[] slmgr {
             get {
                 object obj = ResourceManager.GetObject("slmgr", resourceCulture);

@@ -135,9 +135,6 @@ namespace CMWTAT_DIGITAL
             ConsoleLog("开始写入缓存文件");
             File.WriteAllBytes(tempfile + "ClipUp" + ".exe", Properties.Resources.ClipUp);
             File.WriteAllBytes(tempfile + "slmgr" + ".vbs", Properties.Resources.slmgr);
-            File.WriteAllBytes(tempfile + "gatherosstate" + ".exe", Properties.Resources.gatherosstate);
-            File.WriteAllBytes(tempfile + "gatherosstateltsc" + ".exe", Properties.Resources.gatherosstateltsc);
-            File.WriteAllBytes(tempfile + "slc" + ".dll", Properties.Resources.slc);
             ConsoleLog("写入缓存文件完毕");
         }
 
@@ -367,7 +364,7 @@ namespace CMWTAT_DIGITAL
             DataContext = new ViewModel();
 
             this.DialogHostGrid.Visibility = Visibility.Visible;
-            
+
             DialogWait.IsOpen = true;
             try
             {
@@ -446,6 +443,7 @@ namespace CMWTAT_DIGITAL
             }
         }
 
+        public static string StaticServerDomain = "https://uwa-static.cloudmoe.com"; // 静态服务器
         public static string MainServerDomain = "https://cmwtat.cloudmoe.com"; // 主要服务器
         public static string BackupServerDomain = "https://kms.kumo.moe"; // 备用服务器
 
@@ -464,14 +462,14 @@ namespace CMWTAT_DIGITAL
                 string json;
                 try
                 {
-                    json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=1&ver=3"); // 主要服务器
+                    json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=1&ver=4"); // 主要服务器
                 }
                 catch (Exception e)
                 {
                     ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
                     ConsoleLog("Error Message:" + e.Message);
                     ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                    json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=1&ver=3"); // 备用服务器
+                    json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=1&ver=4"); // 备用服务器
                 }
                 JObject jsonobj = JObject.Parse(json);
                 List<Frequency> list = new List<Frequency>();
@@ -661,12 +659,12 @@ namespace CMWTAT_DIGITAL
             Thread installthread = new Thread(RunInstall);
             installthread.Start();
         }
-        
+
         private void upgradefullbtn_Click(object sender, RoutedEventArgs e)
         {
             this.DialogUpgradeFullVersion.IsOpen = true;
         }
-        
+
         private void UpgradeFullVersionWindows_Click(object sender, RoutedEventArgs e)
         {
             this.DialogUpgradeFullVersion.IsOpen = false;
@@ -781,14 +779,14 @@ namespace CMWTAT_DIGITAL
                     string json;
                     try
                     {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=3"); // 主要服务器
+                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
                     }
                     catch (Exception e)
                     {
                         ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
                         ConsoleLog("Error Message:" + e.Message);
                         ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=3"); // 备用服务器
+                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
                     }
                     JObject jsonobj = JObject.Parse(json);
                     List<Frequency> list = new List<Frequency>();
@@ -946,7 +944,7 @@ namespace CMWTAT_DIGITAL
                 string targetFile = slmgr_self;
                 bool isrewrite = true; // true=覆盖已存在的同名文件,false则反之
                 ConsoleLog("Copy Start: " + sourceFile + " To " + targetFile);
-                System.IO.File.Copy(sourceFile, targetFile, isrewrite);
+                File.Copy(sourceFile, targetFile, isrewrite);
                 ConsoleLog("Copy Completed.");
             }
             catch (Exception CopyExc)
@@ -955,7 +953,6 @@ namespace CMWTAT_DIGITAL
             }
 
             //旧的位置
-            //string slmgr_self = System.AppDomain.CurrentDomain.BaseDirectory + "slmgr.vbs";
 
             string changepk = Environment.SystemDirectory + "\\changepk.exe";
 
@@ -980,14 +977,14 @@ namespace CMWTAT_DIGITAL
                     string json;
                     try
                     {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=3"); // 主要服务器
+                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
                     }
                     catch (Exception e)
                     {
                         ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
                         ConsoleLog("Error Message:" + e.Message);
                         ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=3"); // 备用服务器
+                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
                     }
                     JObject jsonobj = JObject.Parse(json);
                     List<Frequency> list = new List<Frequency>();
@@ -1117,28 +1114,6 @@ namespace CMWTAT_DIGITAL
                     }
                 }
 
-                //写入旧系统特征（用于旧版保底方案）
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Writing_old_OS"]; // "Writing feature of old Windows version";
-                    ShowBallSameDig();
-                }));
-
-                if (mode == "4")
-                {
-                    //长期KMS
-                    ConsoleLog(RunCScript(slmgr_self, "-skms 1.1.45.14:1919").Trim()); // いいよ、来いよ ｗｗｗ
-                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Volume:GVLK"" /f"); // 用于旧版保底方案
-                }
-                else
-                {
-                    RunCMD(@"reg add ""HKLM\SYSTEM\Tokens"" /v ""Channel"" /t REG_SZ /d ""Retail"" /f"); // 用于旧版保底方案
-                }
-
-                // 写入注册表模拟激活和产品信息（用于旧版保底方案）
-                RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Kernel-ProductInfo"" /t REG_DWORD /d " + sku + " /f");
-                RunCMD(@"reg add ""HKLM\SYSTEM\Tokens\Kernel"" /v ""Security-SPP-GenuineLocalStatus"" /t REG_DWORD /d 1 /f");
-
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
                     this.activatingtext.Text = (string)this.Resources["RunAct_Installing_Key"]; //提示正在安装密钥
@@ -1159,37 +1134,45 @@ namespace CMWTAT_DIGITAL
                         ShowBallSameDig();
                     }));
 
-                    //LibGatherOsState.GatherOsState.SetLibHWIDPath(tempfile + "LibHWIDx86.dll", tempfile + "LibHWIDx64.dll");
+                    string ticket = null;
 
-                    var licenseType = LibGatherOsState.GatherOsState.LicenseType.Retail;
-
-                    if (mode == "4")
+                    try
                     {
-                        //长期KMS
-                        licenseType = LibGatherOsState.GatherOsState.LicenseType.GVLK;
-                        RunCLI(tempfile + "gatherosstateltsc.exe", tempfile);
-                        ConsoleLog("进入下一步（CUR：LTSC OLD）");
+                        RegistryKey registryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\ProductOptions", true);
+                        var packageFamilyName = registryKey.GetValue("OSProductPfn").ToString();
+                        try
+                        {
+                            if (mode == "4")
+                            {
+                                //长期KMS
+                                ticket = GetHttpWebRequest(StaticServerDomain + "/Tickets/KMS.xml");
+                            }
+                            else
+                            { 
+                                ticket = GetHttpWebRequest(StaticServerDomain + "/Tickets/" + packageFamilyName + ".xml");
+                            }
+                            //System.Windows.MessageBox.Show(ticket);
+                        }
+                        catch (Exception e)
+                        {
+                            ConsoleLog("StaticServer:" + StaticServerDomain + " is not working.");
+                            ConsoleLog("Error Message:" + e.Message);
+                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        RunCLI(tempfile + "gatherosstate.exe", tempfile);
-                        ConsoleLog("进入下一步（CUR：OLD）");
+                        ConsoleLog("Get PackageFamilyName failed.");
+                        ConsoleLog("Error Message:" + e.Message);
                     }
 
-                    var result = LibGatherOsState.GatherOsState.GenActivateLicenseXML(licenseType);
+                    File.WriteAllText(tempfile + "GenuineTicketvNext.xml", ticket, Encoding.UTF8);
+                    ConsoleLog("进入下一步（CUR：VNEXT）");
 
-                    if (result.state == LibGatherOsState.GatherOsState.ActivateLicenseXMLResultState.OK)
-                    { 
-                        File.WriteAllText(tempfile + "GenuineTicketvNext.xml", result.xml, Encoding.UTF8);
-                        ConsoleLog("进入下一步（CUR：VNEXT）");
-                    }
-
-                    var hasOldTicket = File.Exists(tempfile + "GenuineTicket.xml");
                     var hasvNextTicket = File.Exists(tempfile + "GenuineTicketvNext.xml");
 
-                    if (hasOldTicket || hasvNextTicket)
+                    if (hasvNextTicket)
                     {
-                        
+
                         actbtn.Dispatcher.Invoke(new Action(() =>
                         {
                             this.activatingtext.Text = (string)this.Resources["RunAct_Getting_digital_license"]; // "Getting digital license";
@@ -1198,11 +1181,11 @@ namespace CMWTAT_DIGITAL
 
                         RunCMD(@"sc start wuauserv");
                         RunCMD(@"sc start clipsvc");
-                        
+
                         RunCMD(@"clipup -v -o -altto " + tempfile);
                         RunCMD(@"clipup -v -o -altto " + tempfile.TrimEnd('\\')); // 旧版本系统的 ClipUp 路径不能带最后的反斜杠
-                        if (OSVersionInfo.BuildVersion >= 20348) 
-                        { 
+                        if (OSVersionInfo.BuildVersion >= 20348)
+                        {
                             RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile); // 固定版本解决 22H2 后 ARM64 许可证接收问题
                             RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile.TrimEnd('\\'));
                         }
@@ -1216,17 +1199,16 @@ namespace CMWTAT_DIGITAL
                         int try_max_count = 30;
                         for (int i = 0; i < try_max_count + 1; i++)
                         {
-                            if (hasOldTicket && !File.Exists(tempfile + "GenuineTicket.xml"))
+                            if (!File.Exists(tempfile + "GenuineTicketvNext.xml"))
                             {
                                 break;
                             }
-                            if (hasvNextTicket && !File.Exists(tempfile + "GenuineTicketvNext.xml"))
                             Thread.Sleep(1000);
                             ConsoleLog($"应用许可证 重试 {i}/{try_max_count}");
                         }
 
                         runend = RunCScript(slmgr_self, "-ato").Trim();
-                        
+
                         ConsoleLog(runend);
                         if (runend.EndsWith("successfully.") || runend.Contains("0xC004F074") || runend.Contains("0xC004C003")) //0xC004F074 是 KMS38 长期激活会出的提示，Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
                         {
@@ -1261,21 +1243,6 @@ namespace CMWTAT_DIGITAL
             }
         //string runend = RunCScript(slmgr_self, "-upk").Trim();
         EndLine:;
-            // 此处确保注册表清理一定进行
-            try
-            {
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Cleaning_changes"]; // "Cleaning changes";
-                    ShowBallSameDig();
-                }));
-
-                RunCMD(@"reg delete ""HKLM\SYSTEM\Tokens"" /f");
-            }
-            catch
-            {
-                ConsoleLog("Delete Reg Error");
-            }
             if (code != "200")
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
@@ -1510,7 +1477,7 @@ namespace CMWTAT_DIGITAL
             try
             {
                 if (actbtn != null)
-                { 
+                {
                     string pattern = @"^[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}$";
                     if (is_auto == false)
                     {
