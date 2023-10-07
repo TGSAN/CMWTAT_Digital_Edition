@@ -1208,9 +1208,15 @@ namespace CMWTAT_DIGITAL
                         }
 
                         runend = RunCScript(slmgr_self, "-ato").Trim();
-
+                        
                         ConsoleLog(runend);
-                        if (runend.EndsWith("successfully.") || runend.Contains("0xC004F074") || runend.Contains("0xC004C003")) //0xC004F074 是 KMS38 长期激活会出的提示，Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
+
+                        var xprrunend = RunCScript(slmgr_self, "-xpr").Trim();
+                        var activated = (xprrunend.Contains("activated") || xprrunend.Contains("activation will expire"));
+
+                        ConsoleLog(xprrunend);
+                        
+                        if (runend.EndsWith("successfully.") || activated || runend.Contains("0xC004C003")) // Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
                         {
                             if (runend.Contains("0xC004C003"))
                             {
