@@ -16,9 +16,9 @@ A Windows 10 and Windows 11 digital license activation tool written in CSharp.
 
 # Usage 使用
 
-### [English Readme](./README.zh.md)  
+### [English Readme](./README.en.md)  
 
-### [中文 Readme](./README.en.md)  
+### [中文 Readme](./README.zh.md)  
 
 # License 许可协议
 
