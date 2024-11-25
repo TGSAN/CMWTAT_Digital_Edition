@@ -145,7 +145,7 @@ namespace CMWTAT_DIGITAL
             try
             {
                 //根据名字载入语言文件
-                langRd = System.Windows.Application.LoadComponent(new Uri(@"Lang\" + LangName + ".xaml", UriKind.Relative)) as ResourceDictionary;
+                langRd = System.Windows.Application.LoadComponent(new Uri(@"/CMWTAT_DIGITAL;component/Lang\" + LangName + ".xaml", UriKind.Relative)) as ResourceDictionary;
                 NowLang = LangName;
                 if (LangName != Constants.DefaultLang)
                 {
@@ -158,7 +158,7 @@ namespace CMWTAT_DIGITAL
             {
                 NotSupportLang = true;
                 //System.Windows.MessageBox.Show("The " + LangName + " language pack was not found and the language was set to English.\nIf you want to use Chinese as the interface language, click the \"Language\" button to switch.");
-                langRd = System.Windows.Application.LoadComponent(new Uri(@"Lang\" + Constants.DefaultLang + ".xaml", UriKind.Relative)) as ResourceDictionary;
+                langRd = System.Windows.Application.LoadComponent(new Uri(@"/CMWTAT_DIGITAL;component/Lang\" + Constants.DefaultLang + ".xaml", UriKind.Relative)) as ResourceDictionary;
                 NowLang = Constants.DefaultLang;
             }
 
