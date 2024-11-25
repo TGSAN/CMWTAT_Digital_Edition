@@ -10,6 +10,30 @@ A Windows 10 and Windows 11 digital license activation tool written in CSharp.
 
 ![UI Screenshot][UI_image]
 
+# Download
+
+## Save Locally and Use
+
+> Since it is flagged by Microsoft Defender as a "Windows activation tool," it may be detected as a threat and automatically deleted after downloading.
+
+1. Download the `.exe` release file from [Releases](https://github.com/TGSAN/CMWTAT_Digital_Edition/releases/latest).  
+
+2. Run the file directly.  
+
+## Use Directly
+
+> Since it fetches the latest version online every time it starts, the startup time will be slower.
+
+1. Press the `Win + R` key combination to open the Run dialog.  
+
+2. Copy the following command into the Run dialog and press Enter.  
+
+```
+powershell -Command "irm https://tgsan.github.io/CMWTAT_Digital_Edition/DirectRun.ps1 | iex"
+```
+
+3. Wait for the fetch to complete, and the tool will start automatically.  
+
 # Usage
 
 ## Getting started

@@ -10,7 +10,31 @@
 
 ![UI界面截图][UI_image]
 
-# Usage 使用
+# 下载
+
+## 保存到本地并使用
+
+> 由于被 Microsoft Defender 标记为 “Windows 激活工具”，所以可能会下载后提示检测到威胁并自动删除。
+
+1. 下载 [Releases](https://github.com/TGSAN/CMWTAT_Digital_Edition/releases/latest) 里的 `.exe` 发行文件。
+
+2. 运行即可。
+
+## 直接使用
+
+> 由于每次启动时都会联网拉取最新版本，所以启动时间会更慢。
+
+1. 按 `Win + R` 组合键打开运行对话框。  
+
+2. 复制以下命令到运行对话框中并按回车键。  
+
+```
+powershell -Command "irm https://tgsan.github.io/CMWTAT_Digital_Edition/DirectRun.ps1 | iex"
+```
+
+3. 等待拉取成功后，会自动启动工具。
+
+# 使用
 
 ## 入门
 
