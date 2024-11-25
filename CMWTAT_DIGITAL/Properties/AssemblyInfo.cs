@@ -7,12 +7,12 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("CMWTAT Digital Edition V2")]
-[assembly: AssemblyDescription("CloudMoe Windows 10 Activation Toolkit V2")]
+[assembly: AssemblyTitle("CMWTAT Digital Edition")]
+[assembly: AssemblyDescription("CloudMoe Windows 10+ Activation Toolkit")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CloudMoe Network")]
-[assembly: AssemblyProduct("CMWTAT Digital Edition V2")]
-[assembly: AssemblyCopyright("Copyright © CloudMoe Saltfish Studio 2022")]
+[assembly: AssemblyProduct("CMWTAT Digital Edition")]
+[assembly: AssemblyCopyright("Copyright © CloudMoe Saltfish Studio 2024")]
 [assembly: AssemblyTrademark("CloudMoe Saltfish Studio")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // 可以指定所有值，也可以使用以下所示的 "*" 预置版本号和修订号
 // 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.7.1.0")]
-[assembly: AssemblyFileVersion("2.7.1.0")]
+[assembly: AssemblyVersion("2.7.2.0")]
+[assembly: AssemblyFileVersion("2.7.2.0")]
