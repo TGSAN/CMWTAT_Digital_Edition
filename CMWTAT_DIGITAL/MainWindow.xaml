@@ -21,6 +21,7 @@
         FontFamily="{DynamicResource Font}"
         Activated="Window_Activated"
         WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
         >
     <!--FontFamily="{DynamicResource MaterialDesignFont}"-->
     <Grid>
