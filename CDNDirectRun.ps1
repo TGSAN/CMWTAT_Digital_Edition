@@ -1,7 +1,7 @@
 $isAdmin = (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
 if (-not $isAdmin) {
-    Start-Process powershell -ArgumentList "irm https://fastly.jsdelivr.net/gh/TGSAN/CMWTAT_Digital_Edition@master/CDNDirectRun.ps1 | iex" -Verb RunAs
+    Start-Process powershell -ArgumentList "irm https://fastly.jsdelivr.net/gh/TGSAN/CMWTAT_Digital_Edition/CDNDirectRun.ps1 | iex" -Verb RunAs
     Exit
 }
 
