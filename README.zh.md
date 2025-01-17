@@ -32,6 +32,12 @@
 powershell -Command "irm https://tgsan.github.io/CMWTAT_Digital_Edition/DirectRun.ps1 | iex"
 ```
 
+> 由于中国大陆部分地区的部分运营商屏蔽了 github.io，如果报错或速度缓慢可以使用以下命令替代
+
+```
+powershell -Command "irm https://fastly.jsdelivr.net/gh/TGSAN/CMWTAT_Digital_Edition@master/CDNDirectRun.ps1 | iex"
+```
+
 3. 等待拉取成功后，会自动启动工具。
 
 # 使用
