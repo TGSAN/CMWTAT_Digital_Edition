@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -310,19 +310,7 @@ namespace CMWTAT_DIGITAL
 
             try
             {
-                string json;
-                try
-                {
-                    json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=1&ver=4"); // 主要服务器
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
-                    ConsoleLog("Error Message:" + e.Message);
-                    ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                    json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=1&ver=4"); // 备用服务器
-                }
-                JObject jsonobj = JObject.Parse(json);
+                JObject jsonobj = FetchServerData(1);
                 List<Frequency> list = new List<Frequency>();
                 Frequency freq = new Frequency();
                 ositems = (JArray)jsonobj["OS"];
@@ -434,11 +422,7 @@ namespace CMWTAT_DIGITAL
                             {
                                 if (App.hiderun == true)
                                 {
-                                    int tipShowMilliseconds = 0;
-                                    string tipTitle = (string)this.Resources["notifyIconTitle"];
-                                    string tipContent = (string)this.Resources["notify_May_be_not_be_supported_try"]; //提示不支持可尝试实验性
-                                    ToolTipIcon tipType = ToolTipIcon.None;
-                                    notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                                    ShowNotifyTip((string)this.Resources["notify_May_be_not_be_supported_try"]); //提示不支持可尝试实验性
                                     Exit_Button_Click(null, null);//退出
                                 }
                             }
@@ -446,11 +430,7 @@ namespace CMWTAT_DIGITAL
                         default:
                             if (App.hiderun == true)
                             {
-                                int tipShowMilliseconds = 0;
-                                string tipTitle = (string)this.Resources["notifyIconTitle"];
-                                string tipContent = (string)this.Resources["notify_May_be_not_be_supported_exit"]; //提示不支持并退出（实验性开启）
-                                ToolTipIcon tipType = ToolTipIcon.None;
-                                notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                                ShowNotifyTip((string)this.Resources["notify_May_be_not_be_supported_try"]); //提示不支持并退出（实验性开启）
                                 Exit_Button_Click(null, null);//退出
                             }
                             break;
@@ -471,11 +451,7 @@ namespace CMWTAT_DIGITAL
 
                 if (App.hiderun == true && App.autoact == true)
                 {
-                    int tipShowMilliseconds = 0;
-                    string tipTitle = (string)this.Resources["notifyIconTitle"];
-                    string tipContent = (string)this.Resources["notify_Disconnect_to_server_exit"]; //提示无法连接服务器退出
-                    ToolTipIcon tipType = ToolTipIcon.None;
-                    notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                    ShowNotifyTip((string)this.Resources["notify_Disconnect_to_server_exit"]); //提示无法连接服务器退出
                     Exit_Button_Click(null, null);//退出
                 }
             }
@@ -626,26 +602,12 @@ namespace CMWTAT_DIGITAL
                 //获取密钥和SKU
                 try
                 {
-
-                    string json;
-                    try
-                    {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
-                        ConsoleLog("Error Message:" + e.Message);
-                        ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
-                    }
-                    JObject jsonobj = JObject.Parse(json);
+                    JObject jsonobj = FetchServerData(0);
                     List<Frequency> list = new List<Frequency>();
                     ositems = (JArray)jsonobj["OS"];
                     key = jsonobj[system]["key"].ToString();
                     sku = jsonobj[system]["sku"].ToString();
                     ConsoleLog("Edition:" + system + "\r\nKEY:" + key + "\r\nSKU:" + sku);
-
                 }
                 catch
                 {
@@ -755,11 +717,7 @@ namespace CMWTAT_DIGITAL
             {
                 if (App.hiderun == true && App.autoact == true)
                 {
-                    int tipShowMilliseconds = 0;
-                    string tipTitle = (string)this.Resources["notifyIconTitle"];
-                    string tipContent = this.activatingtext.Text;
-                    ToolTipIcon tipType = ToolTipIcon.None;
-                    notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                    ShowNotifyTip(this.activatingtext.Text);
                 }
             }));
         }
@@ -824,20 +782,7 @@ namespace CMWTAT_DIGITAL
                 //获取密钥和SKU
                 try
                 {
-
-                    string json;
-                    try
-                    {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
-                        ConsoleLog("Error Message:" + e.Message);
-                        ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
-                    }
-                    JObject jsonobj = JObject.Parse(json);
+                    JObject jsonobj = FetchServerData(0);
                     List<Frequency> list = new List<Frequency>();
                     ositems = (JArray)jsonobj["OS"];
                     key = jsonobj[system]["key"].ToString();
@@ -1111,11 +1056,7 @@ namespace CMWTAT_DIGITAL
                     this.DialogWithOKToCloseDialogText.Text = msg + "\r\n" + (string)this.Resources["ErrorCode"] + code; //错误代码 如：错误信息\r\nCode：000
                     if (App.hiderun == true && App.autoact == true)
                     {
-                        int tipShowMilliseconds = 0;
-                        string tipTitle = (string)this.Resources["notifyIconTitle"];
-                        string tipContent = msg;
-                        ToolTipIcon tipType = ToolTipIcon.None;
-                        notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                        ShowNotifyTip(msg);
                         Exit_Button_Click(null, null);
                     }
                 }));
@@ -1140,11 +1081,7 @@ namespace CMWTAT_DIGITAL
 
                     if (App.hiderun == true && App.autoact == true)
                     {
-                        int tipShowMilliseconds = 0;
-                        string tipTitle = (string)this.Resources["notifyIconTitle"];
-                        string tipContent = this.DialogWithOKToCloseDialogDonateText.Text;
-                        ToolTipIcon tipType = ToolTipIcon.None;
-                        notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                        ShowNotifyTip(this.DialogWithOKToCloseDialogDonateText.Text);
                         Exit_Button_Click(null, null);
                     }
                 }));
@@ -1339,6 +1276,39 @@ namespace CMWTAT_DIGITAL
             catch { }
         }
 
+        /// <summary>
+        /// 显示托盘通知气泡提示
+        /// </summary>
+        private void ShowNotifyTip(string tipContent,int tipShowMilliseconds = 0,ToolTipIcon tipType = ToolTipIcon.None)
+        {
+            if (notifyIcon == null) return;
+            string tipTitle = (string)this.Resources["notifyIconTitle"];
+            notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+        }
+
+        /// <summary>
+        /// 从服务器获取产品密钥和SKU信息
+        /// </summary>
+        private JObject FetchServerData(int listQuery)
+        {
+            string json;
+            try
+            {
+                json = GetHttpWebRequest(MainServerDomain + $"/api/digital?list={listQuery}&ver=4"); // 主要服务器
+            }
+            catch (Exception e)
+            {
+                ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
+                ConsoleLog("Error Message:" + e.Message);
+                ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
+                json = GetHttpWebRequest(BackupServerDomain + $"/api/digital?list={listQuery}&ver=4"); // 备用服务器
+            }
+                
+            JObject jsonobj = JObject.Parse(json);
+            return jsonobj;
+        }
+        
+
         private void A_RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             SystemEditionText.Visibility = Visibility.Visible;
@@ -1449,22 +1419,14 @@ namespace CMWTAT_DIGITAL
 
             if (NotSupportLang == true)
             {
-                int tipShowMilliseconds = 0;
-                string tipTitle = (string)this.Resources["notifyIconTitle"];
-                string tipContent = "The language pack \"" + LangName + "\" was not found, language has been automatically switched to English. You can submit this language on GitHub."; // 提示不支持语言提示
-                ToolTipIcon tipType = ToolTipIcon.None;
-                notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                ShowNotifyTip("The language pack \"" + LangName + "\" was not found, language has been automatically switched to English. You can submit this language on GitHub."); // 提示不支持语言提示
             }
 
             if (App.hiderun == true && App.autoact == true)
             {
                 this.Hide();
 
-                int tipShowMilliseconds = 0;
-                string tipTitle = (string)this.Resources["notifyIconTitle"]; //通知气泡标题
-                string tipContent = (string)this.Resources["Running"]; //提示正在运行
-                ToolTipIcon tipType = ToolTipIcon.None;
-                notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                ShowNotifyTip((string)this.Resources["Running"]); //提示正在运行
 
                 //notifyIcon.BalloonTipClicked += new EventHandler((o, e) =>
                 //{
