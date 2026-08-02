@@ -672,7 +672,7 @@ namespace CMWTAT_DIGITAL
                 this.activatingtext.Text = (string)this.Resources["RunInstall_Uninstalling_old_Key"]; //提示正在卸载旧密钥
             }));
             //卸载
-            string runend = RunCScript(slmgr_self, "-upk").Trim();
+            string runend = RunSlmgr(slmgr_self, "-upk").Trim();
             //string runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
             ConsoleLog(runend);
             if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
@@ -684,7 +684,7 @@ namespace CMWTAT_DIGITAL
                 }));
 
                 //安装数字权利升级密钥
-                if (RunCScript(slmgr_self, "-ipk " + key).Trim().EndsWith("successfully."))
+                if (RunSlmgr(slmgr_self, "-ipk " + key).Trim().EndsWith("successfully."))
                 //if (RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key).Trim().EndsWith("successfully."))
                 {
                     code = "200";
@@ -892,13 +892,13 @@ namespace CMWTAT_DIGITAL
             }));
 
             //卸载
-            string runend = RunCScript(slmgr_self, "-upk").Trim();
+            string runend = RunSlmgr(slmgr_self, "-upk").Trim();
             //string runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
             ConsoleLog(runend);
             if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
             {
 
-                RunCScript(slmgr_self, "-ckms").Trim();
+                RunSlmgr(slmgr_self, "-ckms").Trim();
 
                 if (mode == "4")
                 {
@@ -922,7 +922,7 @@ namespace CMWTAT_DIGITAL
                     }));
 
                     //安装转换密钥
-                    runend = RunCScript(slmgr_self, "-ipk " + key);
+                    runend = RunSlmgr(slmgr_self, "-ipk " + key);
                     //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key);
                     ConsoleLog(slmgr_self + " -ipk " + key);
                     ConsoleLog(runend);
@@ -938,7 +938,7 @@ namespace CMWTAT_DIGITAL
                                 ShowBallSameDig();
                             }));
 
-                            runend = RunCScript(slmgr_self, "-upk").Trim();
+                            runend = RunSlmgr(slmgr_self, "-upk").Trim();
                             //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
                             ConsoleLog(runend);
                             if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
@@ -972,7 +972,7 @@ namespace CMWTAT_DIGITAL
                 }));
 
                 //安装数字权利升级密钥
-                runend = RunCScript(slmgr_self, "-ipk " + key);
+                runend = RunSlmgr(slmgr_self, "-ipk " + key);
                 //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key);
                 ConsoleLog(slmgr_self + " -ipk " + key);
                 ConsoleLog(runend);
@@ -1035,7 +1035,7 @@ namespace CMWTAT_DIGITAL
 
                         RunCMD(@"clipup -v -o -altto " + tempfile);
                         RunCMD(@"clipup -v -o -altto " + tempfile.TrimEnd('\\')); // 旧版本系统的 ClipUp 路径不能带最后的反斜杠
-                        if (OSVersionInfo.BuildVersion >= 20348)
+                        if (OSVersionInfo.BuildVersion > 20348)
                         {
                             RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile); // 固定版本解决 22H2 后 ARM64 许可证接收问题
                             RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile.TrimEnd('\\'));
@@ -1058,11 +1058,11 @@ namespace CMWTAT_DIGITAL
                             ConsoleLog($"应用许可证 重试 {i}/{try_max_count}");
                         }
 
-                        runend = RunCScript(slmgr_self, "-ato").Trim();
+                        runend = RunSlmgr(slmgr_self, "-ato").Trim();
                         
                         ConsoleLog(runend);
 
-                        var xprrunend = RunCScript(slmgr_self, "-xpr").Trim();
+                        var xprrunend = RunSlmgr(slmgr_self, "-xpr").Trim();
                         var activated = (xprrunend.Contains("activated") || xprrunend.Contains("activation will expire"));
 
                         ConsoleLog(xprrunend);
@@ -1216,6 +1216,36 @@ namespace CMWTAT_DIGITAL
             {
                 return "Error";
             }
+        }
+
+        /// <summary>
+        /// 执行 slmgr 命令。优先使用进程内的 C# 复刻实现（LibSofwareLicenseManager.SofwareLicenseManager），
+        /// 这样即使系统未安装 / 已禁用 VBScript 宿主也能正常工作；
+        /// 若 C# 实现抛出异常或没有任何输出，则回退到原来的 cscript slmgr.vbs 方式。
+        /// 返回值语义与 RunCScript 完全一致（已 Trim，失败时可能为 "Error"）。
+        /// </summary>
+        /// <param name="path">slmgr.vbs 的路径，仅在回退时使用。</param>
+        /// <param name="var">slmgr 参数，例如 "-upk"、"-ipk XXXXX-..."。</param>
+        public static string RunSlmgr(string path, string var = "")
+        {
+            try
+            {
+                ConsoleLog("Slmgr(C#) " + var);
+                string myString = CMWTAT_DIGITAL.LibSofwareLicenseManager.SofwareLicenseManager.Run(var);
+                if (!string.IsNullOrEmpty(myString))
+                {
+                    ConsoleLog(myString);
+                    return myString;
+                }
+                ConsoleLog("Slmgr(C#) returned nothing, fallback to CScript.");
+            }
+            catch (Exception SlmgrExc)
+            {
+                ConsoleLog("Slmgr(C#) has Exception: " + SlmgrExc.Message + ", fallback to CScript.");
+            }
+
+            // 兜底：仍然走原来的 cscript slmgr.vbs
+            return RunCScript(path, var);
         }
 
         public static string RunCScript(string path, string var = "")
