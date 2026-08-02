@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:CMWTAT_DIGITAL"
         xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
         mc:Ignorable="d"
-        Title="{DynamicResource TitleName}" Height="600" Width="480"
+        Title="{DynamicResource TitleName}" Height="600" Width="500"
         ResizeMode="NoResize"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:WindowHelper.SystemBackdropType="Mica"
@@ -78,6 +78,14 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
+                    <Button x:Name="donateSwitchBtn" VerticalAlignment="Stretch" Padding="0" Width="32" Margin="4,8"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                        <ui:FontIcon FontSize="14" Icon="{x:Static ui:SegoeFluentIcons.Heart}" />
+                    </Button>
+                    <Button x:Name="langSwitchBtn" VerticalAlignment="Stretch" Padding="0" Width="32" Margin="4,8"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                        <ui:FontIcon FontSize="14" Icon="{x:Static ui:SegoeFluentIcons.LocaleLanguage}" />
+                    </Button>
                     <Button x:Name="themeSwitchBtn" VerticalAlignment="Stretch" Padding="0" Width="32" Margin="4,8"
                         WindowChrome.IsHitTestVisibleInChrome="True"
                         Click="themeSwitchBtn_Click">
@@ -165,40 +173,56 @@
                             <TextBlock Style="{DynamicResource BodyTextBlockStyle}" Margin="0,16,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
                         </StackPanel>
                     </ui:ContentDialog>
+                    <!-- 以下这些对话框的正文长度不可控（错误代码 -4 会带上 slmgr 的原始输出，
+                         各语言的长文本也可能撑高），所以放开正文的纵向滚动。
+                         ContentDialog 的模板里本来就有一个 ContentScrollViewer 包着正文，
+                         它的滚动条策略是 {TemplateBinding ScrollViewer.VerticalScrollBarVisibility}，
+                         而默认样式把这个附加属性设成了 Disabled（正文超出直接裁掉），
+                         所以这里显式改成 Auto 即可，不需要再自己套一层 ScrollViewer。
+                         横向仍保持默认的 Disabled，否则 TextBlock 拿到无限宽度就不会自动换行了。
+                         注意：进度类对话框（DialogWait / DialogActProg / DialogWithCancel）不能加，
+                         它们内部用 Height="*" 的行做居中留白，一旦可滚动就会被压成 0 高。 -->
                     <ui:ContentDialog x:Name="DialogWithOK" Title="Title"
                         d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="Hello World" />
                     </ui:ContentDialog>
                     <ui:ContentDialog x:Name="DialogHelp" Title="Help"
                         d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource HelpText}"/>
                     </ui:ContentDialog>
                     <ui:ContentDialog x:Name="DialogWithExit" Title="{DynamicResource ErrorTitle}"
                         d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         CloseButtonText="{DynamicResource Exit}" DefaultButton="Close" CloseButtonClick="Exit_Button_Click">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource Disconnect_to_server_exit}"/>
                     </ui:ContentDialog>
                     <ui:ContentDialog x:Name="DialogWithOKToCloseDialog" Title="Title"
                         d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogText" TextWrapping="Wrap">Text</TextBlock>
                     </ui:ContentDialog>
                     <ui:ContentDialog x:Name="DialogWithOKToCloseDialogDonate" Title="{DynamicResource Complete}"
                         d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         PrimaryButtonText="{DynamicResource DonateBtn}" PrimaryButtonClick="Donate_Button_Click"
                         CloseButtonText="{DynamicResource Refuse}" DefaultButton="Primary">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogDonateText" TextWrapping="Wrap" Text="{DynamicResource DonateTextActivated}" />
                     </ui:ContentDialog>
                     <ui:ContentDialog x:Name="DialogUpdate" Title="{DynamicResource UpdateTitle}"
                         d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         PrimaryButtonText="{DynamicResource UpdateNow}" PrimaryButtonClick="UpdateBtn_Click"
                         SecondaryButtonText="{DynamicResource Ignore}" DefaultButton="Primary">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogUpdateText" TextWrapping="Wrap" Text="{DynamicResource UpdateText}" />
                     </ui:ContentDialog>
                     <ui:ContentDialog x:Name="DialogUpgradeFullVersion" Title="{DynamicResource UpgradeFullVersionWindowsTitle}"
                         d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
                         PrimaryButtonText="{DynamicResource OK}" PrimaryButtonClick="UpgradeFullVersionWindows_Click"
                         CloseButtonText="{DynamicResource Cancel}" DefaultButton="Primary">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
