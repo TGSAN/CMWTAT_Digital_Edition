@@ -1,21 +1,23 @@
-﻿using System;
+﻿using iNKORE.UI.WPF.Modern;
+using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
+using OSVersionInfoClass;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Net;
-using System.IO;
-using System.Threading;
-using Microsoft.Win32;
-using System.Text.RegularExpressions;
-using System.Globalization;
-using System.Reflection;
 using System.Windows.Forms;
-using OSVersionInfoClass;
-using Newtonsoft.Json.Linq;
-using iNKORE.UI.WPF.Modern;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using ContentDialog = iNKORE.UI.WPF.Modern.Controls.ContentDialog;
 using ContentDialogButtonClickEventArgs = iNKORE.UI.WPF.Modern.Controls.ContentDialogButtonClickEventArgs;
 
@@ -32,6 +34,12 @@ namespace CMWTAT_DIGITAL
     /// </summary>
     public partial class MainWindow : Window
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern int PrivateExtractIcons(string lpszFile, int nIconIndex, int cxIcon, int cyIcon, IntPtr[] phicon, IntPtr[] piconid, int nIcons, int flags);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool DestroyIcon(IntPtr hIcon);
+
         [DllImport("Kernel32.dll")]
         private static extern bool Wow64EnableWow64FsRedirection(bool Wow64FsEnableRedirection);//重定向
 
@@ -243,6 +251,24 @@ namespace CMWTAT_DIGITAL
         public MainWindow()
         {
             InitializeComponent();
+            LoadTitleBarIcon();
+        }
+
+        private void LoadTitleBarIcon()
+        {
+            try
+            {
+                var exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                var hIcons = new IntPtr[1];
+                PrivateExtractIcons(exePath, 0, 256, 256, hIcons, null, 1, 0);
+                if (hIcons[0] != IntPtr.Zero)
+                {
+                    TitleBarIcon.Source = Imaging.CreateBitmapSourceFromHIcon(
+                        hIcons[0], Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    DestroyIcon(hIcons[0]);
+                }
+            }
+            catch { }
         }
 
         JArray ositems;

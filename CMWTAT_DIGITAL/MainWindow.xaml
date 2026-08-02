@@ -11,13 +11,16 @@
         xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:WindowHelper.SystemBackdropType="Mica"
-        ui:TitleBar.Height="36"
+        ui:TitleBar.ExtendViewIntoTitleBar="True"
+        ui:TitleBar.Height="48"
+        ui:TitleBar.MaximizeButtonAvailability="Collapsed"
         TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="ClearType"
         Background="{DynamicResource ApplicationPageBackgroundThemeBrush}"
+        d:Background="Gray"
         d:DataContext="{d:DesignInstance domain:ViewModel, d:IsDesignTimeCreatable=False}"
         Icon="CMWTAT.ico"
         Closing="Window_Closing"
@@ -26,97 +29,156 @@
         Loaded="Window_Loaded"
         >
     <Grid>
-        <Grid Margin="30,20,30,20" VerticalAlignment="Center">
-            <StackPanel>
-                <ui:SettingsCard ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
-                    <ui:SettingsCard.Content>
-                        <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
-                    </ui:SettingsCard.Content>
-                </ui:SettingsCard>
-                <ui:SettingsCard ContentAlignment="Left" Padding="30,30" Margin="0,20,0,0">
-                    <ui:SettingsCard.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- 标题栏 -->
+            <StackPanel Margin="20,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Image x:Name="TitleBarIcon" Width="18" Height="18" VerticalAlignment="Center"
+                    RenderOptions.BitmapScalingMode="HighQuality"/>
+                <StackPanel Margin="18,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Opacity" Value="1"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Title}"
+                       VerticalAlignment="Bottom"
+                       Margin="0,0,8,0"
+                       FontSize="11"/>
+                    <TextBlock Text="Preview"
+                       VerticalAlignment="Bottom"
+                       Margin="0,0,8,0"
+                       FontSize="9"
+                       Opacity="0.5" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- 内容区域 -->
+            <Border Grid.Row="1"
+                CornerRadius="8, 8, 0, 0" Background="{DynamicResource LayerFillColorDefaultBrush}" 
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                <Grid Grid.Row="1" Margin="30,20,30,20" VerticalAlignment="Center">
+                    <StackPanel>
+                        <ui:SettingsCard Background="{DynamicResource LayerFillColorDefaultBrush}" ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
+                            <ui:SettingsCard.Content>
+                                <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
+                            </ui:SettingsCard.Content>
+                        </ui:SettingsCard>
+                        <ui:SettingsCard Background="{DynamicResource LayerFillColorDefaultBrush}" ContentAlignment="Left" Padding="30,30" Margin="0,20,0,0">
+                            <ui:SettingsCard.Content>
+                                <StackPanel>
+                                    <Grid>
+                                        <ComboBox x:Name="SystemEditionText" DisplayMemberPath="DisplayOS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Visible"/>
+                                        <TextBox x:Name="SystemEditionTextInput" ui:ControlHelper.PlaceholderText="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" MaxLength="29" xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore" input:InputMethod.IsInputMethodEnabled="False" VerticalAlignment="Center" Visibility="Hidden" TextChanged="SystemEditionTextInput_TextChanged">
+                                            <TextBox.Text>
+                                                <Binding Path="SN" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <domain:IsSN ValidatesOnTargetUpdated="True"/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+                                    </Grid>
+                                    <Grid Margin="0,30,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <RadioButton x:Name="AutoRadio" Grid.Column="0" Content="{DynamicResource Auto_Mode}" IsChecked="True" Checked="A_RadioButton_Checked"/>
+                                        <RadioButton x:Name="ManualRadio" Grid.Column="2" Content="{DynamicResource Manual_Mode}" Checked="M_RadioButton_Checked"/>
+                                    </Grid>
+                                </StackPanel>
+                            </ui:SettingsCard.Content>
+                        </ui:SettingsCard>
+                        <Button x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch"  ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65" />
+                        <Button x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
+                        <Button x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
+                    </StackPanel>
+                    <!-- 对话框：使用框架自带的 ContentDialog，同一时间只能显示一个 -->
+                    <ui:ContentDialog x:Name="DialogWait" d:Visibility="Collapsed">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <ui:ProgressRing Grid.Row="1" IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="48" Height="48" />
+                            <TextBlock Grid.Row="3" Style="{DynamicResource BodyTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
+                        </Grid>
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogActProg" d:Visibility="Collapsed">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <ui:ProgressRing Grid.Row="1" IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="48" Height="48" />
+                            <TextBlock Grid.Row="3" Style="{DynamicResource BodyTextBlockStyle}" x:Name="activatingtext" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Activating}" />
+                        </Grid>
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogWithCancel"
+                  d:Visibility="Collapsed"
+                  CloseButtonText="{DynamicResource Cancel}">
                         <StackPanel>
-                            <Grid>
-                                <ComboBox x:Name="SystemEditionText" DisplayMemberPath="DisplayOS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Visible"/>
-                                <TextBox x:Name="SystemEditionTextInput" ui:ControlHelper.PlaceholderText="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" MaxLength="29" xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore" input:InputMethod.IsInputMethodEnabled="False" VerticalAlignment="Center" Visibility="Hidden" TextChanged="SystemEditionTextInput_TextChanged">
-                                    <TextBox.Text>
-                                        <Binding Path="SN" UpdateSourceTrigger="PropertyChanged">
-                                            <Binding.ValidationRules>
-                                                <domain:IsSN ValidatesOnTargetUpdated="True"/>
-                                            </Binding.ValidationRules>
-                                        </Binding>
-                                    </TextBox.Text>
-                                </TextBox>
-                            </Grid>
-                            <Grid Margin="0,30,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <RadioButton x:Name="AutoRadio" Grid.Column="0" Content="{DynamicResource Auto_Mode}" IsChecked="True" Checked="A_RadioButton_Checked"/>
-                                <RadioButton x:Name="ManualRadio" Grid.Column="2" Content="{DynamicResource Manual_Mode}" Checked="M_RadioButton_Checked"/>
-                            </Grid>
+                            <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
+                            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" Margin="0,16,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
                         </StackPanel>
-                    </ui:SettingsCard.Content>
-                </ui:SettingsCard>
-                <Button x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch"  ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65" />
-                <Button x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
-                <Button x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
-            </StackPanel>
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogWithOK" Title="Title"
+                  d:Visibility="Collapsed"
+                  CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="Hello World" />
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogHelp" Title="Help"
+                  d:Visibility="Collapsed"
+                  CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource HelpText}"/>
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogWithExit" Title="{DynamicResource ErrorTitle}"
+                  d:Visibility="Collapsed"
+                  CloseButtonText="{DynamicResource Exit}" DefaultButton="Close" CloseButtonClick="Exit_Button_Click">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource Disconnect_to_server_exit}"/>
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogWithOKToCloseDialog" Title="Title"
+                  d:Visibility="Collapsed"
+                  CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogText" TextWrapping="Wrap">Text</TextBlock>
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogWithOKToCloseDialogDonate" Title="{DynamicResource Complete}"
+                  d:Visibility="Collapsed"
+                  PrimaryButtonText="{DynamicResource DonateBtn}" PrimaryButtonClick="Donate_Button_Click"
+                  CloseButtonText="{DynamicResource Refuse}" DefaultButton="Primary">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogDonateText" TextWrapping="Wrap" Text="{DynamicResource DonateTextActivated}" />
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogUpdate" Title="{DynamicResource UpdateTitle}"
+                  d:Visibility="Collapsed"
+                  PrimaryButtonText="{DynamicResource UpdateNow}" PrimaryButtonClick="UpdateBtn_Click"
+                  SecondaryButtonText="{DynamicResource Ignore}" DefaultButton="Primary">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogUpdateText" TextWrapping="Wrap" Text="{DynamicResource UpdateText}" />
+                    </ui:ContentDialog>
+                    <ui:ContentDialog x:Name="DialogUpgradeFullVersion" Title="{DynamicResource UpgradeFullVersionWindowsTitle}"
+                  d:Visibility="Collapsed"
+                  PrimaryButtonText="{DynamicResource OK}" PrimaryButtonClick="UpgradeFullVersionWindows_Click"
+                  CloseButtonText="{DynamicResource Cancel}" DefaultButton="Primary">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
+                    </ui:ContentDialog>
+                </Grid>
+            </Border>
         </Grid>
-
-        <!-- 对话框：使用框架自带的 ContentDialog，同一时间只能显示一个 -->
-        <ui:ContentDialog x:Name="DialogWait">
-            <StackPanel>
-                <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
-                <TextBlock Style="{DynamicResource BodyTextBlockStyle}" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
-            </StackPanel>
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogActProg">
-            <StackPanel>
-                <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
-                <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="activatingtext" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Activating}" />
-            </StackPanel>
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogWithCancel"
-                          CloseButtonText="{DynamicResource Cancel}">
-            <StackPanel>
-                <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
-                <TextBlock Style="{DynamicResource BodyTextBlockStyle}" Margin="0,16,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
-            </StackPanel>
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogWithOK" Title="Title"
-                          CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
-            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="Hello World" />
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogHelp" Title="Help"
-                          CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
-            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource HelpText}"/>
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogWithExit" Title="{DynamicResource ErrorTitle}"
-                          CloseButtonText="{DynamicResource Exit}" DefaultButton="Close" CloseButtonClick="Exit_Button_Click">
-            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource Disconnect_to_server_exit}"/>
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogWithOKToCloseDialog" Title="Title"
-                          CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
-            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogText" TextWrapping="Wrap">Text</TextBlock>
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogWithOKToCloseDialogDonate" Title="{DynamicResource Complete}"
-                          PrimaryButtonText="{DynamicResource DonateBtn}" PrimaryButtonClick="Donate_Button_Click"
-                          CloseButtonText="{DynamicResource Refuse}" DefaultButton="Primary">
-            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogDonateText" TextWrapping="Wrap" Text="{DynamicResource DonateTextActivated}" />
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogUpdate" Title="{DynamicResource UpdateTitle}"
-                          PrimaryButtonText="{DynamicResource UpdateNow}" PrimaryButtonClick="UpdateBtn_Click"
-                          SecondaryButtonText="{DynamicResource Ignore}" DefaultButton="Primary">
-            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogUpdateText" TextWrapping="Wrap" Text="{DynamicResource UpdateText}" />
-        </ui:ContentDialog>
-        <ui:ContentDialog x:Name="DialogUpgradeFullVersion" Title="{DynamicResource UpgradeFullVersionWindowsTitle}"
-                          PrimaryButtonText="{DynamicResource OK}" PrimaryButtonClick="UpgradeFullVersionWindows_Click"
-                          CloseButtonText="{DynamicResource Cancel}" DefaultButton="Primary">
-            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
-        </ui:ContentDialog>
     </Grid>
-
 </Window>
