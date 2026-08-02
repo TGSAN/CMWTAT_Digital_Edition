@@ -1698,6 +1698,7 @@ namespace CMWTAT_DIGITAL
         private void Donate_Button_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             OpenDonatePage();
+            args.Cancel = true;
         }
 
         /// <summary>
@@ -1815,6 +1816,7 @@ namespace CMWTAT_DIGITAL
         private void UpdateBtn_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             System.Diagnostics.Process.Start("https://cmwtat.cloudmoe.com"); // 打开官网
+            args.Cancel = true;
         }
 
         private void Window_Activated(object sender, EventArgs e)

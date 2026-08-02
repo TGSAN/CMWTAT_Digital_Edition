@@ -1,6 +1,3 @@
 ﻿<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
-  <!-- IncludeDebugSymbols 默认是 true，会把引用程序集的 .pdb 也一起塞进 exe。
-       iNKORE.UI.WPF.Modern 的 NuGet 包里带了 pdb，白白占掉约 200 KB，关掉。
-       （压缩本来就是默认开的，DisableCompression 不要动。） -->
   <Costura IncludeDebugSymbols="false" />
 </Weavers>
