@@ -961,7 +961,7 @@ namespace CMWTAT_DIGITAL
             }
 
             DialogRebootlessUpdate.PrimaryButtonText = primaryText;
-            DialogRebootlessUpdateText.Text = statusText + "\r\n\r\n" + description;
+            DialogRebootlessUpdateText.Text = statusText + "\r\n" + description;
         }
 
         /// <summary>
@@ -1770,6 +1770,8 @@ namespace CMWTAT_DIGITAL
 
         private void A_RadioButton_Checked(object sender, RoutedEventArgs e)
         {
+            SystemEditionTextLabel.Visibility = Visibility.Visible;      // “选择目标 SKU”
+            SystemEditionTextInputLabel.Visibility = Visibility.Hidden;
             SystemEditionText.Visibility = Visibility.Visible;
             SystemEditionTextInput.Visibility = Visibility.Hidden;
             is_auto = true;
@@ -1778,6 +1780,8 @@ namespace CMWTAT_DIGITAL
 
         private void M_RadioButton_Checked(object sender, RoutedEventArgs e)
         {
+            SystemEditionTextLabel.Visibility = Visibility.Hidden;
+            SystemEditionTextInputLabel.Visibility = Visibility.Visible; // “输入目标 SKU 序列号”
             SystemEditionText.Visibility = Visibility.Hidden;
             SystemEditionTextInput.Visibility = Visibility.Visible;
             is_auto = false;

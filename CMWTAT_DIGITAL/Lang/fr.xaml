@@ -30,9 +30,6 @@
     <sys:String x:Key="TitleName">
         CMWTAT Edition numérique
     </sys:String>
-    <sys:String x:Key="AppName">
-        CMWTAT Edition numérique V2
-    </sys:String>
     <sys:String x:Key="UpdateTitle">
         Une nouvelle version disponible !
     </sys:String>
@@ -65,6 +62,12 @@
     </sys:String>
     <sys:String x:Key="LatestVersion">
         Dernière version
+    </sys:String>
+    <sys:String x:Key="Select_target_SKU">
+        Choisir le SKU cible (SKU actuel par défaut)
+    </sys:String>
+    <sys:String x:Key="Input_target_SKU">
+        Saisir la clé de produit du SKU cible
     </sys:String>
     <sys:String x:Key="Auto_Mode">
         Mode automatique
@@ -220,7 +223,7 @@
 Vous utilisez actuellement la version Core de Windows, vous pouvez utiliser cette fonctionnalité pour passer à la version complète de Windows.&#10;(Si l'opération ne répond pas, il se peut que la version actuelle ne prenne pas en charge la mise à niveau ou qu'une mise à niveau soit déjà en cours) &#10;&#10;Remarque :&#10;Cette opération est irréversible, une fois la mise à niveau terminée vous ne pourrez plus revenir à la version Core de Windows !&#10;&#10;Voulez-vous vraiment effectuer la mise à niveau ?
     </sys:String>
     <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
-La mise à jour par correctif à chaud (hotpatch) de Windows est un droit spécial réservé aux utilisateurs disposant d'une licence d'abonnement Windows.&#10;&#10;Normalement, les mises à jour mensuelles de Windows nécessitent un redémarrage du système d'exploitation pour être terminées. Une fois les correctifs à chaud activés, Windows peut installer les mises à jour sans redémarrer le système (à l'exception des mises à jour de référence, par exemple une mise à jour de référence trimestrielle est publiée tous les 3 mois).
+La mise à jour par correctif à chaud (hotpatch) de Windows est un droit spécial réservé aux utilisateurs disposant d'une licence d'abonnement Windows.&#10;&#10;Normalement, les mises à jour mensuelles de Windows nécessitent un redémarrage du système d'exploitation pour être terminées.&#10;Une fois les correctifs à chaud activés, Windows peut installer les mises à jour sans redémarrer le système.&#10;&#10;Les cas suivants font exception :&#10;Les mises à jour de référence (une mise à jour de référence trimestrielle est généralement publiée tous les 3 mois)&#10;Windows n'est pas sur la dernière version de référence&#10;La sécurité basée sur la virtualisation (VBS) est désactivée&#10;Utilisation d'une version préliminaire Windows Insider&#10;Les appareils ARM64 utilisant CHPE sans l'avoir désactivé
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 Cette application prend désormais en charge les arguments de ligne de commande au démarrage !&#10;&#10;-a&#9;--auto&#9;&#9;Activation automatique.&#10;-h&#9;--hide&#9;&#9;Exécuter en mode masqué (fonctionne uniquement avec -auto).&#10;-e&#9;--expact&#9;&#9;Activation expérimentale.&#10;-l&#9;--log&#9;&#9;Écrire le journal dans un fichier.&#10;-?&#9;--help&#9;&#9;Afficher cette boîte de dialogue d'aide.

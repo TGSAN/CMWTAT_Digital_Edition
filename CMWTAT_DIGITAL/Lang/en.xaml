@@ -30,9 +30,6 @@
     <sys:String x:Key="TitleName">
         CMWTAT Digital Edition
     </sys:String>
-    <sys:String x:Key="AppName">
-        CMWTAT Digital Edition V2
-    </sys:String>
     <sys:String x:Key="UpdateTitle">
         A new version available!
     </sys:String>
@@ -65,6 +62,12 @@
     </sys:String>
     <sys:String x:Key="LatestVersion">
         Latest Version
+    </sys:String>
+    <sys:String x:Key="Select_target_SKU">
+        Select target SKU (defaults to current SKU)
+    </sys:String>
+    <sys:String x:Key="Input_target_SKU">
+        Enter target SKU product key
     </sys:String>
     <sys:String x:Key="Auto_Mode">
         Auto Mode
@@ -220,7 +223,7 @@
 You are currently using the core version of Windows, you can use this feature to upgrade to the full version of Windows.&#10;(If the operation does not respond it may be that the current version does not support the upgrade or is in the process of upgrading) &#10;&#10;Note:&#10;This operation is not reversible and once the upgrade is complete you will not be able to roll back to the core version of Windows!&#10;&#10;Are you sure you want to perform an upgrade?
     </sys:String>
     <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
-Windows hotpatch update is a special entitlement for users with a Windows subscription license.&#10;&#10;Normally, Windows monthly updates require restarting the operating system to complete. Once hotpatching is enabled, Windows can install updates without restarting the system (except for baseline updates, e.g. a quarterly baseline update is pushed every 3 months).
+Windows hotpatch update is a special entitlement for users with a Windows subscription license.&#10;&#10;Normally, Windows monthly updates require restarting the operating system to complete.&#10;Once hotpatching is enabled, Windows can install updates without restarting the system.&#10;&#10;The following cases are excluded:&#10;Baseline updates (a quarterly baseline update is usually pushed every 3 months)&#10;The current Windows is not on the latest baseline version&#10;VBS (Virtualization-based Security) is turned off&#10;Running a Windows Insider preview build&#10;ARM64 devices that use CHPE without having disabled it
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 This application now supports the use of console args to startup!&#10;&#10;-a&#9;--auto&#9;&#9;Auto activate.&#10;-h&#9;--hide&#9;&#9;Run with hide mode (Only be worked with -auto).&#10;-e&#9;--expact&#9;&#9;Experimental activation.&#10;-l&#9;--log&#9;&#9;Output log to file.&#10;-?&#9;--help&#9;&#9;Show this help Dialog.

@@ -30,9 +30,6 @@
     <sys:String x:Key="TitleName">
         雲萌 10+ デジタルライセンス認証アプリ
     </sys:String>
-    <sys:String x:Key="AppName">
-        CMWTAT Digital Edition V2
-    </sys:String>
     <sys:String x:Key="UpdateTitle">
         新しいバージョンがあります！
     </sys:String>
@@ -65,6 +62,12 @@
     </sys:String>
     <sys:String x:Key="LatestVersion">
         ラストバージョン
+    </sys:String>
+    <sys:String x:Key="Select_target_SKU">
+        対象 SKU を選択（既定値は現在の SKU）
+    </sys:String>
+    <sys:String x:Key="Input_target_SKU">
+        対象 SKU のプロダクト キーを入力
     </sys:String>
     <sys:String x:Key="Auto_Mode">
         オートモード
@@ -220,7 +223,7 @@
 現在お使いの Windows はコア版（Core エディション）です。この機能で完全版 Windows にアップグレードできます。&#10;（操作しても反応がない場合は、現在のバージョンがアップグレードに対応していないか、既にアップグレード処理中の可能性があります）&#10;&#10;注意：&#10;この操作は元に戻せません。アップグレードが完了すると、コア版 Windows に戻すことはできません！&#10;&#10;アップグレードを実行してもよろしいですか？
     </sys:String>
     <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
-Windows のホットパッチ更新は、Windows のサブスクリプション ライセンスをお持ちのユーザー向けの特別な特典です。&#10;&#10;通常、Windows の毎月の更新プログラムを適用するにはオペレーティング システムの再起動が必要ですが、ホットパッチを有効にすると、システムを再起動せずに更新できます（ベースライン更新を除く。たとえば 3 か月ごとに四半期ベースライン更新が配信されます）。
+Windows のホットパッチ更新は、Windows のサブスクリプション ライセンスをお持ちのユーザー向けの特別な特典です。&#10;&#10;通常、Windows の毎月の更新プログラムを適用するにはオペレーティング システムの再起動が必要です。&#10;ホットパッチを有効にすると、システムを再起動せずに更新できます。&#10;&#10;ただし、以下の場合を除きます：&#10;ベースライン更新（通常、3 か月ごとに四半期ベースライン更新が配信されます）&#10;現在の Windows が最新のベースライン バージョンではない&#10;VBS（仮想化ベースのセキュリティ）を無効にしている&#10;Windows Insider プレビュー ビルドを使用している&#10;CHPE を使用し、無効化していない ARM64 デバイス
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 このアプリは起動時にコンソール引数を使用できるようになりました！&#10;&#10;-a&#9;--auto&#9;&#9;自動認証。&#10;-h&#9;--hide&#9;&#9;非表示モードで実行 (-autoと一緒に使用するだけ可能)。&#10;-e&#9;--expact&#9;&#9;実験性認証。&#10;-l&#9;--log&#9;&#9;ログをファイルに出力。&#10;-?&#9;--help&#9;&#9;この説明ダイアログボックスを表示する。

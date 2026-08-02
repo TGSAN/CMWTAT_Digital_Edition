@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:CMWTAT_DIGITAL"
         xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
         mc:Ignorable="d"
-        Title="{DynamicResource TitleName}" Height="600" Width="500"
+        Title="{DynamicResource TitleName}" Height="540" Width="500"
         ResizeMode="NoResize"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:WindowHelper.SystemBackdropType="Mica"
@@ -113,14 +113,19 @@
                 <Grid VerticalAlignment="Stretch">
                     <Grid Margin="30,20,30,20" VerticalAlignment="Center">
                         <StackPanel>
-                            <ui:SettingsCard ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
-                                <ui:SettingsCard.Content>
-                                    <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
-                                </ui:SettingsCard.Content>
-                            </ui:SettingsCard>
-                            <ui:SettingsCard ContentAlignment="Left" Padding="30,20" Margin="0,20,0,0">
+                            <ui:SettingsCard ContentAlignment="Left" Padding="30,20" Margin="0">
                                 <ui:SettingsCard.Content>
                                     <StackPanel>
+                                        <!-- 这两个标签和下面的 ComboBox / TextBox 一一对应，
+                                             同样是叠在一格里靠 Visibility 切换（见 A_/M_RadioButton_Checked）。
+                                             用 Hidden 而不是 Collapsed：隐藏的那个仍然参与布局，
+                                             这一格的高度始终取两者的最大值，切换模式时不会跳动。
+                                             加 TextWrapping 是防呆：法语/俄语译文明显更长，
+                                             万一撑出 SettingsCard 的宽度，宁可折行也别被硬裁掉。 -->
+                                        <Grid Margin="0,10,0,20">
+                                            <TextBlock x:Name="SystemEditionTextLabel" TextWrapping="Wrap" Text="{DynamicResource Select_target_SKU}" />
+                                            <TextBlock x:Name="SystemEditionTextInputLabel" TextWrapping="Wrap" Text="{DynamicResource Input_target_SKU}" Visibility="Hidden" />
+                                        </Grid>
                                         <Grid>
                                             <ComboBox x:Name="SystemEditionText" DisplayMemberPath="DisplayOS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Visible"/>
                                             <TextBox x:Name="SystemEditionTextInput" ui:ControlHelper.PlaceholderText="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" MaxLength="29" xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore" input:InputMethod.IsInputMethodEnabled="False" VerticalAlignment="Center" Visibility="Hidden" TextChanged="SystemEditionTextInput_TextChanged">
