@@ -177,6 +177,15 @@
     <sys:String x:Key="ThemeMode_Light">
         ライト
     </sys:String>
+    <sys:String x:Key="LanguageName">
+        日本語
+    </sys:String>
+    <sys:String x:Key="LangSwitchToolTip">
+        言語
+    </sys:String>
+    <sys:String x:Key="DonateToolTip">
+        寄付
+    </sys:String>
 
     <!--
         Attention:

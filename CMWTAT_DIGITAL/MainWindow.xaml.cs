@@ -235,6 +235,136 @@ namespace CMWTAT_DIGITAL
             }
 
             UpdateThemeSwitchButton(); // 语言变了，标题栏主题按钮的工具提示要跟着刷新
+            BuildLangMenu();           // 重建语言菜单：勾选项要指向新语言
+        }
+
+        private static List<string> availableLangs = null; // 编译期就定死了，检测一次即可
+
+        /// <summary>
+        /// 动态检测程序里编译进了哪些语言：直接枚举 .g.resources 里的 lang/*.baml。
+        /// 这样以后往 Lang\ 里加一个 xx.xaml 就自动出现在菜单里，不用改代码。
+        /// </summary>
+        private static List<string> GetAvailableLangs()
+        {
+            if (availableLangs != null)
+            {
+                return availableLangs;
+            }
+
+            List<string> langs = new List<string>();
+
+            try
+            {
+                Assembly asm = Assembly.GetExecutingAssembly();
+                System.Resources.ResourceManager rm =
+                    new System.Resources.ResourceManager(asm.GetName().Name + ".g", asm);
+                System.Resources.ResourceSet res = rm.GetResourceSet(CultureInfo.InvariantCulture, true, true);
+
+                if (res != null)
+                {
+                    const string prefix = "lang/"; // WPF 会把资源键统一转成小写、并用正斜杠
+                    const string suffix = ".baml";
+
+                    // 只取键不碰值：读 Value 会把每个 BAML 流都实例化出来，没必要。
+                    // 另外这里刻意不 Dispose：这个 ResourceSet 归我们自己 new 的 ResourceManager 管，
+                    // 但不值得为了省一个流去冒动到 WPF 资源加载的风险。
+                    System.Collections.IDictionaryEnumerator en = res.GetEnumerator();
+                    while (en.MoveNext())
+                    {
+                        string key = en.Key as string;
+                        if (key != null && key.StartsWith(prefix) && key.EndsWith(suffix))
+                        {
+                            langs.Add(key.Substring(prefix.Length, key.Length - prefix.Length - suffix.Length));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                ConsoleLog("Failed to enumerate languages: " + e.Message);
+            }
+
+            if (langs.Count == 0)
+            {
+                langs.Add(Constants.DefaultLang); // 兜底，至少别弹出一个空菜单
+            }
+
+            langs.Sort(StringComparer.OrdinalIgnoreCase);
+            availableLangs = langs;
+            return langs;
+        }
+
+        /// <summary>
+        /// 读取某个语言包自报的名字（LanguageName），例如 zh -> 简体中文。
+        /// 语言包里没写就退回显示语言代码。
+        /// </summary>
+        private static string GetLangDisplayName(string langCode)
+        {
+            try
+            {
+                ResourceDictionary rd = System.Windows.Application.LoadComponent(
+                    new Uri(@"/CMWTAT_DIGITAL;component/Lang\" + langCode + ".xaml", UriKind.Relative)) as ResourceDictionary;
+
+                string name = rd == null ? null : rd["LanguageName"] as string;
+                return string.IsNullOrEmpty(name) ? langCode : name;
+            }
+            catch
+            {
+                return langCode;
+            }
+        }
+
+        /// <summary>
+        /// 重建标题栏的语言菜单，当前语言那一项用 CheckMark 图标标出。
+        /// 放在 LoadLang() 里调用：语言列表和勾选项只可能在这个时机变化，
+        /// 而且不用去和 FlyoutService 自己挂的 Click 处理器抢执行顺序。
+        /// </summary>
+        private void BuildLangMenu()
+        {
+            if (langMenuFlyout == null)
+            {
+                return; // InitializeComponent() 之前
+            }
+
+            langMenuFlyout.Items.Clear();
+
+            foreach (string code in GetAvailableLangs())
+            {
+                // 这个库里没有 MenuFlyoutItem 这个类型，MenuFlyoutPresenter 本身就是个 ContextMenu，
+                // 所以菜单项用 WPF 原生的 MenuItem。
+                // 注意必须写全名：本文件同时 using 了 System.Windows.Forms，MenuItem 是有歧义的。
+                System.Windows.Controls.MenuItem item = new System.Windows.Controls.MenuItem
+                {
+                    Header = GetLangDisplayName(code),
+                    Tag = code
+                };
+
+                if (string.Equals(code, NowLang, StringComparison.OrdinalIgnoreCase))
+                {
+                    // MenuItem.Icon 是 object，直接塞一个 FontIcon 进去即可
+                    item.Icon = new FontIcon { Icon = SegoeFluentIcons.CheckMark, FontSize = 14 };
+                }
+
+                item.Click += LangMenuItem_Click;
+                langMenuFlyout.Items.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// 语言菜单项被点击：热切到对应语言。
+        /// </summary>
+        private void LangMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.MenuItem item = sender as System.Windows.Controls.MenuItem;
+            string code = item == null ? null : item.Tag as string;
+
+            if (string.IsNullOrEmpty(code) || string.Equals(code, NowLang, StringComparison.OrdinalIgnoreCase))
+            {
+                return; // 点的就是当前语言，不用折腾
+            }
+
+            ConsoleLog("Language switched to: " + code);
+            LoadLang(code); // 内部会刷新标题栏按钮的工具提示并重建本菜单
         }
 
         /// <summary>
@@ -639,7 +769,7 @@ namespace CMWTAT_DIGITAL
             {
                 upgradefullbtn.IsEnabled = false;
                 upgradefullbtn.Visibility = Visibility.Collapsed;
-                this.Height -= 90;
+                this.Height -= 65;
             }
         }
 
@@ -1361,6 +1491,22 @@ namespace CMWTAT_DIGITAL
         }
 
         private void Donate_Button_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            OpenDonatePage();
+        }
+
+        /// <summary>
+        /// 标题栏捐赠按钮：和对话框里的“捐赠”按钮走同一套逻辑。
+        /// </summary>
+        private void donateSwitchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            OpenDonatePage();
+        }
+
+        /// <summary>
+        /// 打开捐赠页面。
+        /// </summary>
+        private static void OpenDonatePage()
         {
             System.Diagnostics.Process.Start("https://cmwtat.cloudmoe.com/donate"); // 打开捐赠页
         }

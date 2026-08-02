@@ -79,11 +79,23 @@
                         </Style>
                     </StackPanel.Style>
                     <Button x:Name="donateSwitchBtn" VerticalAlignment="Stretch" Padding="0" Width="32" Margin="4,8"
-                        WindowChrome.IsHitTestVisibleInChrome="True">
+                        WindowChrome.IsHitTestVisibleInChrome="True"
+                        ToolTip="{DynamicResource DonateToolTip}"
+                        Click="donateSwitchBtn_Click">
                         <ui:FontIcon FontSize="14" Icon="{x:Static ui:SegoeFluentIcons.Heart}" />
                     </Button>
+                    <!-- 语言切换：菜单项由 BuildLangMenu() 动态生成（枚举编译进来的 Lang\*.xaml），
+                         这里只放一个空的 MenuFlyout 占位。
+                         ui:FlyoutService.Flyout 会自己给按钮挂 Click 并调 flyout.ShowAt(button)
+                         （FlyoutOpeningMode 默认就是 Click），所以这个按钮不需要写 Click 处理器。
+                         Placement 的默认值是 Top，按钮贴着窗口右上角，必须显式改成 BottomEdgeAlignedRight，
+                         否则菜单会往上弹到窗口外面去。 -->
                     <Button x:Name="langSwitchBtn" VerticalAlignment="Stretch" Padding="0" Width="32" Margin="4,8"
-                        WindowChrome.IsHitTestVisibleInChrome="True">
+                        WindowChrome.IsHitTestVisibleInChrome="True"
+                        ToolTip="{DynamicResource LangSwitchToolTip}">
+                        <ui:FlyoutService.Flyout>
+                            <ui:MenuFlyout x:Name="langMenuFlyout" Placement="BottomEdgeAlignedRight" />
+                        </ui:FlyoutService.Flyout>
                         <ui:FontIcon FontSize="14" Icon="{x:Static ui:SegoeFluentIcons.LocaleLanguage}" />
                     </Button>
                     <Button x:Name="themeSwitchBtn" VerticalAlignment="Stretch" Padding="0" Width="32" Margin="4,8"
@@ -101,12 +113,12 @@
                 <Grid VerticalAlignment="Stretch">
                     <Grid Margin="30,20,30,20" VerticalAlignment="Center">
                         <StackPanel>
-                            <ui:SettingsCard Background="{DynamicResource LayerFillColorDefaultBrush}" ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
+                            <ui:SettingsCard ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
                                 <ui:SettingsCard.Content>
                                     <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
                                 </ui:SettingsCard.Content>
                             </ui:SettingsCard>
-                            <ui:SettingsCard Background="{DynamicResource LayerFillColorDefaultBrush}" ContentAlignment="Left" Padding="30,30" Margin="0,20,0,0">
+                            <ui:SettingsCard ContentAlignment="Left" Padding="30,20" Margin="0,20,0,0">
                                 <ui:SettingsCard.Content>
                                     <StackPanel>
                                         <Grid>
@@ -121,7 +133,7 @@
                                                 </TextBox.Text>
                                             </TextBox>
                                         </Grid>
-                                        <Grid Margin="0,30,0,0">
+                                        <Grid Margin="0,20,0,0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
@@ -133,9 +145,10 @@
                                     </StackPanel>
                                 </ui:SettingsCard.Content>
                             </ui:SettingsCard>
-                            <Button x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch"  ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65" />
-                            <Button x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
-                            <Button x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
+                            <Button x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45" />
+                            <Button x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45"/>
+                            <Button x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45"/>
+                            <Button x:Name="rebootlessupdatebtn" Content="热补丁权益管理" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45"/>
                         </StackPanel>
                     </Grid>
                     <!-- 对话框：使用框架自带的 ContentDialog，同一时间只能显示一个 -->

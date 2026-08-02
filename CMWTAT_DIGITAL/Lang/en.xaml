@@ -177,6 +177,15 @@
     <sys:String x:Key="ThemeMode_Light">
         Light
     </sys:String>
+    <sys:String x:Key="LanguageName">
+        English
+    </sys:String>
+    <sys:String x:Key="LangSwitchToolTip">
+        Language
+    </sys:String>
+    <sys:String x:Key="DonateToolTip">
+        Donate
+    </sys:String>
 
     <!--
         Attention:

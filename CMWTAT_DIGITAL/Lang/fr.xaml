@@ -177,6 +177,15 @@
     <sys:String x:Key="ThemeMode_Light">
         Clair
     </sys:String>
+    <sys:String x:Key="LanguageName">
+        Français
+    </sys:String>
+    <sys:String x:Key="LangSwitchToolTip">
+        Langue
+    </sys:String>
+    <sys:String x:Key="DonateToolTip">
+        Faire un don
+    </sys:String>
 
     <!--
         Attention:

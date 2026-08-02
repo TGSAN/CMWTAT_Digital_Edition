@@ -177,6 +177,15 @@
     <sys:String x:Key="ThemeMode_Light">
         浅色
     </sys:String>
+    <sys:String x:Key="LanguageName">
+        简体中文
+    </sys:String>
+    <sys:String x:Key="LangSwitchToolTip">
+        语言
+    </sys:String>
+    <sys:String x:Key="DonateToolTip">
+        捐赠
+    </sys:String>
 
     <!--
         Attention:

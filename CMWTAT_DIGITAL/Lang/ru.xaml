@@ -177,6 +177,15 @@
     <sys:String x:Key="ThemeMode_Light">
         Светлая
     </sys:String>
+    <sys:String x:Key="LanguageName">
+        Русский
+    </sys:String>
+    <sys:String x:Key="LangSwitchToolTip">
+        Язык
+    </sys:String>
+    <sys:String x:Key="DonateToolTip">
+        Пожертвовать
+    </sys:String>
 
     <!--
         Attention:
