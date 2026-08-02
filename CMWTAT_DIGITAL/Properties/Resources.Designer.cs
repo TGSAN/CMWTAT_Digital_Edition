@@ -79,15 +79,5 @@ namespace CMWTAT_DIGITAL.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
-        internal static byte[] slmgr {
-            get {
-                object obj = ResourceManager.GetObject("slmgr", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

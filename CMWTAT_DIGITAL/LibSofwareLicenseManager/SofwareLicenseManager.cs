@@ -54,7 +54,7 @@ namespace CMWTAT_DIGITAL.LibSofwareLicenseManager
 
         /// <summary>
         /// 以单个命令行字符串执行（形如 "-ipk XXXXX-XXXXX-..."），返回去除首尾空白的输出。
-        /// 这是 RunCScript(slmgr.vbs, args) 的进程内等价物。
+        /// 这是 cscript //Nologo slmgr.vbs [参数] 的进程内等价物。
         /// </summary>
         public static string Run(string commandLine)
         {

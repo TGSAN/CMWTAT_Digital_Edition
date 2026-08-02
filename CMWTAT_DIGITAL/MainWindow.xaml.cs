@@ -124,7 +124,6 @@ namespace CMWTAT_DIGITAL
 
             ConsoleLog("开始写入缓存文件");
             File.WriteAllBytes(tempfile + "ClipUp" + ".exe", Properties.Resources.ClipUp);
-            File.WriteAllBytes(tempfile + "slmgr" + ".vbs", Properties.Resources.slmgr);
             ConsoleLog("写入缓存文件完毕");
         }
 
@@ -588,27 +587,6 @@ namespace CMWTAT_DIGITAL
             string msg = "Unknow Error!";
             string system = "";
 
-            string slmgr = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\slmgr.vbs";
-
-            string slmgr_self = tempfile + "slmgr.vbs";
-
-            try
-            {
-                string sourceFile = slmgr;
-                string targetFile = slmgr_self;
-                bool isrewrite = true; // true=覆盖已存在的同名文件,false则反之
-                ConsoleLog("Copy Start: " + sourceFile + " To " + targetFile);
-                System.IO.File.Copy(sourceFile, targetFile, isrewrite);
-                ConsoleLog("Copy Completed.");
-            }
-            catch (Exception CopyExc)
-            {
-                ConsoleLog("Copy has Exception: " + CopyExc.Message);
-            }
-
-            //旧的位置
-            //string slmgr_self = System.AppDomain.CurrentDomain.BaseDirectory + "slmgr.vbs";
-
             string changepk = Environment.SystemDirectory + "\\changepk.exe";
 
             if (is_auto == true)
@@ -672,7 +650,7 @@ namespace CMWTAT_DIGITAL
                 this.activatingtext.Text = (string)this.Resources["RunInstall_Uninstalling_old_Key"]; //提示正在卸载旧密钥
             }));
             //卸载
-            string runend = RunSlmgr(slmgr_self, "-upk").Trim();
+            string runend = RunSlmgr("-upk").Trim();
             //string runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
             ConsoleLog(runend);
             if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
@@ -684,7 +662,7 @@ namespace CMWTAT_DIGITAL
                 }));
 
                 //安装数字权利升级密钥
-                if (RunSlmgr(slmgr_self, "-ipk " + key).Trim().EndsWith("successfully."))
+                if (RunSlmgr("-ipk " + key).Trim().EndsWith("successfully."))
                 //if (RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key).Trim().EndsWith("successfully."))
                 {
                     code = "200";
@@ -700,7 +678,6 @@ namespace CMWTAT_DIGITAL
                 code = "-1";
                 msg = (string)this.Resources["ErrorMsg-1"]; // "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
             }
-        //string runend = RunCScript(slmgr_self, "-upk").Trim();
         EndLine:;
             if (code != "200")
             {
@@ -784,26 +761,6 @@ namespace CMWTAT_DIGITAL
             string msg = "Unknow Error!";
             string system = "";
             string mode = "1"; //1：普通（SYS、SKU、KEY完全）；2.需要获取SKU（SYS、KEY）；3.手动输入KEY；4.普通OfflineKMS（SYS、SKU、KEY完全）
-
-            string slmgr = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\slmgr.vbs";
-
-            string slmgr_self = tempfile + "slmgr.vbs";
-
-            try
-            {
-                string sourceFile = slmgr;
-                string targetFile = slmgr_self;
-                bool isrewrite = true; // true=覆盖已存在的同名文件,false则反之
-                ConsoleLog("Copy Start: " + sourceFile + " To " + targetFile);
-                File.Copy(sourceFile, targetFile, isrewrite);
-                ConsoleLog("Copy Completed.");
-            }
-            catch (Exception CopyExc)
-            {
-                ConsoleLog("Copy has Exception: " + CopyExc.Message);
-            }
-
-            //旧的位置
 
             string changepk = Environment.SystemDirectory + "\\changepk.exe";
 
@@ -892,13 +849,13 @@ namespace CMWTAT_DIGITAL
             }));
 
             //卸载
-            string runend = RunSlmgr(slmgr_self, "-upk").Trim();
+            string runend = RunSlmgr("-upk").Trim();
             //string runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
             ConsoleLog(runend);
             if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
             {
 
-                RunSlmgr(slmgr_self, "-ckms").Trim();
+                RunSlmgr("-ckms").Trim();
 
                 if (mode == "4")
                 {
@@ -922,9 +879,9 @@ namespace CMWTAT_DIGITAL
                     }));
 
                     //安装转换密钥
-                    runend = RunSlmgr(slmgr_self, "-ipk " + key);
+                    runend = RunSlmgr("-ipk " + key);
                     //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key);
-                    ConsoleLog(slmgr_self + " -ipk " + key);
+                    ConsoleLog("slmgr -ipk " + key);
                     ConsoleLog(runend);
                     if (runend.Trim().EndsWith("successfully."))
                     {
@@ -938,7 +895,7 @@ namespace CMWTAT_DIGITAL
                                 ShowBallSameDig();
                             }));
 
-                            runend = RunSlmgr(slmgr_self, "-upk").Trim();
+                            runend = RunSlmgr("-upk").Trim();
                             //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
                             ConsoleLog(runend);
                             if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
@@ -972,9 +929,9 @@ namespace CMWTAT_DIGITAL
                 }));
 
                 //安装数字权利升级密钥
-                runend = RunSlmgr(slmgr_self, "-ipk " + key);
+                runend = RunSlmgr("-ipk " + key);
                 //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key);
-                ConsoleLog(slmgr_self + " -ipk " + key);
+                ConsoleLog("slmgr -ipk " + key);
                 ConsoleLog(runend);
                 if (runend.Trim().EndsWith("successfully."))
                 {
@@ -1058,11 +1015,11 @@ namespace CMWTAT_DIGITAL
                             ConsoleLog($"应用许可证 重试 {i}/{try_max_count}");
                         }
 
-                        runend = RunSlmgr(slmgr_self, "-ato").Trim();
+                        runend = RunSlmgr("-ato").Trim();
                         
                         ConsoleLog(runend);
 
-                        var xprrunend = RunSlmgr(slmgr_self, "-xpr").Trim();
+                        var xprrunend = RunSlmgr("-xpr").Trim();
                         var activated = (xprrunend.Contains("activated") || xprrunend.Contains("activation will expire"));
 
                         ConsoleLog(xprrunend);
@@ -1098,7 +1055,6 @@ namespace CMWTAT_DIGITAL
                 code = "-1";
                 msg = (string)this.Resources["ErrorMsg-1"]; // "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
             }
-        //string runend = RunCScript(slmgr_self, "-upk").Trim();
         EndLine:;
             if (code != "200")
             {
@@ -1219,63 +1175,24 @@ namespace CMWTAT_DIGITAL
         }
 
         /// <summary>
-        /// 执行 slmgr 命令。优先使用进程内的 C# 复刻实现（LibSofwareLicenseManager.SofwareLicenseManager），
-        /// 这样即使系统未安装 / 已禁用 VBScript 宿主也能正常工作；
-        /// 若 C# 实现抛出异常或没有任何输出，则回退到原来的 cscript slmgr.vbs 方式。
-        /// 返回值语义与 RunCScript 完全一致（已 Trim，失败时可能为 "Error"）。
+        /// 执行 slmgr 命令。使用进程内的 C# 复刻实现
+        /// （CMWTAT_DIGITAL.LibSofwareLicenseManager.SofwareLicenseManager），
+        /// 不再依赖系统的 VBScript 宿主，也不再需要 slmgr.vbs 文件。
         /// </summary>
-        /// <param name="path">slmgr.vbs 的路径，仅在回退时使用。</param>
         /// <param name="var">slmgr 参数，例如 "-upk"、"-ipk XXXXX-..."。</param>
-        public static string RunSlmgr(string path, string var = "")
+        /// <returns>已 Trim 的输出；执行失败时返回 "Error"。</returns>
+        public static string RunSlmgr(string var = "")
         {
+            ConsoleLog("Slmgr " + var);
             try
             {
-                ConsoleLog("Slmgr(C#) " + var);
                 string myString = CMWTAT_DIGITAL.LibSofwareLicenseManager.SofwareLicenseManager.Run(var);
-                if (!string.IsNullOrEmpty(myString))
-                {
-                    ConsoleLog(myString);
-                    return myString;
-                }
-                ConsoleLog("Slmgr(C#) returned nothing, fallback to CScript.");
+                ConsoleLog(myString);
+                return myString;
             }
             catch (Exception SlmgrExc)
             {
-                ConsoleLog("Slmgr(C#) has Exception: " + SlmgrExc.Message + ", fallback to CScript.");
-            }
-
-            // 兜底：仍然走原来的 cscript slmgr.vbs
-            return RunCScript(path, var);
-        }
-
-        public static string RunCScript(string path, string var = "")
-        {
-            ConsoleLog("CScript" + " " + "//Nologo \"" + path + "\" " + var);
-            Wow64EnableWow64FsRedirection(false);//关闭文件重定向
-            //执行命令行函数
-            try
-            {
-                System.Diagnostics.Process myProcess = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo ProcessStartInfo = new System.Diagnostics.ProcessStartInfo("CScript", "//Nologo \"" + path + "\" " + var)
-                {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    //myProcessStartInfo.Arguments = "/c chcp 65001 > nul && cmd /c \"" + PHPRuntimePath + "\" \"" + path + "\" " + var;
-                    //myProcessStartInfo.Arguments = "/c " & Commands
-                    StandardOutputEncoding = Encoding.UTF8
-                };
-                myProcess.StartInfo = ProcessStartInfo;
-                myProcess.Start();
-                myProcess.WaitForExit(60 * 1000);
-                System.IO.StreamReader myStreamReader = myProcess.StandardOutput;
-                string myString = myStreamReader.ReadToEnd();
-                myProcess.Close();
-                ConsoleLog(myString.Trim());
-                return myString.Trim();
-            }
-            catch
-            {
+                ConsoleLog("Slmgr has Exception: " + SlmgrExc.Message);
                 return "Error";
             }
         }

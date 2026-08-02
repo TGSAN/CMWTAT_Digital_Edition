@@ -195,9 +195,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Res\slmgr.vbs" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="bin\Debug\" />
   </ItemGroup>
   <ItemGroup>
