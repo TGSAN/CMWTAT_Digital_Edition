@@ -43,9 +43,9 @@
                     <ColumnDefinition Width="48" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="20,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Image x:Name="TitleBarIcon" Width="18" Height="18" VerticalAlignment="Center"
+                    <Image x:Name="TitleBarIcon" Width="20" Height="20" VerticalAlignment="Center"
                         RenderOptions.BitmapScalingMode="HighQuality"/>
-                    <StackPanel Margin="18,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="16,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Setter Property="Opacity" Value="1"/>
