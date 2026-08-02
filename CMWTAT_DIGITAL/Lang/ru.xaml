@@ -16,7 +16,7 @@
         Отказаться
     </sys:String>
     <sys:String x:Key="DonateBtn">
-        Поблагодарить и поддержать разработчика
+        Поддержать
     </sys:String>
     <sys:String x:Key="Exit">
         Выйти

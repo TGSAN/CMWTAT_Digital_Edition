@@ -1401,7 +1401,7 @@ namespace CMWTAT_DIGITAL
             //LangName = "ja"; // 如需测试语言，请取消注释此行
             LoadLang(LangName);
 
-            this.Title = this.Title + " V" + ProductVersion; // 初始化语言后为标题增加版本号
+            this.titlebarVersion.Text = "V" + ProductVersion;
 
             //System.Windows.MessageBox.Show((string)this.Resources["HelpText"]);
 

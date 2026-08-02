@@ -16,7 +16,7 @@
         丑拒
     </sys:String>
     <sys:String x:Key="DonateBtn">
-        捐赠一杯咖啡
+        捐赠
     </sys:String>
     <sys:String x:Key="Exit">
         退出

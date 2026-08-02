@@ -36,12 +36,40 @@
             </Grid.RowDefinitions>
 
             <!-- 标题栏 -->
-            <StackPanel Margin="20,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                <Image x:Name="TitleBarIcon" Width="18" Height="18" VerticalAlignment="Center"
-                    RenderOptions.BitmapScalingMode="HighQuality"/>
-                <StackPanel Margin="18,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <StackPanel.Style>
-                        <Style TargetType="StackPanel">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="48" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="20,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image x:Name="TitleBarIcon" Width="18" Height="18" VerticalAlignment="Center"
+                        RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <StackPanel Margin="18,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Opacity" Value="1"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
+                                        <Setter Property="Opacity" Value="0.5"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Title}"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,8,0"
+                           FontSize="11"/>
+                        <TextBlock x:Name="titlebarVersion" Text="Preview"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,8,0"
+                           FontSize="9"
+                           Opacity="0.5" />
+                    </StackPanel>
+                </StackPanel>
+                <Button Grid.Column="1" VerticalAlignment="Stretch" Padding="0" Width="32" Margin="4,8">
+                    <Button.Style>
+                        <Style TargetType="Button">
                             <Setter Property="Opacity" Value="1"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}" Value="False">
@@ -49,18 +77,10 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </StackPanel.Style>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Title}"
-                       VerticalAlignment="Bottom"
-                       Margin="0,0,8,0"
-                       FontSize="11"/>
-                    <TextBlock Text="Preview"
-                       VerticalAlignment="Bottom"
-                       Margin="0,0,8,0"
-                       FontSize="9"
-                       Opacity="0.5" />
-                </StackPanel>
-            </StackPanel>
+                    </Button.Style>
+                    <ui:FontIcon FontSize="14" Icon="{x:Static ui:SegoeFluentIcons.System}" />
+                </Button>
+            </Grid>
 
             <!-- 内容区域 -->
             <Border Grid.Row="1"

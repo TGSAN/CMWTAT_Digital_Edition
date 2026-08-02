@@ -16,7 +16,7 @@
         Refuse
     </sys:String>
     <sys:String x:Key="DonateBtn">
-        Donate a dinner
+        Donate
     </sys:String>
     <sys:String x:Key="Exit">
         Exit

@@ -16,7 +16,7 @@
         リフューズ
     </sys:String>
     <sys:String x:Key="DonateBtn">
-        寄付します
+        寄付
     </sys:String>
     <sys:String x:Key="Exit">
         終了
@@ -36,9 +36,8 @@
     <sys:String x:Key="UpdateTitle">
         新しいバージョンがあります！
     </sys:String>
-    <!-- TODO -->
     <sys:String x:Key="UpgradeFullVersionWindowsTitle">
-        Upgrade to full version of Windows
+        完全版 Windows へアップグレード
     </sys:String>
     <sys:String x:Key="CurrentVersion">
         バージョン
@@ -58,9 +57,8 @@
     <sys:String x:Key="Convert_versions">
         エディション変換 (キーをインストールするが、認証しません)
     </sys:String>
-    <!-- TODO -->
     <sys:String x:Key="Upgrade_full_version">
-        Upgrade to full version of Windows
+        完全版 Windows へアップグレード
     </sys:String>
     <sys:String x:Key="test">
         テストテキスト
@@ -152,9 +150,8 @@
     <sys:String x:Key="RunAct_Getting_digital_license">
         デジタルライセンスを取得中
     </sys:String>
-    <!-- TODO -->
     <sys:String x:Key="RunUpgradeFullVersion_Upgrading">
-        Upgrading
+        アップグレード中
     </sys:String>
     <sys:String x:Key="CompleteTitle">
         コンプリート
@@ -174,9 +171,8 @@
         DO NOT USE ANY Indentation in Preserve Mode, Please!
     -->
 
-    <!-- TODO -->
     <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
-You are currently using the core version of Windows, you can use this feature to upgrade to the full version of Windows.&#10;(If the operation does not respond it may be that the current version does not support the upgrade or is in the process of upgrading) &#10;&#10;Note:&#10;This operation is not reversible and once the upgrade is complete you will not be able to roll back to the core version of Windows!&#10;&#10;Are you sure you want to perform an upgrade?
+現在お使いの Windows はコア版（Core エディション）です。この機能で完全版 Windows にアップグレードできます。&#10;（操作しても反応がない場合は、現在のバージョンがアップグレードに対応していないか、既にアップグレード処理中の可能性があります）&#10;&#10;注意：&#10;この操作は元に戻せません。アップグレードが完了すると、コア版 Windows に戻すことはできません！&#10;&#10;アップグレードを実行してもよろしいですか？
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 このアプリは起動時にコンソール引数を使用できるようになりました！&#10;&#10;-a&#9;--auto&#9;&#9;自動認証。&#10;-h&#9;--hide&#9;&#9;非表示モードで実行 (-autoと一緒に使用するだけ可能)。&#10;-e&#9;--expact&#9;&#9;実験性認証。&#10;-l&#9;--log&#9;&#9;ログをファイルに出力。&#10;-?&#9;--help&#9;&#9;この説明ダイアログボックスを表示する。
@@ -216,7 +212,7 @@ Windows ライセンス認証にはインターネットを通じてキーを取
     </sys:String>
     <sys:String x:Key="Only_find_ltok" xml:space="preserve">
 このシステムエディションに適用されたのは長期オフラインＫＭＳ（ＬＴＯＫ）オプションしか見つかりません。これによってシステムを再インストールした時自動的にライセンス認証しませんが、心配する必要はありません。この方法（ＬＴＯＫ）でライセンス認証後、インターネット接続なしでも２０３８年まで稼働を継続できます！
-	</sys:String>
+    </sys:String>
     <sys:String x:Key="DonateTextWillActivated" xml:space="preserve">
 おめでとうございます！ &#10;&#10;Windowsはライセンス認証の準備が出来ています。&#10;でも、マイクロソフトのライセンス認証サーバーに接続できませんみたいです。&#10;システムは認証サーバーに接続出来る次第に自動的にライセンス認証します。
     </sys:String>
