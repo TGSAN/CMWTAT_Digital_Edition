@@ -233,6 +233,8 @@ namespace CMWTAT_DIGITAL
                 }
                 this.Resources.MergedDictionaries.Add(langRd);
             }
+
+            UpdateThemeSwitchButton(); // 语言变了，标题栏主题按钮的工具提示要跟着刷新
         }
 
         /// <summary>
@@ -248,30 +250,46 @@ namespace CMWTAT_DIGITAL
         private void ApplyTheme()
         {
             ThemeManager.Current.ApplicationTheme = themeMode;
-            UpdateThemeSwitchIcon();
+            UpdateThemeSwitchButton();
         }
 
         /// <summary>
-        /// 让标题栏按钮的图标与当前主题模式保持一致。
+        /// 让标题栏按钮的图标和工具提示与当前主题模式保持一致。
+        /// 切换主题之后、以及切换语言（LoadLang）之后都需要调用。
         /// </summary>
-        private void UpdateThemeSwitchIcon()
+        private void UpdateThemeSwitchButton()
         {
-            if (themeSwitchIcon == null)
+            if (themeSwitchBtn == null || themeSwitchIcon == null)
             {
-                return;
+                return; // InitializeComponent() 之前
             }
+
+            string modeKey;
 
             if (themeMode == ApplicationTheme.Dark)
             {
                 themeSwitchIcon.Icon = SegoeFluentIcons.QuietHours;  // 月亮：深色
+                modeKey = "ThemeMode_Dark";
             }
             else if (themeMode == ApplicationTheme.Light)
             {
                 themeSwitchIcon.Icon = SegoeFluentIcons.Brightness;  // 太阳：亮色
+                modeKey = "ThemeMode_Light";
             }
             else
             {
                 themeSwitchIcon.Icon = SegoeFluentIcons.System;      // 跟随系统
+                modeKey = "ThemeMode_System";
+            }
+
+            // 语言资源可能还没载入（Window_Activated 早于 Window_Loaded），
+            // 此时先跳过，LoadLang() 载入语言之后会再刷新一次。
+            string tipFormat = this.Resources["ThemeSwitchToolTip"] as string;
+            string modeName = this.Resources[modeKey] as string;
+
+            if (tipFormat != null && modeName != null)
+            {
+                themeSwitchBtn.ToolTip = string.Format(tipFormat, modeName); // 切换主题 (当前：跟随系统)
             }
         }
 

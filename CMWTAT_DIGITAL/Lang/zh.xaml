@@ -165,6 +165,18 @@
     <sys:String x:Key="SysMsg">
         系统返回：
     </sys:String>
+    <sys:String x:Key="ThemeSwitchToolTip">
+        切换主题 (当前：{0})
+    </sys:String>
+    <sys:String x:Key="ThemeMode_System">
+        跟随系统
+    </sys:String>
+    <sys:String x:Key="ThemeMode_Dark">
+        深色
+    </sys:String>
+    <sys:String x:Key="ThemeMode_Light">
+        浅色
+    </sys:String>
 
     <!--
         Attention:
