@@ -110,6 +110,6 @@ You need to activate the `Enterprise` edition before activating the `IoTEnterpri
 
 [https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors]
 
-[UI_image]:./images/UI.jpg
+[UI_image]:./images/UI.png
 [https://cmwtat.cloudmoe.com]:https://cmwtat.cloudmoe.com
 [https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors]:https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors

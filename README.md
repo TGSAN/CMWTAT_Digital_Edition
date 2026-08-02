@@ -28,6 +28,6 @@ A Windows 10 and Windows 11 digital license activation tool written in CSharp.
 
 [https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors]
 
-[UI_image]:./images/UI.jpg
+[UI_image]:./images/UI.png
 [https://cmwtat.cloudmoe.com]:https://cmwtat.cloudmoe.com
 [https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors]:https://github.com/TGSAN/CMWTAT_Digital_Edition/graphs/contributors
