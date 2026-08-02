@@ -2,15 +2,15 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:CMWTAT_DIGITAL"
+             xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
              StartupUri="MainWindow.xaml"
              >
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Pink.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <!-- Fluent Design (WinUI) 主题与控件样式 -->
+                <ui:ThemeResources />
+                <ui:XamlControlsResources />
                 <ResourceDictionary Source="Lang/en.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

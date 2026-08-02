@@ -15,7 +15,9 @@ using System.Reflection;
 using System.Windows.Forms;
 using OSVersionInfoClass;
 using Newtonsoft.Json.Linq;
-using MaterialDesignThemes.Wpf;
+using iNKORE.UI.WPF.Modern;
+using ContentDialog = iNKORE.UI.WPF.Modern.Controls.ContentDialog;
+using ContentDialogButtonClickEventArgs = iNKORE.UI.WPF.Modern.Controls.ContentDialogButtonClickEventArgs;
 
 namespace CMWTAT_DIGITAL
 {
@@ -172,11 +174,12 @@ namespace CMWTAT_DIGITAL
             }
         }
 
+        /// <summary>
+        /// 应用浅色 / 深色主题（iNKORE.UI.WPF.Modern / Fluent Design）。
+        /// </summary>
         private static void ApplyBase(bool isDark)
         {
-            var theme = new PaletteHelper().GetTheme();
-            theme.SetBaseTheme(isDark ? Theme.Dark : Theme.Light);
-            new PaletteHelper().SetTheme(theme);
+            ThemeManager.Current.ApplicationTheme = isDark ? ApplicationTheme.Dark : ApplicationTheme.Light;
         }
 
         string ProductVersion = "0.0.0.0"; // 存储程序版本
@@ -274,16 +277,16 @@ namespace CMWTAT_DIGITAL
                     {
                         if (CurrentVersion < AllowedVersion) // 当前版本小于最低允许版本
                         {
-                            this.IgnoreUpdate.IsEnabled = false;
+                            this.DialogUpdate.IsSecondaryButtonEnabled = false;
                             //System.Windows.MessageBox.Show("必须更新");
                         }
                         else
                         {
-                            this.IgnoreUpdate.IsEnabled = true;
+                            this.DialogUpdate.IsSecondaryButtonEnabled = true;
                         }
-                        this.DialogUpdateTitle.Text = (string)this.Resources["UpdateTitle"];
+                        this.DialogUpdate.Title = (string)this.Resources["UpdateTitle"];
                         this.DialogUpdateText.Text = (string)this.Resources["UpdateText"] + "\r\n" + (string)this.Resources["CurrentVersion"] + ": " + ProductVersion + "\r\n" + (string)this.Resources["LatestVersion"] + ": " + latest_version.ToString();
-                        this.DialogUpdate.IsOpen = true;
+                        OpenDialog(this.DialogUpdate);
                     }));
                     //System.Windows.MessageBox.Show("需要更新");
                 }
@@ -304,7 +307,7 @@ namespace CMWTAT_DIGITAL
 
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
-                DialogWait.IsOpen = true;
+                OpenDialog(DialogWait);
             }));
 
             try
@@ -381,23 +384,23 @@ namespace CMWTAT_DIGITAL
                     if (is_selected == 0)//没有匹配
                     {
                         this.SystemEditionText.SelectedIndex = 0;
-                        this.DialogWithOKToCloseDialogTitle.Text = (string)this.Resources["Attention"];
+                        this.DialogWithOKToCloseDialog.Title = (string)this.Resources["Attention"];
                         this.DialogWithOKToCloseDialogText.Text = (string)this.Resources["May_be_not_be_supported"] + "\r\n(" + (string)this.Resources["System_Edition"] + ": " + SystemEdition + OSVersionInfo.BuildVersion + ")";
-                        this.DialogWithOKToCloseDialog.IsOpen = true;
+                        OpenDialog(this.DialogWithOKToCloseDialog);
                     }
                     else if (is_selected == 2)//只找到实验性
                     {
                         this.SystemEditionText.SelectedIndex = now_os_index;
-                        this.DialogWithOKToCloseDialogTitle.Text = (string)this.Resources["Attention"];
+                        this.DialogWithOKToCloseDialog.Title = (string)this.Resources["Attention"];
                         this.DialogWithOKToCloseDialogText.Text = (string)this.Resources["Only_find_experimental"] + "\r\n(" + (string)this.Resources["System_Edition"] + ": " + SystemEdition + OSVersionInfo.BuildVersion + ")";
-                        this.DialogWithOKToCloseDialog.IsOpen = true;
+                        OpenDialog(this.DialogWithOKToCloseDialog);
                     }
                     else if (is_selected == 3)//只找到长期KMS
                     {
                         this.SystemEditionText.SelectedIndex = now_os_index;
-                        this.DialogWithOKToCloseDialogTitle.Text = (string)this.Resources["Attention"];
+                        this.DialogWithOKToCloseDialog.Title = (string)this.Resources["Attention"];
                         this.DialogWithOKToCloseDialogText.Text = (string)this.Resources["Only_find_ltok"] + "\r\n(" + (string)this.Resources["System_Edition"] + ": " + SystemEdition + OSVersionInfo.BuildVersion + ")";
-                        this.DialogWithOKToCloseDialog.IsOpen = true;
+                        OpenDialog(this.DialogWithOKToCloseDialog);
                     }
                     else
                     {
@@ -409,7 +412,7 @@ namespace CMWTAT_DIGITAL
 
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
-                    DialogWait.IsOpen = false;
+                    DialogWait.Hide();
                 }));
 
                 if (App.autoact == true)//自动激活
@@ -425,7 +428,7 @@ namespace CMWTAT_DIGITAL
                             {
                                 actbtn.Dispatcher.Invoke(new Action(() =>
                                 {
-                                    DialogWithOKToCloseDialog.IsOpen = false;
+                                    DialogWithOKToCloseDialog.Hide();
                                 }));
                                 actthread.Start();
                             }
@@ -460,12 +463,12 @@ namespace CMWTAT_DIGITAL
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
-                    DialogWait.IsOpen = false;
+                    DialogWait.Hide();
                 }));
 
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
-                    DialogWithExit.IsOpen = true;
+                    OpenDialog(DialogWithExit);
                 }));
 
                 if (App.hiderun == true && App.autoact == true)
@@ -487,7 +490,7 @@ namespace CMWTAT_DIGITAL
             {
                 upgradefullbtn.IsEnabled = false;
                 upgradefullbtn.Visibility = Visibility.Collapsed;
-                this.Height -= 95;
+                this.Height -= 90;
             }
         }
 
@@ -512,12 +515,11 @@ namespace CMWTAT_DIGITAL
 
         private void upgradefullbtn_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogUpgradeFullVersion.IsOpen = true;
+            OpenDialog(this.DialogUpgradeFullVersion);
         }
 
-        private void UpgradeFullVersionWindows_Click(object sender, RoutedEventArgs e)
+        private void UpgradeFullVersionWindows_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            this.DialogUpgradeFullVersion.IsOpen = false;
             Thread upgradethread = new Thread(RunUpgradeFullVersion);
             upgradethread.Start();
         }
@@ -562,6 +564,24 @@ namespace CMWTAT_DIGITAL
             throw new Exception(outex);
         }
 
+        /// <summary>
+        /// 显示 ContentDialog。框架限定同一时间只能打开一个对话框，
+        /// 因此先关闭已打开的那个（与旧的 IsOpen = true 行为一致）。
+        /// </summary>
+        private void OpenDialog(ContentDialog dialog)
+        {
+            ContentDialog opened = ContentDialog.GetOpenDialog(this);
+            if (opened == dialog)
+            {
+                return;
+            }
+            if (opened != null)
+            {
+                opened.Hide();
+            }
+            dialog.ShowAsync(this); // 不阻塞 UI 线程
+        }
+
         private void Exit_Button_Click(object sender, EventArgs e)
         {
             DelectTempFile();
@@ -575,8 +595,8 @@ namespace CMWTAT_DIGITAL
             //释放文件
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
-                this.DialogActProg.IsOpen = true;
                 this.activatingtext.Text = (string)this.Resources["RunInstall_Converting"]; //提示转换中
+                OpenDialog(this.DialogActProg);
             }));
 
             Wow64EnableWow64FsRedirection(false);//关闭文件重定向
@@ -683,11 +703,11 @@ namespace CMWTAT_DIGITAL
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.DialogActProg.IsOpen = false;
+                    this.DialogActProg.Hide();
                     this.activatingtext.Text = (string)this.Resources["RunInstall_Converting"]; //提示转换中
-                    this.DialogWithOKToCloseDialog.IsOpen = true;
-                    this.DialogWithOKToCloseDialogTitle.Text = (string)this.Resources["ErrorTitle"]; //错误标题
+                    this.DialogWithOKToCloseDialog.Title = (string)this.Resources["ErrorTitle"]; //错误标题
                     this.DialogWithOKToCloseDialogText.Text = msg + "\r\n" + (string)this.Resources["ErrorCode"] + code; //错误代码 如：错误信息\r\nCode：000
+                    OpenDialog(this.DialogWithOKToCloseDialog);
                 }));
                 //MessageBox.Show(msg + "\r\nCode:" + code);
             }
@@ -695,11 +715,11 @@ namespace CMWTAT_DIGITAL
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.DialogActProg.IsOpen = false;
+                    this.DialogActProg.Hide();
                     this.activatingtext.Text = (string)this.Resources["RunInstall_Converting"]; //提示转换中
-                    this.DialogWithOKToCloseDialogDonate.IsOpen = true;
-                    this.DialogWithOKToCloseDialogDonateTitle.Text = (string)this.Resources["CompleteTitle"]; //完成标题
+                    this.DialogWithOKToCloseDialogDonate.Title = (string)this.Resources["CompleteTitle"]; //完成标题
                     this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextConverted"]; //完成转换内容
+                    OpenDialog(this.DialogWithOKToCloseDialogDonate);
                 }));
                 //MessageBox.Show("Congratulation!");
             }
@@ -711,8 +731,8 @@ namespace CMWTAT_DIGITAL
         {
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
-                this.DialogActProg.IsOpen = true;
                 this.activatingtext.Text = (string)this.Resources["RunUpgradeFullVersion_Upgrading"]; //提示升级中
+                OpenDialog(this.DialogActProg);
             }));
             RunCMD(@"sc start sppsvc");
             RunCMD(@"sc start wuauserv");
@@ -722,7 +742,7 @@ namespace CMWTAT_DIGITAL
             RunCLI("ChangePK.exe", ".", "/ProductKey MH37W-N47XK-V7XM9-C7227-GCQG9"); // KMS Pro N
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
-                this.DialogActProg.IsOpen = false;
+                this.DialogActProg.Hide();
             }));
         }
 
@@ -748,8 +768,8 @@ namespace CMWTAT_DIGITAL
             //释放文件
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
-                this.DialogActProg.IsOpen = true;
                 this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; //提示激活中
+                OpenDialog(this.DialogActProg);
                 ShowBallSameDig();
             }));
 
@@ -1060,11 +1080,11 @@ namespace CMWTAT_DIGITAL
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.DialogActProg.IsOpen = false;
+                    this.DialogActProg.Hide();
                     this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; //提示激活中
-                    this.DialogWithOKToCloseDialog.IsOpen = true;
-                    this.DialogWithOKToCloseDialogTitle.Text = (string)this.Resources["ErrorTitle"]; //错误标题
+                    this.DialogWithOKToCloseDialog.Title = (string)this.Resources["ErrorTitle"]; //错误标题
                     this.DialogWithOKToCloseDialogText.Text = msg + "\r\n" + (string)this.Resources["ErrorCode"] + code; //错误代码 如：错误信息\r\nCode：000
+                    OpenDialog(this.DialogWithOKToCloseDialog);
                     if (App.hiderun == true && App.autoact == true)
                     {
                         int tipShowMilliseconds = 0;
@@ -1081,10 +1101,9 @@ namespace CMWTAT_DIGITAL
             {
                 actbtn.Dispatcher.Invoke(new Action(() =>
                 {
-                    this.DialogActProg.IsOpen = false;
+                    this.DialogActProg.Hide();
                     this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; //提示激活中
-                    this.DialogWithOKToCloseDialogDonate.IsOpen = true;
-                    this.DialogWithOKToCloseDialogDonateTitle.Text = (string)this.Resources["CompleteTitle"]; //完成标题
+                    this.DialogWithOKToCloseDialogDonate.Title = (string)this.Resources["CompleteTitle"]; //完成标题
                     if (is_not_network_to_act == true)
                     {
                         this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextWillActivated"]; //即将激活内容
@@ -1093,6 +1112,7 @@ namespace CMWTAT_DIGITAL
                     {
                         this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextActivated"]; //完成激活内容
                     }
+                    OpenDialog(this.DialogWithOKToCloseDialogDonate);
 
                     if (App.hiderun == true && App.autoact == true)
                     {
@@ -1228,10 +1248,9 @@ namespace CMWTAT_DIGITAL
             }
         }
 
-        private void Donate_Button_Click(object sender, RoutedEventArgs e)
+        private void Donate_Button_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             System.Diagnostics.Process.Start("https://cmwtat.cloudmoe.com/donate"); // 打开捐赠页
-            this.DialogWithOKToCloseDialogDonate.IsOpen = false;
         }
 
         string last_key = "";
@@ -1308,7 +1327,7 @@ namespace CMWTAT_DIGITAL
             notifyIcon.Visible = false;
         }
 
-        private void UpdateBtn_Click(object sender, RoutedEventArgs e)
+        private void UpdateBtn_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             System.Diagnostics.Process.Start("https://cmwtat.cloudmoe.com"); // 打开官网
         }
@@ -1319,7 +1338,7 @@ namespace CMWTAT_DIGITAL
             ApplyBase(isDark); // 应用颜色
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CheckWindowsTheme();
 
@@ -1349,7 +1368,7 @@ namespace CMWTAT_DIGITAL
 
             if (App.showhelp == true)
             {
-                DialogHelp.IsOpen = true;
+                await DialogHelp.ShowAsync(this); // 等待用户关闭帮助后再继续
             }
 
             notifyIcon = new NotifyIcon
@@ -1426,9 +1445,7 @@ namespace CMWTAT_DIGITAL
             //初始化动态表单数据绑定
             DataContext = new Domain.ViewModel();
 
-            this.DialogHostGrid.Visibility = Visibility.Visible;
-
-            DialogWait.IsOpen = true;
+            OpenDialog(DialogWait);
             try
             {
                 RegistryKey pRegKey = Registry.LocalMachine;

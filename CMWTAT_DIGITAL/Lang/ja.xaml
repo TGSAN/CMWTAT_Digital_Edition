@@ -9,6 +9,11 @@
     <FontFamily x:Key="Font">
         Yu Gothic UI
     </FontFamily>
+
+    <!--Fluent 控件模板（ContentDialog 标题、按钮等）内置使用的字体键，一并覆盖以保持字体一致-->
+    <FontFamily x:Key="ContentControlThemeFontFamily">
+        Yu Gothic UI
+    </FontFamily>
     
     <!--String Dictionary-->
     

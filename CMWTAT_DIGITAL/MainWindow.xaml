@@ -6,15 +6,18 @@
         xmlns:domain="clr-namespace:CMWTAT_DIGITAL.Domain"
         xmlns:local="clr-namespace:CMWTAT_DIGITAL"
         mc:Ignorable="d"
-        Title="{DynamicResource TitleName}" Height="645" Width="450"
+        Title="{DynamicResource TitleName}" Height="600" Width="480"
         ResizeMode="NoResize"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        ui:WindowHelper.SystemBackdropType="Mica"
+        ui:TitleBar.Height="36"
+        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
+        TextElement.FontSize="14"
         TextOptions.TextFormattingMode="Ideal"
-        TextOptions.TextRenderingMode="Aliased"
-        Background="{DynamicResource MaterialDesignPaper}"
+        TextOptions.TextRenderingMode="ClearType"
+        Background="{DynamicResource ApplicationPageBackgroundThemeBrush}"
         d:DataContext="{d:DesignInstance domain:ViewModel, d:IsDesignTimeCreatable=False}"
         Icon="CMWTAT.ico"
         Closing="Window_Closing"
@@ -23,234 +26,98 @@
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
         >
-    <!--FontFamily="{DynamicResource MaterialDesignFont}"-->
     <Grid>
-        <Grid Margin="30,30,30,30" VerticalAlignment="Center">
+        <Grid Margin="30,20,30,20" VerticalAlignment="Center">
             <StackPanel>
-                <materialDesign:Card Padding="30" Margin="0,0,0,0" materialDesign:ShadowAssist.ShadowDepth="Depth3" UniformCornerRadius="8">
-                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
-                </materialDesign:Card>
-                <materialDesign:Card Padding="30,30" Margin="0,30,0,0" materialDesign:ShadowAssist.ShadowDepth="Depth3" UniformCornerRadius="8">
-                    <StackPanel>
-                        <Grid>
-                            <ComboBox x:Name="SystemEditionText" DisplayMemberPath="DisplayOS" VerticalAlignment="Center" Visibility="Visible"/>
-                            <TextBox x:Name="SystemEditionTextInput" materialDesign:HintAssist.Hint="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" MaxLength="29" xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore" input:InputMethod.IsInputMethodEnabled="False" VerticalAlignment="Center" Visibility="Hidden" TextChanged="SystemEditionTextInput_TextChanged">
-                                <TextBox.Text>
-                                    <Binding Path="SN" UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <domain:IsSN ValidatesOnTargetUpdated="True"/>
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
-                            </TextBox>
-                        </Grid>
-                        <!--<TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignTitleTextBlock}" x:Name="SystemEditionText"  Text="Checking System" />-->
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,30,0,0">
-                            <RadioButton x:Name="AutoRadio" Content="{DynamicResource Auto_Mode}" Margin="30,0,30,0" IsChecked="True" Checked="A_RadioButton_Checked"/>
-                            <RadioButton x:Name="ManualRadio" Content="{DynamicResource Manual_Mode}" Margin="30,0,30,0" Checked="M_RadioButton_Checked"/>
+                <ui:SettingsCard ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
+                    <ui:SettingsCard.Content>
+                        <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource SubtitleTextBlockStyle}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
+                    </ui:SettingsCard.Content>
+                </ui:SettingsCard>
+                <ui:SettingsCard ContentAlignment="Left" Padding="30,30" Margin="0,20,0,0">
+                    <ui:SettingsCard.Content>
+                        <StackPanel>
+                            <Grid>
+                                <ComboBox x:Name="SystemEditionText" DisplayMemberPath="DisplayOS" HorizontalAlignment="Stretch" VerticalAlignment="Center" Visibility="Visible"/>
+                                <TextBox x:Name="SystemEditionTextInput" ui:ControlHelper.PlaceholderText="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" MaxLength="29" xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore" input:InputMethod.IsInputMethodEnabled="False" VerticalAlignment="Center" Visibility="Hidden" TextChanged="SystemEditionTextInput_TextChanged">
+                                    <TextBox.Text>
+                                        <Binding Path="SN" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <domain:IsSN ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                            <Grid Margin="0,30,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <RadioButton x:Name="AutoRadio" Grid.Column="0" Content="{DynamicResource Auto_Mode}" IsChecked="True" Checked="A_RadioButton_Checked"/>
+                                <RadioButton x:Name="ManualRadio" Grid.Column="2" Content="{DynamicResource Manual_Mode}" Checked="M_RadioButton_Checked"/>
+                            </Grid>
                         </StackPanel>
-                    </StackPanel>
-                </materialDesign:Card>
-                <Button FontFamily="{DynamicResource Font}" x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65" Cursor="Hand" />
-                <Button FontFamily="{DynamicResource Font}" x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65" Cursor="Hand"/>
-                <Button FontFamily="{DynamicResource Font}" x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" materialDesign:ShadowAssist.ShadowDepth="Depth3" materialDesign:ShadowAssist.Darken="False" materialDesign:ButtonAssist.CornerRadius="8" Margin="0,30,0,0" Height="65" Cursor="Hand"/>
+                    </ui:SettingsCard.Content>
+                </ui:SettingsCard>
+                <Button FontFamily="{DynamicResource Font}" x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch"  ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65" />
+                <Button FontFamily="{DynamicResource Font}" x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
+                <Button FontFamily="{DynamicResource Font}" x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
             </StackPanel>
         </Grid>
-        <Grid x:Name="DialogHostGrid" Visibility="Hidden">
-            <materialDesign:DialogHost x:Name="DialogWait" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="32,24,32,24">
-                                    <ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}"  Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource Loading}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogActProg" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="32,24,32,24">
-                                    <ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="activatingtext"  Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource Activating}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogWithCancel" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="24,24,24,8">
-                                    <ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}"  Margin="24,16,24,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource Loading}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                            CommandParameter="Sample2Cancel"
-                                            HorizontalAlignment="Center" Content="{DynamicResource Cancel}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogWithOK" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="16,16,16,8">
-                                    <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Text="Title" />
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}"  Margin="0,8,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" Text="Hello World" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                            CommandParameter="Sample2Cancel"
-                                            HorizontalAlignment="Center" Content="{DynamicResource OK}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogHelp" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="16,16,16,8">
-                                    <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Text="Help"></TextBlock>
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}"  Margin="0,8,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource HelpText}"></TextBlock>
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                            CommandParameter="Sample2Cancel"
-                                            HorizontalAlignment="Center" Content="{DynamicResource OK}" />
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogWithExit" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="16,16,16,8">
-                                    <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogWithExitTitle"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Text="{DynamicResource ErrorTitle}"/>
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogWithExitText"  Margin="0,8,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource Disconnect_to_server_exit}"/>
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                        Click="Exit_Button_Click"
-                                        HorizontalAlignment="Center" Content="{DynamicResource Exit}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogWithOKToCloseDialog" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="16,16,16,8">
-                                    <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogWithOKToCloseDialogTitle"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" >Title</TextBlock>
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogWithOKToCloseDialogText"  Margin="0,8,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="14" >Text</TextBlock>
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                            HorizontalAlignment="Center" Content="{DynamicResource OK}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogWithOKToCloseDialogDonate" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="16,16,16,8">
-                                    <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogWithOKToCloseDialogDonateTitle"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Text="{DynamicResource Complete}" />
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogWithOKToCloseDialogDonateText"  Margin="0,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource DonateTextActivated}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" HorizontalAlignment="Center" Content="{DynamicResource Refuse}"/>
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Click="Donate_Button_Click" HorizontalAlignment="Center" Content="{DynamicResource DonateBtn}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogUpdate" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="16,16,16,8">
-                                    <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogUpdateTitle"  Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Text="{DynamicResource UpdateTitle}" />
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignHeadline6TextBlock}" x:Name="DialogUpdateText"  Margin="0,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource UpdateText}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button x:Name="IgnoreUpdate" FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" HorizontalAlignment="Center" Content="{DynamicResource Ignore}"/>
-                                    <Button x:Name="UpdateBtn" FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Click="UpdateBtn_Click" HorizontalAlignment="Center" Content="{DynamicResource UpdateNow}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-            <materialDesign:DialogHost x:Name="DialogUpgradeFullVersion" IsOpen="False">
-                <materialDesign:DialogHost.DialogContent>
-                    <Grid>
-                        <materialDesign:Card UniformCornerRadius="8" materialDesign:ShadowAssist.ShadowDepth="Depth3">
-                            <StackPanel>
-                                <StackPanel Margin="16,16,16,8">
-                                    <!--<ProgressBar Style="{DynamicResource MaterialDesignCircularProgressBar}" HorizontalAlignment="Center" Margin="0,0,0,0" IsIndeterminate="True" Value="0" VerticalAlignment="Top" Width="32" Height="32" />-->
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignTitleTextBlock}" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Text="{DynamicResource UpgradeFullVersionWindowsTitle}" />
-                                    <TextBlock FontFamily="{DynamicResource Font}"  Style="{DynamicResource MaterialDesignTitleTextBlock}" Margin="0,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="14" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="8,0,8,8">
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True"
-                                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" HorizontalAlignment="Center" Content="{DynamicResource Cancel}"/>
-                                    <Button FontFamily="{DynamicResource Font}" Style="{StaticResource MaterialDesignFlatButton}" IsCancel="True" 
-                                            Click="UpgradeFullVersionWindows_Click" HorizontalAlignment="Center" Content="{DynamicResource OK}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </materialDesign:Card>
-                    </Grid>
-                </materialDesign:DialogHost.DialogContent>
-            </materialDesign:DialogHost>
-        </Grid>
+
+        <!-- 对话框：使用框架自带的 ContentDialog，同一时间只能显示一个 -->
+        <ui:ContentDialog x:Name="DialogWait">
+            <StackPanel>
+                <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
+                <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
+            </StackPanel>
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogActProg">
+            <StackPanel>
+                <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
+                <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="activatingtext" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Activating}" />
+            </StackPanel>
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogWithCancel"
+                          CloseButtonText="{DynamicResource Cancel}">
+            <StackPanel>
+                <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
+                <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" Margin="0,16,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
+            </StackPanel>
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogWithOK" Title="Title"
+                          CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
+            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="Hello World" />
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogHelp" Title="Help"
+                          CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
+            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource HelpText}"/>
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogWithExit" Title="{DynamicResource ErrorTitle}"
+                          CloseButtonText="{DynamicResource Exit}" DefaultButton="Close" CloseButtonClick="Exit_Button_Click">
+            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource Disconnect_to_server_exit}"/>
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogWithOKToCloseDialog" Title="Title"
+                          CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
+            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogText" TextWrapping="Wrap">Text</TextBlock>
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogWithOKToCloseDialogDonate" Title="{DynamicResource Complete}"
+                          PrimaryButtonText="{DynamicResource DonateBtn}" PrimaryButtonClick="Donate_Button_Click"
+                          CloseButtonText="{DynamicResource Refuse}" DefaultButton="Primary">
+            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogDonateText" TextWrapping="Wrap" Text="{DynamicResource DonateTextActivated}" />
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogUpdate" Title="{DynamicResource UpdateTitle}"
+                          PrimaryButtonText="{DynamicResource UpdateNow}" PrimaryButtonClick="UpdateBtn_Click"
+                          SecondaryButtonText="{DynamicResource Ignore}" DefaultButton="Primary">
+            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogUpdateText" TextWrapping="Wrap" Text="{DynamicResource UpdateText}" />
+        </ui:ContentDialog>
+        <ui:ContentDialog x:Name="DialogUpgradeFullVersion" Title="{DynamicResource UpgradeFullVersionWindowsTitle}"
+                          PrimaryButtonText="{DynamicResource OK}" PrimaryButtonClick="UpgradeFullVersionWindows_Click"
+                          CloseButtonText="{DynamicResource Cancel}" DefaultButton="Primary">
+            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
+        </ui:ContentDialog>
     </Grid>
 
 </Window>
