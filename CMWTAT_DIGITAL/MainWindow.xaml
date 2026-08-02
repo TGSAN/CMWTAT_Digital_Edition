@@ -148,7 +148,7 @@
                             <Button x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45" />
                             <Button x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45"/>
                             <Button x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45"/>
-                            <Button x:Name="rebootlessupdatebtn" Content="热补丁权益管理" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45"/>
+                            <Button x:Name="rebootlessupdatebtn" Click="rebootlessupdatebtn_Click" Content="{DynamicResource Rebootless_update_management}" HorizontalAlignment="Stretch" Margin="0,20,0,0" Height="45"/>
                         </StackPanel>
                     </Grid>
                     <!-- 对话框：使用框架自带的 ContentDialog，同一时间只能显示一个 -->
@@ -239,6 +239,17 @@
                         PrimaryButtonText="{DynamicResource OK}" PrimaryButtonClick="UpgradeFullVersionWindows_Click"
                         CloseButtonText="{DynamicResource Cancel}" DefaultButton="Primary">
                         <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
+                    </ui:ContentDialog>
+                    <!-- 热补丁权益管理：正文里要带上实时检测出来的当前状态，主按钮也要在
+                         “开启权益”和“恢复默认”之间切换，这两处没法写成 {DynamicResource}，
+                         由 RefreshRebootlessUpdateDialog() 在打开对话框前（以及切换语言后）填。
+                         标题和“取消”是固定的，仍旧走 {DynamicResource} 自动跟随语言。 -->
+                    <ui:ContentDialog x:Name="DialogRebootlessUpdate" Title="{DynamicResource RebootlessUpdateTitle}"
+                        d:Visibility="Collapsed"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        PrimaryButtonClick="RebootlessUpdate_Click"
+                        CloseButtonText="{DynamicResource Cancel}" DefaultButton="Primary">
+                        <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogRebootlessUpdateText" TextWrapping="Wrap" />
                     </ui:ContentDialog>
                 </Grid>
             </Border>

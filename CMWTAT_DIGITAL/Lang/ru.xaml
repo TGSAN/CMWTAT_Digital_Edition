@@ -39,6 +39,27 @@
     <sys:String x:Key="UpgradeFullVersionWindowsTitle">
         Перейти на полную версию Windows
     </sys:String>
+    <sys:String x:Key="RebootlessUpdateTitle">
+        Управление правами на горячие исправления
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateEnableBtn">
+        Включить права
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateRestoreBtn">
+        Восстановить по умолчанию
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatus">
+        Текущее состояние: {0}
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusEnabled">
+        Права включены
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusDefault">
+        Определяется подпиской (по умолчанию)
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateFailed">
+        Не удалось выполнить операцию. Убедитесь, что программа запущена от имени администратора.
+    </sys:String>
     <sys:String x:Key="CurrentVersion">
         Текущая версия
     </sys:String>
@@ -59,6 +80,9 @@
     </sys:String>
     <sys:String x:Key="Upgrade_full_version">
         Перейти на полную версию Windows
+    </sys:String>
+    <sys:String x:Key="Rebootless_update_management">
+        Управление правами на горячие исправления
     </sys:String>
     <sys:String x:Key="test">
         тест текст
@@ -194,6 +218,9 @@
 
     <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
 Вы используете базовую версию Windows, Вы можете использовать эту функцию, чтобы перейти на полную версию.&#10;(Если программа не отвечает, Ваша версия системы может не поддерживать переход на полную версию или уже в процессе перехода) &#10;&#10;Note:&#10;Данное действие необратимо. После перехода на полную версию Вы не сможете перейти обратно!&#10;&#10;Вы хотите продолжить?
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
+Обновление Windows с помощью горячих исправлений (hotpatch) — это особая привилегия для пользователей с лицензией по подписке Windows.&#10;&#10;Обычно для завершения ежемесячных обновлений Windows требуется перезагрузка операционной системы. После включения горячих исправлений Windows может устанавливать обновления без перезагрузки системы (кроме базовых обновлений: например, раз в 3 месяца выпускается квартальное базовое обновление).
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 Эта программа теперь поддерживает аргументы командной строки при запуске!&#10;&#10;-a&#9;--auto&#9;&#9;Автоматическая активация.&#10;-h&#9;--hide&#9;&#9;Запустить в скрытом режиме (Работает только с --auto).&#10;-e&#9;--expact&#9;&#9;Экспериментальная активация.&#10;-l&#9;--log&#9;&#9;Вывод логов в файл.&#10;-?&#9;--help&#9;&#9;Показать эту справку.

@@ -39,6 +39,27 @@
     <sys:String x:Key="UpgradeFullVersionWindowsTitle">
         Passer à la version complète de Windows
     </sys:String>
+    <sys:String x:Key="RebootlessUpdateTitle">
+        Gérer les droits de correctifs à chaud
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateEnableBtn">
+        Activer les droits
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateRestoreBtn">
+        Restaurer par défaut
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatus">
+        État actuel : {0}
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusEnabled">
+        Droits activés
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusDefault">
+        Déterminé par l'abonnement (par défaut)
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateFailed">
+        Échec de l'opération. Veuillez vérifier que l'application est exécutée en tant qu'administrateur.
+    </sys:String>
     <sys:String x:Key="CurrentVersion">
         Version actuelle
     </sys:String>
@@ -59,6 +80,9 @@
     </sys:String>
     <sys:String x:Key="Upgrade_full_version">
         Passer à la version complète de Windows
+    </sys:String>
+    <sys:String x:Key="Rebootless_update_management">
+        Gérer les droits de correctifs à chaud
     </sys:String>
     <sys:String x:Key="test">
         Texte de test
@@ -194,6 +218,9 @@
 
     <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
 Vous utilisez actuellement la version Core de Windows, vous pouvez utiliser cette fonctionnalité pour passer à la version complète de Windows.&#10;(Si l'opération ne répond pas, il se peut que la version actuelle ne prenne pas en charge la mise à niveau ou qu'une mise à niveau soit déjà en cours) &#10;&#10;Remarque :&#10;Cette opération est irréversible, une fois la mise à niveau terminée vous ne pourrez plus revenir à la version Core de Windows !&#10;&#10;Voulez-vous vraiment effectuer la mise à niveau ?
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
+La mise à jour par correctif à chaud (hotpatch) de Windows est un droit spécial réservé aux utilisateurs disposant d'une licence d'abonnement Windows.&#10;&#10;Normalement, les mises à jour mensuelles de Windows nécessitent un redémarrage du système d'exploitation pour être terminées. Une fois les correctifs à chaud activés, Windows peut installer les mises à jour sans redémarrer le système (à l'exception des mises à jour de référence, par exemple une mise à jour de référence trimestrielle est publiée tous les 3 mois).
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 Cette application prend désormais en charge les arguments de ligne de commande au démarrage !&#10;&#10;-a&#9;--auto&#9;&#9;Activation automatique.&#10;-h&#9;--hide&#9;&#9;Exécuter en mode masqué (fonctionne uniquement avec -auto).&#10;-e&#9;--expact&#9;&#9;Activation expérimentale.&#10;-l&#9;--log&#9;&#9;Écrire le journal dans un fichier.&#10;-?&#9;--help&#9;&#9;Afficher cette boîte de dialogue d'aide.

@@ -39,6 +39,27 @@
     <sys:String x:Key="UpgradeFullVersionWindowsTitle">
         Upgrade to full version of Windows
     </sys:String>
+    <sys:String x:Key="RebootlessUpdateTitle">
+        Manage hotpatch entitlement
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateEnableBtn">
+        Enable entitlement
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateRestoreBtn">
+        Restore default
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatus">
+        Current status: {0}
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusEnabled">
+        Entitlement enabled
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusDefault">
+        Determined by subscription (default)
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateFailed">
+        Operation failed. Please make sure this app is running as administrator.
+    </sys:String>
     <sys:String x:Key="CurrentVersion">
         Current Version
     </sys:String>
@@ -59,6 +80,9 @@
     </sys:String>
     <sys:String x:Key="Upgrade_full_version">
         Upgrade to full version of Windows
+    </sys:String>
+    <sys:String x:Key="Rebootless_update_management">
+        Manage hotpatch entitlement
     </sys:String>
     <sys:String x:Key="test">
         Test Text
@@ -194,6 +218,9 @@
 
     <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
 You are currently using the core version of Windows, you can use this feature to upgrade to the full version of Windows.&#10;(If the operation does not respond it may be that the current version does not support the upgrade or is in the process of upgrading) &#10;&#10;Note:&#10;This operation is not reversible and once the upgrade is complete you will not be able to roll back to the core version of Windows!&#10;&#10;Are you sure you want to perform an upgrade?
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
+Windows hotpatch update is a special entitlement for users with a Windows subscription license.&#10;&#10;Normally, Windows monthly updates require restarting the operating system to complete. Once hotpatching is enabled, Windows can install updates without restarting the system (except for baseline updates, e.g. a quarterly baseline update is pushed every 3 months).
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 This application now supports the use of console args to startup!&#10;&#10;-a&#9;--auto&#9;&#9;Auto activate.&#10;-h&#9;--hide&#9;&#9;Run with hide mode (Only be worked with -auto).&#10;-e&#9;--expact&#9;&#9;Experimental activation.&#10;-l&#9;--log&#9;&#9;Output log to file.&#10;-?&#9;--help&#9;&#9;Show this help Dialog.

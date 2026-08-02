@@ -39,6 +39,27 @@
     <sys:String x:Key="UpgradeFullVersionWindowsTitle">
         升级到完整版 Windows
     </sys:String>
+    <sys:String x:Key="RebootlessUpdateTitle">
+        热补丁权益管理
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateEnableBtn">
+        开启权益
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateRestoreBtn">
+        恢复默认
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatus">
+        当前状态：{0}
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusEnabled">
+        已开启权益
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusDefault">
+        根据订阅决定（默认值）
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateFailed">
+        操作失败，请确认是否以管理员身份运行。
+    </sys:String>
     <sys:String x:Key="CurrentVersion">
         当前版本
     </sys:String>
@@ -59,6 +80,9 @@
     </sys:String>
     <sys:String x:Key="Upgrade_full_version">
         升级到完整版 Windows
+    </sys:String>
+    <sys:String x:Key="Rebootless_update_management">
+        热补丁权益管理
     </sys:String>
     <sys:String x:Key="test">
         测试文本
@@ -194,6 +218,9 @@
 
     <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
 当前正在使用核心版 Windows，你可以通过此功能升级到完整版 Windows。&#10;（如果操作没有反应可能是当前版本不支持升级，或者正在升级）&#10;&#10;注意：&#10;此操作不可逆，一旦升级完成将无法回退到核心版 Windows！&#10;&#10;确定要执行升级操作吗？
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
+Windows 热补丁更新是一项面向 Windows 订阅授权用户的特殊权益&#10;&#10;通常情况下，Windows 每月更新都需要重启操作系统才能完成更新，当开启热补丁后，Windows 可以在不重启系统的情况下更新（基线更新除外，比如每3个月会推送一次季度基线更新）
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 这个应用现已支持通过控制台参数启动！&#10;&#10;-a&#9;--auto&#9;&#9;自动激活。&#10;-h&#9;--hide&#9;&#9;隐藏模式运行 (只能与 -auto 一起使用)。&#10;-e&#9;--expact&#9;实验性激活。&#10;-l&#9;--log&#9;&#9;输出日志到文件。&#10;-?&#9;--help&#9;&#9;显示此说明对话框。

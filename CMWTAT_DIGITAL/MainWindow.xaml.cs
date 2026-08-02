@@ -234,8 +234,9 @@ namespace CMWTAT_DIGITAL
                 this.Resources.MergedDictionaries.Add(langRd);
             }
 
-            UpdateThemeSwitchButton(); // 语言变了，标题栏主题按钮的工具提示要跟着刷新
-            BuildLangMenu();           // 重建语言菜单：勾选项要指向新语言
+            UpdateThemeSwitchButton();       // 语言变了，标题栏主题按钮的工具提示要跟着刷新
+            BuildLangMenu();                 // 重建语言菜单：勾选项要指向新语言
+            RefreshRebootlessUpdateDialog(); // 热补丁对话框的正文和主按钮文字是代码拼的，不会自动跟着语言走
         }
 
         private static List<string> availableLangs = null; // 编译期就定死了，检测一次即可
@@ -773,6 +774,16 @@ namespace CMWTAT_DIGITAL
             }
         }
 
+        private void CheckWindows24H2()
+        {
+            if (OSVersionInfo.BuildVersion < 26100)
+            {
+                rebootlessupdatebtn.IsEnabled = false;
+                rebootlessupdatebtn.Visibility = Visibility.Collapsed;
+                this.Height -= 65;
+            }
+        }
+
         private void Activate_Button_Click(object sender, RoutedEventArgs e)
         {
             Thread actthread = new Thread(RunActWithUI);
@@ -802,6 +813,200 @@ namespace CMWTAT_DIGITAL
             Thread upgradethread = new Thread(RunUpgradeFullVersion);
             upgradethread.Start();
         }
+
+        #region 热补丁（Rebootless Update）权益
+
+        // 开启权益 = 把下面这三个值都写成 DWORD 1；恢复默认 = 把这三个值删掉（保留键本身，
+        // 因为 PolicyManager 那个键下面还挂着别的策略，不能整键删）。
+        private const string HotpatchEnvKey = @"SOFTWARE\Microsoft\Windows\Hotpatch\Environment";
+        private const string HotpatchPolicyKey = @"SOFTWARE\Microsoft\PolicyManager\current\device\Update";
+        private const string AllowRebootlessUpdates = "AllowRebootlessUpdates";
+        private const string AllowRebootlessUpdatesProviderSet = "AllowRebootlessUpdates_ProviderSet";
+
+        /// <summary>
+        /// 打开 HKLM 的 64 位视图。
+        /// 当前工程是 AnyCPU + Prefer32Bit=false，本来就跑在 64 位下；但只要有人把
+        /// PlatformTarget 改成 x86，HKLM\SOFTWARE\... 就会被 WOW64 悄悄重定向到
+        /// WOW6432Node，写进去对系统完全无效且不会报错。所以这里显式指定视图。
+        /// （32 位系统上这个参数会被忽略，不影响。）
+        /// </summary>
+        private static RegistryKey OpenLocalMachine64()
+        {
+            return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+        }
+
+        /// <summary>
+        /// 是否已开启热补丁权益：三个值必须都存在且为 1，
+        /// 只要有一个缺失或者不等于 1，就按“未开启（跟随订阅默认）”处理。
+        /// </summary>
+        private static bool IsRebootlessUpdateEnabled()
+        {
+            try
+            {
+                using (RegistryKey hklm = OpenLocalMachine64())
+                {
+                    return ReadDword(hklm, HotpatchEnvKey, AllowRebootlessUpdates) == 1
+                        && ReadDword(hklm, HotpatchPolicyKey, AllowRebootlessUpdatesProviderSet) == 1
+                        && ReadDword(hklm, HotpatchPolicyKey, AllowRebootlessUpdates) == 1;
+                }
+            }
+            catch (Exception e)
+            {
+                // 读不到就当没开：这里只用来显示状态，不该把整个对话框拖挂
+                ConsoleLog("IsRebootlessUpdateEnabled failed: " + e.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 读一个 DWORD；键或值不存在、或者类型不是 DWORD 时返回 null。
+        /// </summary>
+        private static int? ReadDword(RegistryKey baseKey, string subKey, string name)
+        {
+            using (RegistryKey key = baseKey.OpenSubKey(subKey))
+            {
+                if (key == null)
+                {
+                    return null;
+                }
+                return key.GetValue(name) as int?; // REG_DWORD 装箱出来就是 int，其它类型自然得到 null
+            }
+        }
+
+        /// <summary>
+        /// 开启（true）或恢复默认（false）热补丁权益。失败时直接抛出，由调用方提示用户。
+        /// </summary>
+        private static void SetRebootlessUpdateEnabled(bool enabled)
+        {
+            using (RegistryKey hklm = OpenLocalMachine64())
+            {
+                if (enabled)
+                {
+                    WriteDword(hklm, HotpatchEnvKey, AllowRebootlessUpdates, 1);
+                    WriteDword(hklm, HotpatchPolicyKey, AllowRebootlessUpdatesProviderSet, 1);
+                    WriteDword(hklm, HotpatchPolicyKey, AllowRebootlessUpdates, 1);
+                }
+                else
+                {
+                    DeleteDword(hklm, HotpatchEnvKey, AllowRebootlessUpdates);
+                    DeleteDword(hklm, HotpatchPolicyKey, AllowRebootlessUpdatesProviderSet);
+                    DeleteDword(hklm, HotpatchPolicyKey, AllowRebootlessUpdates);
+                }
+            }
+        }
+
+        private static void WriteDword(RegistryKey baseKey, string subKey, string name, int value)
+        {
+            // 没装过热补丁的机器上这些键可能压根不存在，CreateSubKey 会顺手建出来
+            using (RegistryKey key = baseKey.CreateSubKey(subKey))
+            {
+                if (key == null)
+                {
+                    throw new Exception("Cannot create registry key: " + subKey);
+                }
+                key.SetValue(name, value, RegistryValueKind.DWord);
+            }
+        }
+
+        private static void DeleteDword(RegistryKey baseKey, string subKey, string name)
+        {
+            using (RegistryKey key = baseKey.OpenSubKey(subKey, true))
+            {
+                if (key != null)
+                {
+                    key.DeleteValue(name, false); // 值本来就没有 = 已经是默认状态，不算失败
+                }
+            }
+        }
+
+        private void rebootlessupdatebtn_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshRebootlessUpdateDialog(); // 每次打开都重新检测一次注册表
+            OpenDialog(this.DialogRebootlessUpdate);
+        }
+
+        /// <summary>
+        /// 拼“当前状态：XXX”这行文字。语言资源还没载入时返回 null。
+        /// </summary>
+        private string GetRebootlessUpdateStatusText(bool enabled)
+        {
+            string format = this.Resources["RebootlessUpdateStatus"] as string;
+            string status = this.Resources[enabled ? "RebootlessUpdateStatusEnabled" : "RebootlessUpdateStatusDefault"] as string;
+
+            return format == null || status == null ? null : string.Format(format, status);
+        }
+
+        /// <summary>
+        /// 按注册表里的实际状态刷新热补丁对话框的正文和主按钮文字。
+        /// 打开对话框之前、执行操作之后、以及切换语言（LoadLang）之后都需要调用。
+        /// </summary>
+        private void RefreshRebootlessUpdateDialog()
+        {
+            if (DialogRebootlessUpdate == null || DialogRebootlessUpdateText == null)
+            {
+                return; // InitializeComponent() 之前
+            }
+
+            bool enabled = IsRebootlessUpdateEnabled();
+
+            string statusText = GetRebootlessUpdateStatusText(enabled);
+            string description = this.Resources["RebootlessUpdateText"] as string;
+            // 已开启 -> 主按钮是“恢复默认”；未开启 -> 主按钮是“开启权益”
+            string primaryText = this.Resources[enabled ? "RebootlessUpdateRestoreBtn" : "RebootlessUpdateEnableBtn"] as string;
+
+            // 语言资源可能还没载入（LoadLang 会在载入之后再调一次），此时先跳过
+            if (statusText == null || description == null || primaryText == null)
+            {
+                return;
+            }
+
+            DialogRebootlessUpdate.PrimaryButtonText = primaryText;
+            DialogRebootlessUpdateText.Text = statusText + "\r\n\r\n" + description;
+        }
+
+        /// <summary>
+        /// 对话框主按钮：它是个开关，已开启就恢复默认，未开启就开启。
+        /// </summary>
+        private void RebootlessUpdate_Click(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            bool enable = !IsRebootlessUpdateEnabled();
+
+            try
+            {
+                SetRebootlessUpdateEnabled(enable);
+                ConsoleLog("Rebootless update entitlement set to: " + enable.ToString());
+            }
+            catch (Exception ex)
+            {
+                // 最常见的就是没以管理员身份运行，写 HKLM 会被拒
+                ConsoleLog("Failed to set rebootless update entitlement: " + ex.Message);
+                ShowRebootlessUpdateResult((string)this.Resources["ErrorTitle"],
+                    (string)this.Resources["RebootlessUpdateFailed"] + "\r\n" + (string)this.Resources["SysMsg"] + "\r\n" + ex.Message);
+                RefreshRebootlessUpdateDialog();
+                return;
+            }
+
+            RefreshRebootlessUpdateDialog(); // 状态变了，下次打开要显示新的
+            ShowRebootlessUpdateResult((string)this.Resources["CompleteTitle"],
+                GetRebootlessUpdateStatusText(IsRebootlessUpdateEnabled()));
+        }
+
+        /// <summary>
+        /// 复用通用的“标题 + 正文 + 好”对话框来回报操作结果。
+        /// </summary>
+        private void ShowRebootlessUpdateResult(string title, string text)
+        {
+            // 此刻热补丁对话框还没关完（正在处理它的主按钮点击），框架又限定同一时间
+            // 只能开一个对话框，所以排到消息队列后面，等它关掉再弹结果。
+            this.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() =>
+            {
+                this.DialogWithOKToCloseDialog.Title = title;
+                this.DialogWithOKToCloseDialogText.Text = text;
+                OpenDialog(this.DialogWithOKToCloseDialog);
+            }));
+        }
+
+        #endregion
 
         private string GetHttpWebRequest(string url, int timeout = 10000, int retry = 2)
         {
@@ -1720,6 +1925,7 @@ namespace CMWTAT_DIGITAL
             loadthread.Start();
 
             CheckWindowsCore();
+            CheckWindows24H2();
         }
     }
 }

@@ -39,6 +39,27 @@
     <sys:String x:Key="UpgradeFullVersionWindowsTitle">
         完全版 Windows へアップグレード
     </sys:String>
+    <sys:String x:Key="RebootlessUpdateTitle">
+        ホットパッチ特典の管理
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateEnableBtn">
+        特典を有効にする
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateRestoreBtn">
+        既定値に戻す
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatus">
+        現在の状態：{0}
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusEnabled">
+        特典が有効
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateStatusDefault">
+        サブスクリプションに従う（既定値）
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateFailed">
+        操作に失敗しました。管理者として実行しているか確認してください。
+    </sys:String>
     <sys:String x:Key="CurrentVersion">
         バージョン
     </sys:String>
@@ -59,6 +80,9 @@
     </sys:String>
     <sys:String x:Key="Upgrade_full_version">
         完全版 Windows へアップグレード
+    </sys:String>
+    <sys:String x:Key="Rebootless_update_management">
+        ホットパッチ特典の管理
     </sys:String>
     <sys:String x:Key="test">
         テストテキスト
@@ -194,6 +218,9 @@
 
     <sys:String x:Key="UpgradeFullVersionWindowsText" xml:space="preserve">
 現在お使いの Windows はコア版（Core エディション）です。この機能で完全版 Windows にアップグレードできます。&#10;（操作しても反応がない場合は、現在のバージョンがアップグレードに対応していないか、既にアップグレード処理中の可能性があります）&#10;&#10;注意：&#10;この操作は元に戻せません。アップグレードが完了すると、コア版 Windows に戻すことはできません！&#10;&#10;アップグレードを実行してもよろしいですか？
+    </sys:String>
+    <sys:String x:Key="RebootlessUpdateText" xml:space="preserve">
+Windows のホットパッチ更新は、Windows のサブスクリプション ライセンスをお持ちのユーザー向けの特別な特典です。&#10;&#10;通常、Windows の毎月の更新プログラムを適用するにはオペレーティング システムの再起動が必要ですが、ホットパッチを有効にすると、システムを再起動せずに更新できます（ベースライン更新を除く。たとえば 3 か月ごとに四半期ベースライン更新が配信されます）。
     </sys:String>
     <sys:String x:Key="HelpText" xml:space="preserve">
 このアプリは起動時にコンソール引数を使用できるようになりました！&#10;&#10;-a&#9;--auto&#9;&#9;自動認証。&#10;-h&#9;--hide&#9;&#9;非表示モードで実行 (-autoと一緒に使用するだけ可能)。&#10;-e&#9;--expact&#9;&#9;実験性認証。&#10;-l&#9;--log&#9;&#9;ログをファイルに出力。&#10;-?&#9;--help&#9;&#9;この説明ダイアログボックスを表示する。
