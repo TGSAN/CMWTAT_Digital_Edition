@@ -1,4 +1,6 @@
 ﻿using iNKORE.UI.WPF.Modern;
+using iNKORE.UI.WPF.Modern.Common.IconKeys;
+using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using OSVersionInfoClass;
@@ -234,11 +236,66 @@ namespace CMWTAT_DIGITAL
         }
 
         /// <summary>
-        /// 应用浅色 / 深色主题（iNKORE.UI.WPF.Modern / Fluent Design）。
+        /// 当前主题模式：null = 跟随系统，Dark = 深色，Light = 亮色。默认跟随系统。
         /// </summary>
-        private static void ApplyBase(bool isDark)
+        private ApplicationTheme? themeMode = null;
+
+        /// <summary>
+        /// 应用当前主题模式（iNKORE.UI.WPF.Modern / Fluent Design）。
+        /// ApplicationTheme 置为 null 时，框架会自动读取系统主题，
+        /// 并在系统主题发生变化时实时跟随，无需自行轮询。
+        /// </summary>
+        private void ApplyTheme()
         {
-            ThemeManager.Current.ApplicationTheme = isDark ? ApplicationTheme.Dark : ApplicationTheme.Light;
+            ThemeManager.Current.ApplicationTheme = themeMode;
+            UpdateThemeSwitchIcon();
+        }
+
+        /// <summary>
+        /// 让标题栏按钮的图标与当前主题模式保持一致。
+        /// </summary>
+        private void UpdateThemeSwitchIcon()
+        {
+            if (themeSwitchIcon == null)
+            {
+                return;
+            }
+
+            if (themeMode == ApplicationTheme.Dark)
+            {
+                themeSwitchIcon.Icon = SegoeFluentIcons.QuietHours;  // 月亮：深色
+            }
+            else if (themeMode == ApplicationTheme.Light)
+            {
+                themeSwitchIcon.Icon = SegoeFluentIcons.Brightness;  // 太阳：亮色
+            }
+            else
+            {
+                themeSwitchIcon.Icon = SegoeFluentIcons.System;      // 跟随系统
+            }
+        }
+
+        /// <summary>
+        /// 标题栏主题切换按钮：在 系统 -> 深色 -> 亮色 -> 系统 三态之间循环。
+        /// </summary>
+        private void themeSwitchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (themeMode == null)
+            {
+                themeMode = ApplicationTheme.Dark;
+            }
+            else if (themeMode == ApplicationTheme.Dark)
+            {
+                themeMode = ApplicationTheme.Light;
+            }
+            else
+            {
+                themeMode = null;
+            }
+
+            ConsoleLog("Theme Mode switched to: " + (themeMode == null ? "System" : themeMode.ToString()));
+
+            ApplyTheme();
         }
 
         string ProductVersion = "0.0.0.0"; // 存储程序版本
@@ -268,8 +325,7 @@ namespace CMWTAT_DIGITAL
 
         public string SystemEdition = OSVersionInfo.Edition;
 
-        bool isDark = false;
-
+        // 仅用于日志诊断；实际配色由 ApplyTheme() / ThemeManager 负责
         string WindowsTheme = "Light";
 
         NotifyIcon notifyIcon;
@@ -285,12 +341,10 @@ namespace CMWTAT_DIGITAL
 
             if (lightness > 0.75)
             {
-                isDark = false;
                 WindowsTheme = "Light";
             }
             else
             {
-                isDark = true;
                 WindowsTheme = "Dark";
             }
 
@@ -656,7 +710,8 @@ namespace CMWTAT_DIGITAL
             {
                 opened.Hide();
             }
-            dialog.ShowAsync(this); // 不阻塞 UI 线程
+            dialog.Hide();
+            dialog.ShowAsync(ContentDialogPlacement.InPlace); // 不阻塞 UI 线程
         }
 
         private void Exit_Button_Click(object sender, EventArgs e)
@@ -1374,7 +1429,7 @@ namespace CMWTAT_DIGITAL
         private void Window_Activated(object sender, EventArgs e)
         {
             CheckWindowsTheme();
-            ApplyBase(isDark); // 应用颜色
+            ApplyTheme(); // 应用颜色（保持用户选择的主题模式）
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -1393,7 +1448,7 @@ namespace CMWTAT_DIGITAL
 
             //MessageBox.Show("A:" + autoact.ToString() + ";H:" + hiderun.ToString());
 
-            ApplyBase(isDark);
+            ApplyTheme();
 
             string LangName = currentCultureInfo.Name;
             //根据本地语言来进行本地化
