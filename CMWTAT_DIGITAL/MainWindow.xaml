@@ -21,7 +21,6 @@
         d:DataContext="{d:DesignInstance domain:ViewModel, d:IsDesignTimeCreatable=False}"
         Icon="CMWTAT.ico"
         Closing="Window_Closing"
-        FontFamily="{DynamicResource Font}"
         Activated="Window_Activated"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
@@ -31,7 +30,7 @@
             <StackPanel>
                 <ui:SettingsCard ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
                     <ui:SettingsCard.Content>
-                        <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource SubtitleTextBlockStyle}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
+                        <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" ><Run Text="{DynamicResource AppName}"/></TextBlock>
                     </ui:SettingsCard.Content>
                 </ui:SettingsCard>
                 <ui:SettingsCard ContentAlignment="Left" Padding="30,30" Margin="0,20,0,0">
@@ -61,9 +60,9 @@
                         </StackPanel>
                     </ui:SettingsCard.Content>
                 </ui:SettingsCard>
-                <Button FontFamily="{DynamicResource Font}" x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch"  ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65" />
-                <Button FontFamily="{DynamicResource Font}" x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
-                <Button FontFamily="{DynamicResource Font}" x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
+                <Button x:Name="actbtn" Click="Activate_Button_Click" Content="{DynamicResource Activate_Button}" Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Stretch"  ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65" />
+                <Button x:Name="installbtn" Click="installbtn_Click" Content="{DynamicResource Convert_versions}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
+                <Button x:Name="upgradefullbtn" Click="upgradefullbtn_Click" Content="{DynamicResource Upgrade_full_version}" HorizontalAlignment="Stretch" ui:ControlHelper.CornerRadius="8" Margin="0,20,0,0" Height="65"/>
             </StackPanel>
         </Grid>
 
@@ -71,52 +70,52 @@
         <ui:ContentDialog x:Name="DialogWait">
             <StackPanel>
                 <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
-                <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
+                <TextBlock Style="{DynamicResource BodyTextBlockStyle}" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
             </StackPanel>
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogActProg">
             <StackPanel>
                 <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
-                <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="activatingtext" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Activating}" />
+                <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="activatingtext" Margin="0,24,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Activating}" />
             </StackPanel>
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogWithCancel"
                           CloseButtonText="{DynamicResource Cancel}">
             <StackPanel>
                 <ui:ProgressRing IsActive="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="32" Height="32" />
-                <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" Margin="0,16,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
+                <TextBlock Style="{DynamicResource BodyTextBlockStyle}" Margin="0,16,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{DynamicResource Loading}" />
             </StackPanel>
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogWithOK" Title="Title"
                           CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
-            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="Hello World" />
+            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="Hello World" />
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogHelp" Title="Help"
                           CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
-            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource HelpText}"/>
+            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource HelpText}"/>
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogWithExit" Title="{DynamicResource ErrorTitle}"
                           CloseButtonText="{DynamicResource Exit}" DefaultButton="Close" CloseButtonClick="Exit_Button_Click">
-            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource Disconnect_to_server_exit}"/>
+            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource Disconnect_to_server_exit}"/>
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogWithOKToCloseDialog" Title="Title"
                           CloseButtonText="{DynamicResource OK}" DefaultButton="Close">
-            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogText" TextWrapping="Wrap">Text</TextBlock>
+            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogText" TextWrapping="Wrap">Text</TextBlock>
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogWithOKToCloseDialogDonate" Title="{DynamicResource Complete}"
                           PrimaryButtonText="{DynamicResource DonateBtn}" PrimaryButtonClick="Donate_Button_Click"
                           CloseButtonText="{DynamicResource Refuse}" DefaultButton="Primary">
-            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogDonateText" TextWrapping="Wrap" Text="{DynamicResource DonateTextActivated}" />
+            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogWithOKToCloseDialogDonateText" TextWrapping="Wrap" Text="{DynamicResource DonateTextActivated}" />
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogUpdate" Title="{DynamicResource UpdateTitle}"
                           PrimaryButtonText="{DynamicResource UpdateNow}" PrimaryButtonClick="UpdateBtn_Click"
                           SecondaryButtonText="{DynamicResource Ignore}" DefaultButton="Primary">
-            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogUpdateText" TextWrapping="Wrap" Text="{DynamicResource UpdateText}" />
+            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" x:Name="DialogUpdateText" TextWrapping="Wrap" Text="{DynamicResource UpdateText}" />
         </ui:ContentDialog>
         <ui:ContentDialog x:Name="DialogUpgradeFullVersion" Title="{DynamicResource UpgradeFullVersionWindowsTitle}"
                           PrimaryButtonText="{DynamicResource OK}" PrimaryButtonClick="UpgradeFullVersionWindows_Click"
                           CloseButtonText="{DynamicResource Cancel}" DefaultButton="Primary">
-            <TextBlock FontFamily="{DynamicResource Font}" Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
+            <TextBlock Style="{DynamicResource BodyTextBlockStyle}" TextWrapping="Wrap" Text="{DynamicResource UpgradeFullVersionWindowsText}" />
         </ui:ContentDialog>
     </Grid>
 
