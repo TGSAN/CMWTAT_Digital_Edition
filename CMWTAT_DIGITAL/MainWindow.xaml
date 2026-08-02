@@ -98,8 +98,8 @@
             <Border Grid.Row="1" ClipToBounds="True"
                 CornerRadius="8, 8, 0, 0" Background="{DynamicResource LayerFillColorDefaultBrush}" 
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
-                <Grid VerticalAlignment="Center">
-                    <Grid Margin="30,20,30,20">
+                <Grid VerticalAlignment="Stretch">
+                    <Grid Margin="30,20,30,20" VerticalAlignment="Center">
                         <StackPanel>
                             <ui:SettingsCard Background="{DynamicResource LayerFillColorDefaultBrush}" ContentAlignment="Left" Padding="20" Margin="0,0,0,0">
                                 <ui:SettingsCard.Content>
