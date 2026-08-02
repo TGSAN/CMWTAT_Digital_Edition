@@ -30,6 +30,57 @@ namespace CMWTAT_DIGITAL
     }
 
     /// <summary>
+    /// RunAct / RunInstall 的运行参数。
+    /// 由调用方（UI 层）在调用前一次性收集，使逻辑本身不需要读取任何控件。
+    /// </summary>
+    public class LicenseTaskOptions
+    {
+        /// <summary>是否为自动模式，false 为手动输入密钥模式。</summary>
+        public bool IsAuto { get; set; }
+
+        /// <summary>自动模式下选择的系统版本（对应 SystemEditionText 的文本）。</summary>
+        public string SystemEdition { get; set; }
+
+        /// <summary>手动模式下输入的产品密钥（对应 SystemEditionTextInput 的文本）。</summary>
+        public string ManualKey { get; set; }
+    }
+
+    /// <summary>
+    /// RunAct / RunInstall 的执行结果。
+    /// 只描述“发生了什么”，由调用方决定如何呈现（对话框、气泡提示或命令行输出）。
+    /// </summary>
+    public class LicenseTaskResult
+    {
+        public LicenseTaskResult(string code) : this(code, null)
+        {
+        }
+
+        public LicenseTaskResult(string code, string systemMessage)
+        {
+            Code = code;
+            SystemMessage = systemMessage;
+        }
+
+        /// <summary>
+        /// 结果代码，"200" 为成功，其余为错误代码。
+        /// 错误提示文本约定保存在语言资源 "ErrorMsg" + Code 中（如 "ErrorMsg-1.1"）。
+        /// </summary>
+        public string Code { get; private set; }
+
+        /// <summary>附加的系统输出，目前仅错误代码 "-4" 会带上 slmgr 的原始输出。</summary>
+        public string SystemMessage { get; private set; }
+
+        /// <summary>是否因为未连接激活服务器而将在下次联网时自动激活。</summary>
+        public bool WillActivateLater { get; set; }
+
+        /// <summary>是否执行成功。</summary>
+        public bool Succeeded
+        {
+            get { return Code == "200"; }
+        }
+    }
+
+    /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window
@@ -443,7 +494,7 @@ namespace CMWTAT_DIGITAL
 
                 if (App.autoact == true)//自动激活
                 {
-                    Thread actthread = new Thread(RunAct);
+                    Thread actthread = new Thread(RunActWithUI);
                     switch (is_selected)
                     {
                         case 1: //正常
@@ -522,7 +573,7 @@ namespace CMWTAT_DIGITAL
 
         private void Activate_Button_Click(object sender, RoutedEventArgs e)
         {
-            Thread actthread = new Thread(RunAct);
+            Thread actthread = new Thread(RunActWithUI);
             actthread.Start();
 
             //RunAct();
@@ -535,7 +586,7 @@ namespace CMWTAT_DIGITAL
 
         private void installbtn_Click(object sender, RoutedEventArgs e)
         {
-            Thread installthread = new Thread(RunInstall);
+            Thread installthread = new Thread(RunInstallWithUI);
             installthread.Start();
         }
 
@@ -615,142 +666,196 @@ namespace CMWTAT_DIGITAL
             System.Windows.Application.Current.Shutdown();
         }
 
-        private void RunInstall()
+        /// <summary>
+        /// 在 UI 线程上一次性收集运行参数，使 RunAct / RunInstall 无需再访问控件。
+        /// </summary>
+        private LicenseTaskOptions GetLicenseTaskOptions()
         {
-            ExportTempFile();
-            //释放文件
+            LicenseTaskOptions options = null;
+            actbtn.Dispatcher.Invoke(new Action(() =>
+            {
+                options = new LicenseTaskOptions
+                {
+                    IsAuto = is_auto,
+                    SystemEdition = this.SystemEditionText.Text,
+                    ManualKey = this.SystemEditionTextInput.Text
+                };
+            }));
+            return options;
+        }
+
+        /// <summary>
+        /// 把执行结果的错误代码翻译成当前语言的提示文本。
+        /// </summary>
+        private string GetErrorMessage(LicenseTaskResult result)
+        {
+            string msg = this.Resources["ErrorMsg" + result.Code] as string ?? "Unknow Error!";
+            if (result.SystemMessage != null)
+            {
+                msg += "\r\n" + (string)this.Resources["SysMsg"] + "\r\n" + result.SystemMessage;
+            }
+            return msg;
+        }
+
+        /// <summary>
+        /// 呈现 RunAct / RunInstall 的执行结果：关闭进度对话框并弹出结果对话框。
+        /// </summary>
+        /// <param name="result">执行结果。</param>
+        /// <param name="busyLangKey">复位进度文字所使用的语言资源键。</param>
+        /// <param name="doneLangKey">成功时显示内容的语言资源键。</param>
+        /// <param name="notifyWhenHideRun">静默模式下是否弹出气泡提示并退出。</param>
+        private void ShowTaskResult(LicenseTaskResult result, string busyLangKey, string doneLangKey, bool notifyWhenHideRun)
+        {
+            actbtn.Dispatcher.Invoke(new Action(() =>
+            {
+                this.DialogActProg.Hide();
+                this.activatingtext.Text = (string)this.Resources[busyLangKey];
+
+                string tipContent;
+                if (result.Succeeded == false)
+                {
+                    tipContent = GetErrorMessage(result);
+                    this.DialogWithOKToCloseDialog.Title = (string)this.Resources["ErrorTitle"]; //错误标题
+                    this.DialogWithOKToCloseDialogText.Text = tipContent + "\r\n" + (string)this.Resources["ErrorCode"] + result.Code; //错误代码 如：错误信息\r\nCode：000
+                    OpenDialog(this.DialogWithOKToCloseDialog);
+                }
+                else
+                {
+                    tipContent = (string)this.Resources[doneLangKey];
+                    this.DialogWithOKToCloseDialogDonate.Title = (string)this.Resources["CompleteTitle"]; //完成标题
+                    this.DialogWithOKToCloseDialogDonateText.Text = tipContent;
+                    OpenDialog(this.DialogWithOKToCloseDialogDonate);
+                }
+
+                if (notifyWhenHideRun == true && App.hiderun == true && App.autoact == true)
+                {
+                    int tipShowMilliseconds = 0;
+                    string tipTitle = (string)this.Resources["notifyIconTitle"];
+                    ToolTipIcon tipType = ToolTipIcon.None;
+                    notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
+                    Exit_Button_Click(null, null);
+                }
+            }));
+        }
+
+        /// <summary>
+        /// installbtn 的线程入口：只负责 UI 交互，实际逻辑见 RunInstall。
+        /// </summary>
+        private void RunInstallWithUI()
+        {
+            LicenseTaskOptions options = GetLicenseTaskOptions();
+
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
                 this.activatingtext.Text = (string)this.Resources["RunInstall_Converting"]; //提示转换中
                 OpenDialog(this.DialogActProg);
             }));
 
-            Wow64EnableWow64FsRedirection(false);//关闭文件重定向
+            LicenseTaskResult result = RunInstall(options, ReportInstallProgress);
 
-            string code = "-0";
-            string key = "00000-00000-00000-00000-00000";
-            string sku = "0";
-            string msg = "Unknow Error!";
-            string system = "";
+            ShowTaskResult(result, "RunInstall_Converting", "DonateTextConverted", false); //完成转换内容
+        }
 
-            string changepk = Environment.SystemDirectory + "\\changepk.exe";
-
-            if (is_auto == true)
-            {
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    system = this.SystemEditionText.Text;
-                }));
-
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunInstall_Getting_Key"]; //提示正在获取密钥
-                }));
-
-                //获取密钥和SKU
-                try
-                {
-
-                    string json;
-                    try
-                    {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
-                        ConsoleLog("Error Message:" + e.Message);
-                        ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
-                    }
-                    JObject jsonobj = JObject.Parse(json);
-                    List<Frequency> list = new List<Frequency>();
-                    ositems = (JArray)jsonobj["OS"];
-                    key = jsonobj[system]["key"].ToString();
-                    sku = jsonobj[system]["sku"].ToString();
-                    ConsoleLog("Edition:" + system + "\r\nKEY:" + key + "\r\nSKU:" + sku);
-
-                }
-                catch
-                {
-                    code = "-0";
-                    msg = (string)this.Resources["ErrorMsg-0"]; // "激活Windows10需要网络获取产品密钥 :) \nActivate Windows 10 requires a network to gets the product key :)";
-                    goto EndLine;
-                }
-            }
-            else
-            {
-
-                //手动密钥
-
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    key = this.SystemEditionTextInput.Text;
-                }));
-
-            }
-
-
+        /// <summary>
+        /// RunInstall 的进度回调：更新进度对话框上的提示文字。
+        /// </summary>
+        /// <param name="langKey">提示文字对应的语言资源键。</param>
+        private void ReportInstallProgress(string langKey)
+        {
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
-                this.activatingtext.Text = (string)this.Resources["RunInstall_Uninstalling_old_Key"]; //提示正在卸载旧密钥
+                this.activatingtext.Text = (string)this.Resources[langKey];
             }));
-            //卸载
-            string runend = RunSlmgr("-upk").Trim();
-            //string runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
-            ConsoleLog(runend);
-            if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
+        }
+
+        /// <summary>
+        /// 安装（转换）产品密钥。不涉及任何 UI 操作，可在任意线程调用。
+        /// </summary>
+        /// <param name="options">运行参数，由调用方提前收集。</param>
+        /// <param name="onProgress">进度回调，参数为语言资源键，可为 null。</param>
+        /// <returns>执行结果，由调用方决定如何呈现。</returns>
+        public LicenseTaskResult RunInstall(LicenseTaskOptions options, Action<string> onProgress = null)
+        {
+            ExportTempFile();
+            //释放文件
+            try
             {
+                Wow64EnableWow64FsRedirection(false);//关闭文件重定向
 
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunInstall_Installing_Key"]; //提示正在安装密钥
-                }));
+                string key = "00000-00000-00000-00000-00000";
+                string sku = "0";
 
-                //安装数字权利升级密钥
-                if (RunSlmgr("-ipk " + key).Trim().EndsWith("successfully."))
-                //if (RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key).Trim().EndsWith("successfully."))
+                if (options.IsAuto == true)
                 {
-                    code = "200";
+                    string system = options.SystemEdition;
+
+                    onProgress?.Invoke("RunInstall_Getting_Key"); //提示正在获取密钥
+
+                    //获取密钥和SKU
+                    try
+                    {
+
+                        string json;
+                        try
+                        {
+                            json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
+                        }
+                        catch (Exception e)
+                        {
+                            ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
+                            ConsoleLog("Error Message:" + e.Message);
+                            ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
+                            json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
+                        }
+                        JObject jsonobj = JObject.Parse(json);
+                        ositems = (JArray)jsonobj["OS"];
+                        key = jsonobj[system]["key"].ToString();
+                        sku = jsonobj[system]["sku"].ToString();
+                        ConsoleLog("Edition:" + system + "\r\nKEY:" + key + "\r\nSKU:" + sku);
+
+                    }
+                    catch
+                    {
+                        // 激活Windows10需要网络获取产品密钥
+                        return new LicenseTaskResult("-0");
+                    }
                 }
                 else
                 {
-                    code = "-2";
-                    msg = (string)this.Resources["ErrorMsg-2"]; // "无法安装密钥，可能没有选择或输入正确的版本 :(\nCannot to install key, may be you choose or enter a incorrect version. :(";
+
+                    //手动密钥
+
+                    key = options.ManualKey;
+
                 }
-            }
-            else
-            {
-                code = "-1";
-                msg = (string)this.Resources["ErrorMsg-1"]; // "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
-            }
-        EndLine:;
-            if (code != "200")
-            {
-                actbtn.Dispatcher.Invoke(new Action(() =>
+
+                onProgress?.Invoke("RunInstall_Uninstalling_old_Key"); //提示正在卸载旧密钥
+
+                //卸载
+                string runend = RunSlmgr("-upk").Trim();
+                ConsoleLog(runend);
+                if (runend.EndsWith("successfully.") == false && runend.EndsWith("not found.") == false)
                 {
-                    this.DialogActProg.Hide();
-                    this.activatingtext.Text = (string)this.Resources["RunInstall_Converting"]; //提示转换中
-                    this.DialogWithOKToCloseDialog.Title = (string)this.Resources["ErrorTitle"]; //错误标题
-                    this.DialogWithOKToCloseDialogText.Text = msg + "\r\n" + (string)this.Resources["ErrorCode"] + code; //错误代码 如：错误信息\r\nCode：000
-                    OpenDialog(this.DialogWithOKToCloseDialog);
-                }));
-                //MessageBox.Show(msg + "\r\nCode:" + code);
-            }
-            else
-            {
-                actbtn.Dispatcher.Invoke(new Action(() =>
+                    // 无法卸载旧密钥
+                    return new LicenseTaskResult("-1");
+                }
+
+                onProgress?.Invoke("RunInstall_Installing_Key"); //提示正在安装密钥
+
+                //安装数字权利升级密钥
+                if (RunSlmgr("-ipk " + key).Trim().EndsWith("successfully.") == false)
                 {
-                    this.DialogActProg.Hide();
-                    this.activatingtext.Text = (string)this.Resources["RunInstall_Converting"]; //提示转换中
-                    this.DialogWithOKToCloseDialogDonate.Title = (string)this.Resources["CompleteTitle"]; //完成标题
-                    this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextConverted"]; //完成转换内容
-                    OpenDialog(this.DialogWithOKToCloseDialogDonate);
-                }));
-                //MessageBox.Show("Congratulation!");
+                    // 无法安装密钥，可能没有选择或输入正确的版本
+                    return new LicenseTaskResult("-2");
+                }
+
+                return new LicenseTaskResult("200");
             }
-            DelectTempFile();
-            //清理文件
+            finally
+            {
+                DelectTempFile();
+                //清理文件
+            }
         }
 
         private void RunUpgradeFullVersion()
@@ -787,11 +892,13 @@ namespace CMWTAT_DIGITAL
             }));
         }
 
-        private void RunAct()
+        /// <summary>
+        /// actbtn / 自动激活的线程入口：只负责 UI 交互，实际逻辑见 RunAct。
+        /// </summary>
+        private void RunActWithUI()
         {
-            bool is_not_network_to_act = false; //是否无法联网稍后激活
-            ExportTempFile();
-            //释放文件
+            LicenseTaskOptions options = GetLicenseTaskOptions();
+
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
                 this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; //提示激活中
@@ -799,107 +906,114 @@ namespace CMWTAT_DIGITAL
                 ShowBallSameDig();
             }));
 
-            Wow64EnableWow64FsRedirection(false);//关闭文件重定向
+            LicenseTaskResult result = RunAct(options, ReportActProgress);
 
-            string code = "-0";
-            string key = "00000-00000-00000-00000-00000";
-            string sku = "0";
-            string msg = "Unknow Error!";
-            string system = "";
-            string mode = "1"; //1：普通（SYS、SKU、KEY完全）；2.需要获取SKU（SYS、KEY）；3.手动输入KEY；4.普通OfflineKMS（SYS、SKU、KEY完全）
+            //即将激活内容 / 完成激活内容
+            string doneLangKey = result.WillActivateLater ? "DonateTextWillActivated" : "DonateTextActivated";
+            ShowTaskResult(result, "RunAct_Activating", doneLangKey, true);
+        }
 
-            string changepk = Environment.SystemDirectory + "\\changepk.exe";
-
-            if (is_auto == true)
-            {
-
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    system = this.SystemEditionText.Text;
-                }));
-
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Getting_Key"]; //提示正在获取密钥
-                    ShowBallSameDig();
-                }));
-
-                //获取密钥和SKU
-                try
-                {
-
-                    string json;
-                    try
-                    {
-                        json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
-                        ConsoleLog("Error Message:" + e.Message);
-                        ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
-                        json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
-                    }
-                    JObject jsonobj = JObject.Parse(json);
-                    List<Frequency> list = new List<Frequency>();
-                    ositems = (JArray)jsonobj["OS"];
-                    key = jsonobj[system]["key"].ToString();
-                    sku = jsonobj[system]["sku"].ToString();
-                    ConsoleLog("Edition:" + system + "\r\nKEY:" + key + "\r\nSKU:" + sku);
-
-                    string selecos = "";
-                    // 获取当前选择的选择的文本
-                    actbtn.Dispatcher.Invoke(new Action(() =>
-                    {
-                        selecos = SystemEditionText.Text;
-                    }));
-
-                    ConsoleLog("Selected OS: " + selecos);
-
-                    if (sku == "unknow")
-                    {
-                        mode = "2";
-                    }
-
-                    if (selecos.ToUpper().StartsWith("(Offline-KMS)".ToUpper()))
-                    {
-                        ConsoleLog("Switch Mode Offline-KMS");
-                        mode = "4";
-                    }
-
-                }
-                catch
-                {
-                    code = "-0";
-                    msg = (string)this.Resources["ErrorMsg-0"]; // "激活Windows10需要网络获取产品密钥 :) \nActivate Windows 10 requires a network to gets the product key :)";
-                    goto EndLine;
-                }
-
-            }
-            else
-            {
-
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    key = this.SystemEditionTextInput.Text;
-                }));
-                mode = "3";
-                sku = "unknow";
-
-            }
-
+        /// <summary>
+        /// RunAct 的进度回调：更新进度对话框上的提示文字，并同步气泡提示。
+        /// </summary>
+        /// <param name="langKey">提示文字对应的语言资源键。</param>
+        private void ReportActProgress(string langKey)
+        {
             actbtn.Dispatcher.Invoke(new Action(() =>
             {
-                this.activatingtext.Text = (string)this.Resources["RunAct_Uninstalling_old_Key"]; //提示正在卸载旧密钥
+                this.activatingtext.Text = (string)this.Resources[langKey];
                 ShowBallSameDig();
             }));
+        }
 
-            //卸载
-            string runend = RunSlmgr("-upk").Trim();
-            //string runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
-            ConsoleLog(runend);
-            if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
+        /// <summary>
+        /// 激活（获取数字权利）。不涉及任何 UI 操作，可在任意线程调用。
+        /// </summary>
+        /// <param name="options">运行参数，由调用方提前收集。</param>
+        /// <param name="onProgress">进度回调，参数为语言资源键，可为 null。</param>
+        /// <returns>执行结果，由调用方决定如何呈现。</returns>
+        public LicenseTaskResult RunAct(LicenseTaskOptions options, Action<string> onProgress = null)
+        {
+            ExportTempFile();
+            //释放文件
+            try
             {
+                Wow64EnableWow64FsRedirection(false);//关闭文件重定向
+
+                string key = "00000-00000-00000-00000-00000";
+                string sku = "0";
+                string mode = "1"; //1：普通（SYS、SKU、KEY完全）；2.需要获取SKU（SYS、KEY）；3.手动输入KEY；4.普通OfflineKMS（SYS、SKU、KEY完全）
+
+                if (options.IsAuto == true)
+                {
+
+                    string system = options.SystemEdition;
+
+                    onProgress?.Invoke("RunAct_Getting_Key"); //提示正在获取密钥
+
+                    //获取密钥和SKU
+                    try
+                    {
+
+                        string json;
+                        try
+                        {
+                            json = GetHttpWebRequest(MainServerDomain + "/api/digital?list=0&ver=4"); // 主要服务器
+                        }
+                        catch (Exception e)
+                        {
+                            ConsoleLog("MainServer:" + MainServerDomain + " is not working.");
+                            ConsoleLog("Error Message:" + e.Message);
+                            ConsoleLog("Ready to use BackupServer:" + BackupServerDomain);
+                            json = GetHttpWebRequest(BackupServerDomain + "/api/digital?list=0&ver=4"); // 备用服务器
+                        }
+                        JObject jsonobj = JObject.Parse(json);
+                        ositems = (JArray)jsonobj["OS"];
+                        key = jsonobj[system]["key"].ToString();
+                        sku = jsonobj[system]["sku"].ToString();
+                        ConsoleLog("Edition:" + system + "\r\nKEY:" + key + "\r\nSKU:" + sku);
+
+                        // 当前选择的版本
+                        ConsoleLog("Selected OS: " + system);
+
+                        if (sku == "unknow")
+                        {
+                            mode = "2";
+                        }
+
+                        if (system.ToUpper().StartsWith("(Offline-KMS)".ToUpper()))
+                        {
+                            ConsoleLog("Switch Mode Offline-KMS");
+                            mode = "4";
+                        }
+
+                    }
+                    catch
+                    {
+                        // 激活Windows10需要网络获取产品密钥
+                        return new LicenseTaskResult("-0");
+                    }
+
+                }
+                else
+                {
+
+                    key = options.ManualKey;
+                    mode = "3";
+                    sku = "unknow";
+
+                }
+
+                onProgress?.Invoke("RunAct_Uninstalling_old_Key"); //提示正在卸载旧密钥
+
+                //卸载
+                string runend = RunSlmgr("-upk").Trim();
+                ConsoleLog(runend);
+                if (runend.EndsWith("successfully.") == false && runend.EndsWith("not found.") == false)
+                {
+                    // 无法卸载旧密钥
+                    return new LicenseTaskResult("-1");
+                }
 
                 RunSlmgr("-ckms").Trim();
 
@@ -918,242 +1032,141 @@ namespace CMWTAT_DIGITAL
                 if (sku == "unknow")//if (mode == "2" || mode == "3") //获取SKU
                 {
 
-                    actbtn.Dispatcher.Invoke(new Action(() =>
-                    {
-                        this.activatingtext.Text = (string)this.Resources["RunAct_Getting_edition_code_Exp"]; // "Getting edition code (Experimental)";
-                        ShowBallSameDig();
-                    }));
+                    onProgress?.Invoke("RunAct_Getting_edition_code_Exp"); // "Getting edition code (Experimental)";
 
                     //安装转换密钥
                     runend = RunSlmgr("-ipk " + key);
-                    //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key);
                     ConsoleLog("slmgr -ipk " + key);
                     ConsoleLog(runend);
-                    if (runend.Trim().EndsWith("successfully."))
+                    if (runend.Trim().EndsWith("successfully.") == false)
                     {
-                        Thread.Sleep(6000); //等待6秒，确保SKU生效
-                        sku = GetSKU(); //获取SKU
-                        if (sku != "Error")
-                        {
-                            actbtn.Dispatcher.Invoke(new Action(() =>
-                            {
-                                this.activatingtext.Text = (string)this.Resources["RunAct_Uninstalling_old_Key_Exp"]; //提示正在卸载旧密钥（实验性）
-                                ShowBallSameDig();
-                            }));
-
-                            runend = RunSlmgr("-upk").Trim();
-                            //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -upk").Trim();
-                            ConsoleLog(runend);
-                            if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
-                            {
-                                actbtn.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    this.activatingtext.Text = (string)this.Resources["RunAct_Prepare_for_the_next_step_Exp"]; // "Prepare for the next step (Experimental)";
-                                    ShowBallSameDig();
-                                }));
-                            }
-                        }
-                        else
-                        {
-                            code = "-1.2";
-                            msg = (string)this.Resources["ErrorMsg-1.2"]; // "无法获取版本代号 :(\nCannot to get edition code. :(";
-                            goto EndLine;
-                        }
+                        // 无法安装密钥，可能没有选择或输入正确的版本
+                        return new LicenseTaskResult("-1.1");
                     }
-                    else
+
+                    Thread.Sleep(6000); //等待6秒，确保SKU生效
+                    sku = GetSKU(); //获取SKU
+                    if (sku == "Error")
                     {
-                        code = "-1.1";
-                        msg = (string)this.Resources["ErrorMsg-1.1"]; // "无法安装密钥，可能没有选择或输入正确的版本 :(\nCannot to install key, may be you choose or enter a incorrect version. :(";
-                        goto EndLine;
+                        // 无法获取版本代号
+                        return new LicenseTaskResult("-1.2");
+                    }
+
+                    onProgress?.Invoke("RunAct_Uninstalling_old_Key_Exp"); //提示正在卸载旧密钥（实验性）
+
+                    runend = RunSlmgr("-upk").Trim();
+                    ConsoleLog(runend);
+                    if (runend.EndsWith("successfully.") || runend.EndsWith("not found."))
+                    {
+                        onProgress?.Invoke("RunAct_Prepare_for_the_next_step_Exp"); // "Prepare for the next step (Experimental)";
                     }
                 }
 
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Installing_Key"]; //提示正在安装密钥
-                    ShowBallSameDig();
-                }));
+                onProgress?.Invoke("RunAct_Installing_Key"); //提示正在安装密钥
 
                 //安装数字权利升级密钥
                 runend = RunSlmgr("-ipk " + key);
-                //runend = RunCMD(@"cscript.exe /nologo %systemroot%\system32\slmgr.vbs -ipk " + key);
                 ConsoleLog("slmgr -ipk " + key);
                 ConsoleLog(runend);
-                if (runend.Trim().EndsWith("successfully."))
+                if (runend.Trim().EndsWith("successfully.") == false)
                 {
+                    // 无法安装密钥，可能没有选择或输入正确的版本
+                    return new LicenseTaskResult("-2");
+                }
 
-                    actbtn.Dispatcher.Invoke(new Action(() =>
-                    {
-                        this.activatingtext.Text = (string)this.Resources["RunAct_Getting_free_upgrade_permissions"]; // "Getting free upgrade permissions";
-                        ShowBallSameDig();
-                    }));
+                onProgress?.Invoke("RunAct_Getting_free_upgrade_permissions"); // "Getting free upgrade permissions";
 
-                    string ticket = null;
+                string ticket = null;
 
+                try
+                {
+                    RegistryKey registryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\ProductOptions", true);
+                    var packageFamilyName = registryKey.GetValue("OSProductPfn").ToString();
                     try
                     {
-                        RegistryKey registryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\ProductOptions", true);
-                        var packageFamilyName = registryKey.GetValue("OSProductPfn").ToString();
-                        try
+                        if (mode == "4")
                         {
-                            if (mode == "4")
-                            {
-                                //长期KMS
-                                ticket = GetHttpWebRequest(StaticServerDomain + "/Tickets/KMS.xml");
-                            }
-                            else
-                            { 
-                                ticket = GetHttpWebRequest(StaticServerDomain + "/Tickets/" + packageFamilyName + ".xml");
-                            }
-                            //System.Windows.MessageBox.Show(ticket);
-                        }
-                        catch (Exception e)
-                        {
-                            ConsoleLog("StaticServer:" + StaticServerDomain + " is not working.");
-                            ConsoleLog("Error Message:" + e.Message);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleLog("Get PackageFamilyName failed.");
-                        ConsoleLog("Error Message:" + e.Message);
-                    }
-
-                    File.WriteAllText(tempfile + "GenuineTicketvNext.xml", ticket, Encoding.UTF8);
-                    ConsoleLog("进入下一步（CUR：VNEXT）");
-
-                    var hasvNextTicket = File.Exists(tempfile + "GenuineTicketvNext.xml");
-
-                    if (hasvNextTicket)
-                    {
-
-                        actbtn.Dispatcher.Invoke(new Action(() =>
-                        {
-                            this.activatingtext.Text = (string)this.Resources["RunAct_Getting_digital_license"]; // "Getting digital license";
-                            ShowBallSameDig();
-                        }));
-
-                        RunCMD(@"sc start wuauserv");
-                        RunCMD(@"sc start clipsvc");
-
-                        RunCMD(@"clipup -v -o -altto " + tempfile);
-                        RunCMD(@"clipup -v -o -altto " + tempfile.TrimEnd('\\')); // 旧版本系统的 ClipUp 路径不能带最后的反斜杠
-                        if (OSVersionInfo.BuildVersion > 20348)
-                        {
-                            RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile); // 固定版本解决 22H2 后 ARM64 许可证接收问题
-                            RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile.TrimEnd('\\'));
-                        }
-
-                        actbtn.Dispatcher.Invoke(new Action(() =>
-                        {
-                            this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; // 提示激活中
-                            ShowBallSameDig();
-                        }));
-
-                        int try_max_count = 30;
-                        for (int i = 0; i < try_max_count + 1; i++)
-                        {
-                            if (!File.Exists(tempfile + "GenuineTicketvNext.xml"))
-                            {
-                                break;
-                            }
-                            Thread.Sleep(1000);
-                            ConsoleLog($"应用许可证 重试 {i}/{try_max_count}");
-                        }
-
-                        runend = RunSlmgr("-ato").Trim();
-                        
-                        ConsoleLog(runend);
-
-                        var xprrunend = RunSlmgr("-xpr").Trim();
-                        var activated = (xprrunend.Contains("activated") || xprrunend.Contains("activation will expire"));
-
-                        ConsoleLog(xprrunend);
-                        
-                        if (runend.EndsWith("successfully.") || activated || runend.Contains("0xC004C003")) // Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
-                        {
-                            if (runend.Contains("0xC004C003"))
-                            {
-                                is_not_network_to_act = true;
-                            }
-                            code = "200";
+                            //长期KMS
+                            ticket = GetHttpWebRequest(StaticServerDomain + "/Tickets/KMS.xml");
                         }
                         else
                         {
-                            code = "-4";
-                            msg = (string)this.Resources["ErrorMsg-4"] + "\r\n" + (string)this.Resources["SysMsg"] + "\r\n" + runend; // "激活失败 :(\nActivation Failed. :(";
+                            ticket = GetHttpWebRequest(StaticServerDomain + "/Tickets/" + packageFamilyName + ".xml");
                         }
+                        //System.Windows.MessageBox.Show(ticket);
                     }
-                    else
+                    catch (Exception e)
                     {
-                        code = "-3";
-                        msg = (string)this.Resources["ErrorMsg-3"]; // "执行超时，可能没有选择正确或输入的版本 :(\nTime out, may be you choose or enter a incorrect version. :(";
+                        ConsoleLog("StaticServer:" + StaticServerDomain + " is not working.");
+                        ConsoleLog("Error Message:" + e.Message);
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    code = "-2";
-                    msg = (string)this.Resources["ErrorMsg-2"]; // "无法安装密钥，可能没有选择或输入正确的版本 :(\nCannot to install key, may be you choose or enter a incorrect version. :(";
+                    ConsoleLog("Get PackageFamilyName failed.");
+                    ConsoleLog("Error Message:" + e.Message);
                 }
-            }
-            else
-            {
-                code = "-1";
-                msg = (string)this.Resources["ErrorMsg-1"]; // "无法卸载旧密钥 :(\nCannot to uninstall old key. :(";
-            }
-        EndLine:;
-            if (code != "200")
-            {
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.DialogActProg.Hide();
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; //提示激活中
-                    this.DialogWithOKToCloseDialog.Title = (string)this.Resources["ErrorTitle"]; //错误标题
-                    this.DialogWithOKToCloseDialogText.Text = msg + "\r\n" + (string)this.Resources["ErrorCode"] + code; //错误代码 如：错误信息\r\nCode：000
-                    OpenDialog(this.DialogWithOKToCloseDialog);
-                    if (App.hiderun == true && App.autoact == true)
-                    {
-                        int tipShowMilliseconds = 0;
-                        string tipTitle = (string)this.Resources["notifyIconTitle"];
-                        string tipContent = msg;
-                        ToolTipIcon tipType = ToolTipIcon.None;
-                        notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
-                        Exit_Button_Click(null, null);
-                    }
-                }));
-                //MessageBox.Show(msg + "\r\nCode:" + code);
-            }
-            else
-            {
-                actbtn.Dispatcher.Invoke(new Action(() =>
-                {
-                    this.DialogActProg.Hide();
-                    this.activatingtext.Text = (string)this.Resources["RunAct_Activating"]; //提示激活中
-                    this.DialogWithOKToCloseDialogDonate.Title = (string)this.Resources["CompleteTitle"]; //完成标题
-                    if (is_not_network_to_act == true)
-                    {
-                        this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextWillActivated"]; //即将激活内容
-                    }
-                    else
-                    {
-                        this.DialogWithOKToCloseDialogDonateText.Text = (string)this.Resources["DonateTextActivated"]; //完成激活内容
-                    }
-                    OpenDialog(this.DialogWithOKToCloseDialogDonate);
 
-                    if (App.hiderun == true && App.autoact == true)
+                File.WriteAllText(tempfile + "GenuineTicketvNext.xml", ticket, Encoding.UTF8);
+                ConsoleLog("进入下一步（CUR：VNEXT）");
+
+                var hasvNextTicket = File.Exists(tempfile + "GenuineTicketvNext.xml");
+
+                if (hasvNextTicket == false)
+                {
+                    // 执行超时，可能没有选择正确或输入的版本
+                    return new LicenseTaskResult("-3");
+                }
+
+                onProgress?.Invoke("RunAct_Getting_digital_license"); // "Getting digital license";
+
+                RunCMD(@"sc start wuauserv");
+                RunCMD(@"sc start clipsvc");
+
+                RunCMD(@"clipup -v -o -altto " + tempfile);
+                RunCMD(@"clipup -v -o -altto " + tempfile.TrimEnd('\\')); // 旧版本系统的 ClipUp 路径不能带最后的反斜杠
+                if (OSVersionInfo.BuildVersion > 20348)
+                {
+                    RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile); // 固定版本解决 22H2 后 ARM64 许可证接收问题
+                    RunCLI(tempfile + "ClipUp.exe", ".", "-v -o -altto " + tempfile.TrimEnd('\\'));
+                }
+
+                onProgress?.Invoke("RunAct_Activating"); // 提示激活中
+
+                int try_max_count = 30;
+                for (int i = 0; i < try_max_count + 1; i++)
+                {
+                    if (!File.Exists(tempfile + "GenuineTicketvNext.xml"))
                     {
-                        int tipShowMilliseconds = 0;
-                        string tipTitle = (string)this.Resources["notifyIconTitle"];
-                        string tipContent = this.DialogWithOKToCloseDialogDonateText.Text;
-                        ToolTipIcon tipType = ToolTipIcon.None;
-                        notifyIcon.ShowBalloonTip(tipShowMilliseconds, tipTitle, tipContent, tipType);
-                        Exit_Button_Click(null, null);
+                        break;
                     }
-                }));
-                //MessageBox.Show("Congratulation!");
+                    Thread.Sleep(1000);
+                    ConsoleLog($"应用许可证 重试 {i}/{try_max_count}");
+                }
+
+                runend = RunSlmgr("-ato").Trim();
+
+                ConsoleLog(runend);
+
+                var xprrunend = RunSlmgr("-xpr").Trim();
+                var activated = (xprrunend.Contains("activated") || xprrunend.Contains("activation will expire"));
+
+                ConsoleLog(xprrunend);
+
+                if (runend.EndsWith("successfully.") || activated || runend.Contains("0xC004C003")) // Error 0xC004C003: The activation server determined that the specified product key is blocked. 是因为未连接激活服务器，下次连接时会自动激活。
+                {
+                    // 未连接激活服务器时，下次连接时会自动激活
+                    return new LicenseTaskResult("200") { WillActivateLater = runend.Contains("0xC004C003") };
+                }
+
+                // 激活失败
+                return new LicenseTaskResult("-4", runend);
             }
-            DelectTempFile();
-            //清理文件
+            finally
+            {
+                DelectTempFile();
+                //清理文件
+            }
         }
 
         public static string RunCLI(string path, string wdPath, string var = "")
