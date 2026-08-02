@@ -1788,6 +1788,24 @@ namespace CMWTAT_DIGITAL
             UpdateInputMatch(); // 更新按钮启用状态
         }
 
+        /// <summary>
+        /// 取托盘图标。
+        /// CMWTAT.ico 原本在 exe 里存了三份：Win32 图标资源（资源管理器要用，去不掉）、
+        /// &lt;Resource&gt; 一份（MainWindow 的 Icon="CMWTAT.ico" 在用）、
+        /// Properties.Resources 又一份（托盘图标在用）。后两份内容完全一样，
+        /// 所以这里直接读 &lt;Resource&gt; 那份，把 resx 里的重复副本删掉，省约 180 KB。
+        /// </summary>
+        private static System.Drawing.Icon LoadAppIcon()
+        {
+            System.Windows.Resources.StreamResourceInfo info =
+                System.Windows.Application.GetResourceStream(new Uri("CMWTAT.ico", UriKind.Relative));
+
+            using (Stream s = info.Stream)
+            {
+                return new System.Drawing.Icon(s); // 和 resx 里那份一样是完整多尺寸图标，交给 NotifyIcon 自己挑
+            }
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DelectTempFile();
@@ -1841,7 +1859,7 @@ namespace CMWTAT_DIGITAL
             notifyIcon = new NotifyIcon
             {
                 Text = (string)this.Resources["notifyIconTitle"], //托盘图标标题
-                Icon = Properties.Resources.CMWTAT_ICON
+                Icon = LoadAppIcon()
             }; // 先初始化托盘图标，以方便语言缺省时提示
 
             if ((App.hiderun == true && App.autoact == true) || NotSupportLang == true)

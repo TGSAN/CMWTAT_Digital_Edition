@@ -69,15 +69,5 @@ namespace CMWTAT_DIGITAL.Properties {
                 return ((byte[])(obj));
             }
         }
-        
-        /// <summary>
-        ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Icon CMWTAT_ICON {
-            get {
-                object obj = ResourceManager.GetObject("CMWTAT_ICON", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
     }
 }
