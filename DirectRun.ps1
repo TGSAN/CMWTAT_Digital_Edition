@@ -9,7 +9,7 @@ if (-not $isAdmin) {
 # $exeBytes = [System.IO.File]::ReadAllBytes($exePath)
 # $bytes = $exeBytes
 
-$bytes = (Invoke-WebRequest "https://tgsan.github.io/CMWTAT_Digital_Edition/CMWTAT_Digital_Release_3_0_0_0.exe").Content
+$bytes = (Invoke-WebRequest "https://tgsan.github.io/CMWTAT_Digital_Edition/CMWTAT_Digital_Release_3_0_1_0.exe").Content
 $assembly = [System.Reflection.Assembly]::Load($bytes)
 $entryPointMethod = $assembly.EntryPoint
 $entryPointMethod.Invoke($null, @())
