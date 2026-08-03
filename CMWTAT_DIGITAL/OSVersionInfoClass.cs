@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 
 // http://www.codeproject.com/Articles/73000/Getting-Operating-System-Version-Info-Even-for-Win
@@ -982,6 +983,27 @@ namespace OSVersionInfoClass
             }
         }
         #endregion REVISION
+
+        #region VersionWithoutEKB
+        static public Version VersionWithoutEKB
+        {
+            get
+            {
+                string windows = Environment.GetFolderPath(
+                Environment.SpecialFolder.Windows);
+                string kernel = Path.Combine(
+                    windows, "System32", "ntoskrnl.exe");
+                FileVersionInfo info =
+                    FileVersionInfo.GetVersionInfo(kernel);
+                return new Version(
+                    info.FileMajorPart,
+                    info.FileMinorPart,
+                    info.FileBuildPart,
+                    info.FilePrivatePart);
+            }
+        }
+        #endregion VersionWithoutEKB
+
         #endregion VERSION
 
         #region 64 BIT OS DETECTION

@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:CMWTAT_DIGITAL"
         xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
         mc:Ignorable="d"
-        Title="{DynamicResource TitleName}" Height="540" Width="500"
-        ResizeMode="NoResize"
+        Title="{DynamicResource TitleName}" Height="540" Width="600"
+        ResizeMode="CanMinimize"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:WindowHelper.SystemBackdropType="Mica"
         ui:TitleBar.ExtendViewIntoTitleBar="True"
@@ -40,7 +40,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition Width="96" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="20,0,0,0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <Image x:Name="TitleBarIcon" Width="20" Height="20" VerticalAlignment="Center"
