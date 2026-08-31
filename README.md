@@ -15,7 +15,7 @@
 >
 > Thanks to [@efojug](https://github.com/efojug) for reporting this issue in Issue [#115](https://github.com/TGSAN/CMWTAT_Digital_Edition/issues/115).
 >
-> I sincerely apologize for the inconvenience and risks caused by this incident. I will continue investigating the details of the attack and further strengthen server security and download-file verification to prevent similar incidents from happening again.
+> I sincerely apologize for the inconvenience and risks caused by this incident. I will continue investigating the details of the attack and take greater care to ensure the security of the server, in order to prevent similar incidents from happening again.
 >
 > ---
 > 
@@ -31,7 +31,7 @@
 >
 > 感谢 [@efojug](https://github.com/efojug) 在 Issue [#115](https://github.com/TGSAN/CMWTAT_Digital_Edition/issues/115) 中提供报告。
 >
-> 对由此造成的困扰和风险，我深表歉意。我将持续调查攻击细节，并进一步加强服务器安全与下载文件校验，避免类似事件再次发生。
+> 对由此造成的困扰和风险，我深表歉意。我将持续调查攻击细节，并更加认真地保障服务器安全，避免类似事件再次发生。
 
 
 # CloudMoe Windows 10+ Activation Toolkit Digital Edition
