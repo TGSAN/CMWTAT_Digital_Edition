@@ -7,7 +7,7 @@
 >
 > The CMWTAT website has now restored its legitimate download links. However, `cmwtat.cloudmoe.com` was previously compromised, and the download links to the Alibaba Cloud and Amazon Cloud mirrors were replaced with ZIP files containing malicious `.msi` installers. Downloads from GitHub Releases are not confirmed to be affected by this incident.
 >
-> According to my investigation, the attacker had been scanning the server for some time, and the actual intrusion most likely began on the evening of **August 29, 2026**. The exact time when the malware was uploaded is still under investigation. The file timestamps on the server were also falsified to show dates in 2025.
+> According to my investigation, the attacker had been scanning the server for some time, and the actual intrusion most likely began on the evening of **August 10, 2026**. The exact time when the malware was uploaded is still under investigation. The file timestamps on the server were also falsified to show dates in 2025.
 >
 > A normal CMWTAT download should be a standalone `.exe` file, or a ZIP archive containing only one `.exe` file. If a ZIP archive contains an `.msi` file, do not run it.
 >
@@ -23,7 +23,7 @@
 >
 > 目前 CMWTAT 官网已经恢复正常的下载链接。但此前 `cmwtat.cloudmoe.com` 官网曾遭到入侵，官网指向阿里云、亚马逊云的下载链接被替换为包含恶意 `.msi` 安装包的 ZIP 文件。GitHub Releases 下载不在本次已确认的受影响范围内。
 >
-> 根据调查，攻击者此前已进行服务器扫描，正式入侵很可能始于 **2026 年 8 月 29 日傍晚**；具体挂马时间仍在调查，服务器文件时间戳也曾被伪造为 2025 年。
+> 根据调查，攻击者此前已进行服务器扫描，正式入侵很可能始于 **2026 年 8 月 10 日傍晚**；具体挂马时间仍在调查，服务器文件时间戳也曾被伪造为 2025 年。
 >
 > CMWTAT 正常下载应为单独的 `.exe`，或 ZIP 内仅包含一个 `.exe`。如果 ZIP 内含 `.msi`，请勿运行。
 >
