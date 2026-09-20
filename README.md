@@ -33,8 +33,11 @@
 >
 > 对由此造成的困扰和风险，我深表歉意。我将持续调查攻击细节，并更加认真地保障服务器安全，避免类似事件再次发生。
 
+<div align="center">
 
 # CloudMoe Windows 10+ Activation Toolkit Digital Edition
+
+<a href="https://trendshift.io/repositories/626?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-626" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/626" alt="TGSAN%2FCMWTAT_Digital_Edition | Trendshift" width="250" height="55"/></a>
 
 This toolkit can activate your Windows 10 and Windows 11 use digital license.  
 
@@ -45,6 +48,8 @@ A Windows 10 and Windows 11 digital license activation tool written in CSharp.
 一款使用`CSharp`编写的 `Windows 10` 和 `Windows 11` 数字权利激活工具。
 
 ![UI界面截图][UI_image]
+
+</div>
 
 # Usage 使用
 
