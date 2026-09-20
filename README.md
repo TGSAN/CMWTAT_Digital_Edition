@@ -39,7 +39,7 @@
 
 <a href="https://trendshift.io/repositories/626?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-626" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/626" alt="TGSAN%2FCMWTAT_Digital_Edition | Trendshift" width="250" height="55"/></a>
 &nbsp;
-<a href="https://trendshift.io/repositories/626?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-626" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/626/daily?language=C%23" alt="TGSAN%2FCMWTAT_Digital_Edition | Trendshift" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/626?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-626" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/626/weekly?language=C%23" alt="TGSAN%2FCMWTAT_Digital_Edition | Trendshift" width="250" height="55"/></a>
 
 This toolkit can activate your Windows 10 and Windows 11 use digital license.  
 
